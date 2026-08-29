@@ -1,0 +1,2 @@
+[25-Aug-2026 20:30:11 America/Bogota] PHP Notice:  Undefined property: App\DAO\UsuarioDAO::$usuarioDAO in /home/systempo/api.enersolax.systemposfac.com.co/src/DAO/UsuarioDAO.php on line 28
+[25-Aug-2026 20:47:31 America/Bogota] PHP Notice:  Undefined property: App\DAO\UsuarioDAO::$usuarioDAO in /home/systempo/api.enersolax.systemposfac.com.co/src/DAO/UsuarioDAO.php on line 29

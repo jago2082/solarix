@@ -1,0 +1,110 @@
+<app-header headerName="Gestión de usuarios"></app-header>
+
+<ion-content class="ion-padding" color="secondary">
+
+  <ion-button expand="block" (click)="abrirModal()" class="ion-margin-bottom">
+    <ion-icon slot="start" name="add"></ion-icon>
+    Agregar usuario
+  </ion-button>
+
+  <div class="p-input-icon-left ion-margin-bottom">
+    <i class="pi pi-search"></i>
+    <input type="text" pInputText placeholder="Buscar..." (input)="aplicarFiltroGlobal($event)" />
+  </div>
+
+  <p-table
+    #table
+    [value]="users"
+    [paginator]="true"
+    [rows]="10"
+    [rowsPerPageOptions]="[5,10,20]"
+    [globalFilterFields]="['codigo','nombres','apellidos','telefono','email','estado']"
+    [responsiveLayout]="'scroll'"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+    class="mi-tabla p-datatable-sm p-datatable-gridlines p-datatable-striped"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Código</th>
+        <th>Nombres</th>
+        <th>Apellidos</th>
+        <th>Teléfono</th>
+        <th>Email</th>
+        <th>Estado</th>
+        <th>Acciones</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-item>
+      <tr>
+        <td>{{ item.codigo }}</td>
+        <td>{{ item.nombres }}</td>
+        <td>{{ item.apellidos }}</td>
+        <td>{{ item.telefono }}</td>
+        <td>{{ item.email }}</td>
+        <td>{{ item.estado }}</td>
+        <td>
+          <ion-button fill="clear" size="small" color="primary" (click)="abrirModal(item)">
+            <ion-icon slot="icon-only" name="create"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" size="small" color="danger" (click)="eliminar(item)">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <app-footer></app-footer>
+
+  <ion-modal [isOpen]="isModalOpen" (didDismiss)="cerrarModal()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-title>{{ editing ? 'Editar usuario' : 'Nuevo usuario' }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="cerrarModal()">
+              <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="ion-padding" color="secondary">
+        <form [formGroup]="form" (ngSubmit)="guardar()">
+          <ion-input placeholder="Nombres" formControlName="nombres" fill="outline" class="primary-input ion-margin-top"></ion-input>
+          <ion-text color="danger" *ngIf="form.get('nombres')?.invalid && form.get('nombres')?.touched"><p>Nombres requeridos</p></ion-text>
+
+          <ion-input placeholder="Apellidos" formControlName="apellidos" fill="outline" class="primary-input ion-margin-top"></ion-input>
+          <ion-text color="danger" *ngIf="form.get('apellidos')?.invalid && form.get('apellidos')?.touched"><p>Apellidos requeridos</p></ion-text>
+
+          <ion-input placeholder="Código de usuario" formControlName="codigo" fill="outline" class="primary-input ion-margin-top"></ion-input>
+          <ion-text color="danger" *ngIf="form.get('codigo')?.invalid && form.get('codigo')?.touched"><p>Código requerido</p></ion-text>
+
+          <ion-input placeholder="Teléfono" type="tel" formControlName="telefono" fill="outline" class="primary-input ion-margin-top"></ion-input>
+          <ion-text color="danger" *ngIf="form.get('telefono')?.invalid && form.get('telefono')?.touched"><p>Teléfono requerido</p></ion-text>
+
+          <ion-input placeholder="Correo electrónico" type="email" formControlName="email" fill="outline" class="primary-input ion-margin-top"></ion-input>
+          <ion-text color="danger" *ngIf="form.get('email')?.invalid && form.get('email')?.touched"><p>Correo inválido</p></ion-text>
+
+          <ion-select formControlName="estado" fill="outline" class="primary-input ion-margin-top" label="Estado" labelPlacement="floating">
+            <ion-select-option value="A">Activo</ion-select-option>
+            <ion-select-option value="I">Inactivo</ion-select-option>
+          </ion-select>
+          <ion-text color="danger" *ngIf="form.get('estado')?.invalid && form.get('estado')?.touched"><p>Estado requerido</p></ion-text>
+
+          <ion-input [placeholder]="editing ? 'Contraseña (dejar vacía para no cambiar)' : 'Contraseña'" type="password" formControlName="password" fill="outline" class="primary-input ion-margin-top"></ion-input>
+          <ion-text color="danger" *ngIf="form.get('password')?.invalid && form.get('password')?.touched"><p>Mínimo 6 caracteres</p></ion-text>
+
+          <div class="ion-margin-top">
+            <ion-button expand="block" color="primary" type="submit" [disabled]="saving">
+              {{ editing ? 'Actualizar' : 'Registrar' }}
+            </ion-button>
+          </div>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>

@@ -1,0 +1,14 @@
+.mi-tabla ::ng-deep .p-datatable-thead > tr > th {
+  background-color: var(--ion-color-primary);
+  color: white;
+}
+
+.primary-input {
+  --background: #ffffff;
+  --color: #000000;
+}
+
+ion-select.primary-input {
+  --background: #ffffff;
+  --color: #000000;
+}

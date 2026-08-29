@@ -1,0 +1,40 @@
+<ion-content class="ion-padding ion-text-center" color="secondary">
+  <img src="assets/icons/logo.svg" class="imgLogo ion-text-center" />
+
+  <div class="title ion-margin-top">
+    <h2>Servicentro el Bosque</h2>
+    <p>900.181.214-1</p>
+  </div>
+
+  <ion-input
+      placeholder="email@email.com"
+      type="email"
+      [(ngModel)]="user.email"
+      class="primary-input ion-margin-top"
+      fill="outline"
+      expand="block"
+      autofocus="true"
+    ></ion-input>
+
+    <ion-input
+      placeholder="Password"
+      type="password"
+      [(ngModel)]="user.password"
+      class="primary-input ion-margin-top"
+      fill="outline"
+      expand="block"
+    ></ion-input>
+
+  <div class="ion-margin-top">
+    <ion-button expand="block" color="primary" (click)="login()">
+      Ingresar
+    </ion-button>
+  </div>
+  <ion-footer>
+      <ion-buttons slot="start">                
+        <ion-button (click)="getPass()">
+          <ion-icon slot="icon-only" src="assets/icons/settings.svg"></ion-icon>
+        </ion-button>                
+  </ion-buttons>
+  </ion-footer>
+</ion-content>

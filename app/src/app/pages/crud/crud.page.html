@@ -1,0 +1,111 @@
+<app-header [headerName]="config?.plural || 'Administración'"></app-header>
+
+<ion-content class="ion-padding" color="secondary">
+
+  <ion-button expand="block" (click)="abrirModal()" class="ion-margin-bottom">
+    <ion-icon slot="start" name="add"></ion-icon>
+    Agregar {{ config?.label || 'registro' }}
+  </ion-button>
+
+  <div class="p-input-icon-left ion-margin-bottom">
+    <i class="pi pi-search"></i>
+    <input type="text" pInputText placeholder="Buscar..." (input)="aplicarFiltroGlobal($event)" />
+  </div>
+
+  <p-table
+    #table
+    [value]="items"
+    [paginator]="true"
+    [rows]="10"
+    [rowsPerPageOptions]="[5,10,20]"
+    [globalFilterFields]="globalFilterFields"
+    [responsiveLayout]="'scroll'"
+    [showCurrentPageReport]="true"
+    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+    class="mi-tabla p-datatable-sm p-datatable-gridlines p-datatable-striped"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th *ngFor="let field of tableFields">{{ field.label }}</th>
+        <th>Acciones</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-item>
+      <tr>
+        <td *ngFor="let field of tableFields">{{ displayValue(item, field) }}</td>
+        <td>
+          <ion-button fill="clear" size="small" color="primary" (click)="abrirModal(item)">
+            <ion-icon slot="icon-only" name="create"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" size="small" color="danger" (click)="eliminar(item)">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <app-footer></app-footer>
+
+  <ion-modal [isOpen]="isModalOpen" (didDismiss)="cerrarModal()">
+    <ng-template>
+      <ion-header>
+        <ion-toolbar color="primary">
+          <ion-title>{{ editing ? 'Editar' : 'Nuevo' }} {{ config?.label || 'registro' }}</ion-title>
+          <ion-buttons slot="end">
+            <ion-button (click)="cerrarModal()">
+              <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+          </ion-buttons>
+        </ion-toolbar>
+      </ion-header>
+
+      <ion-content class="ion-padding" color="secondary">
+        <form [formGroup]="form" (ngSubmit)="guardar()">
+          <ng-container *ngFor="let field of formFields; trackBy: trackByField">
+
+            <ion-input
+              *ngIf="field.type === 'text' || field.type === 'number' || field.type === 'email' || field.type === 'password' || field.type === 'date' || field.type === 'datetime-local'"
+              [type]="field.type"
+              [placeholder]="field.label"
+              [formControlName]="field.key"
+              fill="outline"
+              class="primary-input ion-margin-top"
+            ></ion-input>
+
+            <ion-select
+              *ngIf="field.type === 'select'"
+              [formControlName]="field.key"
+              fill="outline"
+              class="primary-input ion-margin-top"
+              [label]="field.label"
+              labelPlacement="floating"
+            >
+              <ion-select-option *ngFor="let opt of field.options || []" [value]="opt.value">{{ opt.label }}</ion-select-option>
+            </ion-select>
+
+            <ion-textarea
+              *ngIf="field.type === 'textarea'"
+              [placeholder]="field.label"
+              [formControlName]="field.key"
+              fill="outline"
+              class="primary-input ion-margin-top"
+            ></ion-textarea>
+
+            <ion-text color="danger" *ngIf="form.get(field.key)?.invalid && form.get(field.key)?.touched">
+              <p>{{ field.label }} requerido</p>
+            </ion-text>
+          </ng-container>
+
+          <div class="ion-margin-top">
+            <ion-button expand="block" color="primary" type="submit" [disabled]="saving">
+              {{ editing ? 'Actualizar' : 'Registrar' }}
+            </ion-button>
+          </div>
+        </form>
+      </ion-content>
+    </ng-template>
+  </ion-modal>
+
+</ion-content>

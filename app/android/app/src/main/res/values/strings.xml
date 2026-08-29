@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">System Pos Fac</string>
+    <string name="title_activity_main">System Pos Fac</string>
+    <string name="package_name">com.systemposfac.parking</string>
+    <string name="custom_url_scheme">com.systemposfac.parking</string>
+</resources>

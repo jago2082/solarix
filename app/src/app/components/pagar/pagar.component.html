@@ -1,0 +1,85 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Pagar</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title class="titulo">
+        {{ valorAPagar | currency: 'COP':'symbol':'1.0-0':'es-CO' }}
+      </ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <!-- Buscador de usuarios -->
+      <ion-item>
+        <ion-label position="floating">Buscar cliente</ion-label>
+        <ion-input [(ngModel)]="searchTerm" (ionInput)="onSearchInput()"></ion-input>
+      </ion-item>
+
+      <ion-list *ngIf="showSuggestions">
+        <ion-item *ngFor="let usuario of resultados" (click)="seleccionarUsuario(usuario)" button>
+          {{ usuario.pCli_docu }} - {{ usuario.pCli_noco }}
+        </ion-item>
+      </ion-list>
+
+      <!-- Inputs de pago -->
+      <ion-grid>
+        <ion-row>
+          <ion-col size="6">
+            <ion-item>
+              <ion-label position="floating">Efectivo</ion-label>
+              <ion-input type="number" [(ngModel)]="pagos.efectivo" (ionInput)="actualizarCambio()"></ion-input>
+            </ion-item>
+          </ion-col>
+          <ion-col size="6">
+            <ion-item>
+              <ion-label position="floating">Nequi</ion-label>
+              <ion-input type="number" [(ngModel)]="pagos.nequi" (ionInput)="actualizarCambio()"></ion-input>
+            </ion-item>      
+          </ion-col>
+          <ion-col size="6">
+            <ion-item>
+              <ion-label position="floating">Tarjeta</ion-label>
+              <ion-input type="number" [(ngModel)]="pagos.tarjeta" (ionInput)="actualizarCambio()"></ion-input>
+            </ion-item>      
+          </ion-col>
+          <ion-col size="6">
+            <ion-item>
+              <ion-label position="floating">Daviplata</ion-label>
+              <ion-input type="number" [(ngModel)]="pagos.daviplata" (ionInput)="actualizarCambio()"></ion-input>
+            </ion-item>      
+          </ion-col>
+          <ion-col size="12">
+            <ion-item *ngIf="cambio > 0">
+              <ion-label color="success">Cambio</ion-label>
+              <ion-note slot="end" color="success">
+                {{ cambio | currency:'COP':'symbol':'1.0-0':'es-CO' }}
+              </ion-note>
+            </ion-item>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+
+      <!-- Botón confirmar -->
+      <ion-button expand="block" color="primary" (click)="confirmarPago()" [disabled]="!pagoValido">
+        Confirmar Pago
+      </ion-button>
+      <!-- Mensaje de error -->
+      <ion-text color="danger" *ngIf="errorPago">
+        <p class="ion-padding-top">{{ errorPago }}</p>
+      </ion-text>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+<ion-footer>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button color="dark" (click)="CerrarModal()">
+        <ion-icon src="assets/icons/close.svg"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-footer>

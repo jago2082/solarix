@@ -1,0 +1,16 @@
+<ion-tabs>
+
+  <ion-tab-bar  slot="bottom" color="primary">
+
+      <ion-tab-button [disabled]="tab.disable"  [tab]="tab.mainPath" *ngFor="let tab of tabs">
+          <ion-icon   [src]="tab.mainSrc" [name]="tab.mainIcon"></ion-icon>
+          <ion-label>{{tab.mainTitle}}</ion-label>
+        </ion-tab-button>
+  </ion-tab-bar>
+  <ion-footer>
+    <ion-toolbar id="footer"  class="ion-toolbar ion-text-center">  
+      <small> {{appCopyright}}</small>
+      <small> V.{{appVersion}}</small>      
+    </ion-toolbar>
+  </ion-footer>
+</ion-tabs>

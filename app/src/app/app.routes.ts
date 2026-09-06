@@ -15,18 +15,6 @@ export const routes: Routes = [
     loadComponent: () => import('./tabs/tabs.page').then( m => m.TabsPage)
   },
   {
-    path: 'tabs/in',
-    loadComponent: () => import('./pages/entradavh/entradavh.page').then( m => m.EntradavhPage)
-  },
-  {
-    path: 'tabs/sa',
-    loadComponent: () => import('./pages/salidavh/salidavh.page').then( m => m.SalidavhPage)
-  },
-  {
-    path: 'tabs/pe',
-    loadComponent: () => import('./pages/pendientesvh/pendientesvh.page').then( m => m.PendientesvhPage)
-  },
-  {
     path: 'tabs/us',
     loadComponent: () => import('./pages/registro/registro.page').then( m => m.RegistroPage)
   },

@@ -1,40 +1,62 @@
-<ion-content class="ion-padding ion-text-center" color="secondary">
-  <img src="assets/icons/logo.svg" class="imgLogo ion-text-center" />
+<ion-content class="login-bg" scroll-y="false">
+    <!-- Contenedor central -->
+    <div class="login-wrapper">
 
-  <div class="title ion-margin-top">
-    <h2>Servicentro el Bosque</h2>
-    <p>900.181.214-1</p>
-  </div>
+        <!-- Tarjeta Blanca del Formulario -->
+        <div class="login-card">
 
-  <ion-input
-      placeholder="email@email.com"
-      type="email"
-      [(ngModel)]="user.email"
-      class="primary-input ion-margin-top"
-      fill="outline"
-      expand="block"
-      autofocus="true"
-    ></ion-input>
+            <!-- Logo y Título -->
+            <div class="logo-container ion-text-center">
+                <img src="assets/icons/logo.svg" class="logo-img" alt="Solaxgen Logo" />
+                <h2 class="app-subtitle ion-text-center" style="width: 100%; text-align: center;">Módulo de Propuestas PPA</h2>
+            </div>
 
-    <ion-input
-      placeholder="Password"
-      type="password"
-      [(ngModel)]="user.password"
-      class="primary-input ion-margin-top"
-      fill="outline"
-      expand="block"
-    ></ion-input>
+            <!-- Formulario de Login -->
+            <form class="form-container">
+                <ion-input placeholder="CORREO@EJEMPLO.COM" type="email" [(ngModel)]="user.email" name="email" (ionInput)="user.email = $any($event.target).value.toUpperCase()" class="modern-input input-mayusculas" fill="outline" label="CORREO ELECTRÓNICO" label-placement="floating">
+                </ion-input>
 
-  <div class="ion-margin-top">
-    <ion-button expand="block" color="primary" (click)="login()">
-      Ingresar
-    </ion-button>
-  </div>
-  <ion-footer>
-      <ion-buttons slot="start">                
-        <ion-button (click)="getPass()">
-          <ion-icon slot="icon-only" src="assets/icons/settings.svg"></ion-icon>
-        </ion-button>                
-  </ion-buttons>
-  </ion-footer>
+                <ion-input placeholder="CONTRASEÑA" type="password" [(ngModel)]="user.password" name="password" class="modern-input ion-margin-top" fill="outline" label="CONTRASEÑA" label-placement="floating">
+                </ion-input>
+
+                <!-- Recuperación de contraseña -->
+                <div class="forgot-password-container">
+                    <a class="forgot-link" (click)="getPass()">¿Olvidaste tu contraseña?</a>
+                </div>
+
+                <!-- Botón Principal -->
+                <ion-button expand="block" color="primary" class="btn-ingresar" (click)="login()">
+                    Ingresar
+                </ion-button>
+
+                <!-- Divisor visual -->
+                <div class="divider">
+                    <span>O ingresa con</span>
+                </div>
+
+                <ion-button expand="block" fill="outline" color="medium" class="btn-biometric" (click)="loginBiometric()">
+                    <div style="display: flex; align-items: center; justify-content: center; width: 100%;">
+                        <!-- 1. Ícono a la izquierda (22px de tamaño + 10px de margen = 32px de espacio) -->
+                        <ion-icon name="finger-print-outline" style="font-size: 22px; margin-right: 10px;"></ion-icon>
+
+                        <!-- 2. Texto perfectamente en el centro visual -->
+                        <span style="font-size: 14px; font-weight: 600;">HUELLA</span>
+
+                        <!-- 3. Espaciador invisible a la derecha para compensar y balancear el peso del ícono -->
+                        <div style="width: 32px;"></div>
+                    </div>
+                </ion-button>
+            </form>
+
+        </div>
+    </div>
 </ion-content>
+
+<!-- Footer minimalista -->
+<ion-footer class="ion-no-border login-footer">
+    <div class="ion-text-center">
+        <ion-text color="medium">
+            <p>Solaxgen PPA • v26.8.0</p>
+        </ion-text>
+    </div>
+</ion-footer>

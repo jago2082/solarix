@@ -1,111 +1,123 @@
-<app-header [headerName]="config?.plural || 'Administración'"></app-header>
+<app-header [headerName]="config?.plural || 'GESTIÓN'"></app-header>
 
-<ion-content class="ion-padding" color="secondary">
+<div class="admin-bg main-layout-container">
 
-  <ion-button expand="block" (click)="abrirModal()" class="ion-margin-bottom">
-    <ion-icon slot="start" name="add"></ion-icon>
-    Agregar {{ config?.label || 'registro' }}
-  </ion-button>
+    <!-- Botón Agregar -->
+    <div class="action-bar">
+        <ion-button expand="block" color="primary" class="btn-add-user" (click)="abrirModal()">
+            <ion-icon slot="start" name="add-outline"></ion-icon>
+            AGREGAR {{ config?.label | uppercase }}
+        </ion-button>
+    </div>
 
-  <div class="p-input-icon-left ion-margin-bottom">
-    <i class="pi pi-search"></i>
-    <input type="text" pInputText placeholder="Buscar..." (input)="aplicarFiltroGlobal($event)" />
-  </div>
+    <!-- Tarjeta Contenedora de la Tabla -->
+    <ion-card class="table-card">
 
-  <p-table
-    #table
-    [value]="items"
-    [paginator]="true"
-    [rows]="10"
-    [rowsPerPageOptions]="[5,10,20]"
-    [globalFilterFields]="globalFilterFields"
-    [responsiveLayout]="'scroll'"
-    [showCurrentPageReport]="true"
-    currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
-    class="mi-tabla p-datatable-sm p-datatable-gridlines p-datatable-striped"
-  >
-    <ng-template pTemplate="header">
-      <tr>
-        <th *ngFor="let field of tableFields">{{ field.label }}</th>
-        <th>Acciones</th>
-      </tr>
-    </ng-template>
+        <!-- Buscador -->
+        <div class="p-input-icon-left search-container">
+            <i class="pi pi-search"></i>
+            <input type="text" pInputText placeholder="Buscar..." (input)="aplicarFiltroGlobal($event)" class="search-input" />
+        </div>
 
-    <ng-template pTemplate="body" let-item>
-      <tr>
-        <td *ngFor="let field of tableFields">{{ displayValue(item, field) }}</td>
-        <td>
-          <ion-button fill="clear" size="small" color="primary" (click)="abrirModal(item)">
-            <ion-icon slot="icon-only" name="create"></ion-icon>
-          </ion-button>
-          <ion-button fill="clear" size="small" color="danger" (click)="eliminar(item)">
-            <ion-icon slot="icon-only" name="trash"></ion-icon>
-          </ion-button>
-        </td>
-      </tr>
-    </ng-template>
-  </p-table>
+        <!-- Tabla PrimeNG -->
+        <div class="table-wrapper">
+            <p-table #table [value]="items" [paginator]="true" [rows]="10" [rowsPerPageOptions]="[5,10,20]" [globalFilterFields]="globalFilterFields" [responsiveLayout]="'scroll'" [showCurrentPageReport]="true" currentPageReportTemplate="Mostrando {first} a {last} de {totalRecords} registros"
+                class="tabla-moderna p-datatable-sm p-datatable-gridlines p-datatable-striped">
 
-  <app-footer></app-footer>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th *ngFor="let field of tableFields">{{ field.label | uppercase }}</th>
+                        <th class="ion-text-center">ACCIONES</th>
+                    </tr>
+                </ng-template>
 
-  <ion-modal [isOpen]="isModalOpen" (didDismiss)="cerrarModal()">
+                <ng-template pTemplate="body" let-item>
+                    <tr>
+                        <td *ngFor="let field of tableFields" [ngClass]="{'texto-fuerte': field.key === 'id' || field.key === 'codigo'}">
+                            <ng-container *ngIf="field.key !== 'estado'; else estadoBadge">
+                                {{ displayValue(item, field) }}
+                            </ng-container>
+                            <ng-template #estadoBadge>
+                                <span class="badge-estado" [ngClass]="{'activo': item[field.key] === 'A' || item[field.key] === 'ACTIVO' || item[field.key] === 'R'}">
+                                    {{ item[field.key] === 'A' || item[field.key] === 'ACTIVO' ? 'Activo' : (item[field.key] === 'R' ? 'Realizada' : 'Inactivo') }}
+                                </span>
+                            </ng-template>
+                        </td>
+                        <td class="ion-text-center acciones-cell">
+                            <ion-button fill="clear" size="small" color="primary" (click)="abrirModal(item)" title="Editar">
+                                <ion-icon slot="icon-only" name="create-outline"></ion-icon>
+                            </ion-button>
+                            <ion-button fill="clear" size="small" color="danger" (click)="eliminar(item)" title="Eliminar">
+                                <ion-icon slot="icon-only" name="trash-outline"></ion-icon>
+                            </ion-button>
+                        </td>
+                    </tr>
+                </ng-template>
+            </p-table>
+        </div>
+
+    </ion-card>
+
+    <app-footer></app-footer>
+</div>
+
+<!-- Modal Formulario Dinámico -->
+<ion-modal [isOpen]="isModalOpen" (didDismiss)="cerrarModal()" class="modern-modal">
     <ng-template>
-      <ion-header>
-        <ion-toolbar color="primary">
-          <ion-title>{{ editing ? 'Editar' : 'Nuevo' }} {{ config?.label || 'registro' }}</ion-title>
-          <ion-buttons slot="end">
-            <ion-button (click)="cerrarModal()">
-              <ion-icon slot="icon-only" name="close"></ion-icon>
-            </ion-button>
-          </ion-buttons>
-        </ion-toolbar>
-      </ion-header>
+        <ion-header class="ion-no-border">
+            <ion-toolbar color="primary">
+                <ion-title>{{ editing ? ('Editar ' + config?.label) : ('Nuevo ' + config?.label) }}</ion-title>
+                <ion-buttons slot="end">
+                    <ion-button color="light" (click)="cerrarModal()">
+                        <ion-icon slot="icon-only" name="close-outline"></ion-icon>
+                    </ion-button>
+                </ion-buttons>
+            </ion-toolbar>
+        </ion-header>
 
-      <ion-content class="ion-padding" color="secondary">
-        <form [formGroup]="form" (ngSubmit)="guardar()">
-          <ng-container *ngFor="let field of formFields; trackBy: trackByField">
+        <div class="modal-body-container">
+            <form [formGroup]="form" (ngSubmit)="guardar()" class="modal-form-wrapper">
+                <div *ngFor="let field of formFields; trackBy: trackByField" class="field-container">
 
-            <ion-input
-              *ngIf="field.type === 'text' || field.type === 'number' || field.type === 'email' || field.type === 'password' || field.type === 'date' || field.type === 'datetime-local'"
-              [type]="field.type"
-              [placeholder]="field.label"
-              [formControlName]="field.key"
-              fill="outline"
-              class="primary-input ion-margin-top"
-            ></ion-input>
+                    <!-- Entradas de Texto / Número / Email / Password / Fecha / Datetime -->
+                    <ion-input *ngIf="field.type === 'text' || field.type === 'number' || field.type === 'email' || field.type === 'password' || field.type === 'date' || field.type === 'datetime-local'" [type]="field.type" [placeholder]="field.label | uppercase" [formControlName]="field.key"
+                        fill="outline" class="primary-input">
+                    </ion-input>
 
-            <ion-select
-              *ngIf="field.type === 'select'"
-              [formControlName]="field.key"
-              fill="outline"
-              class="primary-input ion-margin-top"
-              [label]="field.label"
-              labelPlacement="floating"
-            >
-              <ion-select-option *ngFor="let opt of field.options || []" [value]="opt.value">{{ opt.label }}</ion-select-option>
-            </ion-select>
+                    <!-- Textarea -->
+                    <ion-textarea *ngIf="field.type === 'textarea'" [placeholder]="field.label | uppercase" [formControlName]="field.key" fill="outline" rows="3" class="primary-input">
+                    </ion-textarea>
 
-            <ion-textarea
-              *ngIf="field.type === 'textarea'"
-              [placeholder]="field.label"
-              [formControlName]="field.key"
-              fill="outline"
-              class="primary-input ion-margin-top"
-            ></ion-textarea>
+                    <!-- Selects (Soporta Opciones Estáticas y Fuentes Dinámicas Lookups) -->
+                    <ion-select *ngIf="field.type === 'select'" [formControlName]="field.key" fill="outline" class="primary-input" [label]="field.label" labelPlacement="floating">
 
-            <ion-text color="danger" *ngIf="form.get(field.key)?.invalid && form.get(field.key)?.touched">
-              <p>{{ field.label }} requerido</p>
-            </ion-text>
-          </ng-container>
+                        <!-- Opciones Estáticas -->
+                        <ng-container *ngIf="field.options">
+                            <ion-select-option *ngFor="let opt of field.options" [value]="opt.value">
+                                {{ opt.label }}
+                            </ion-select-option>
+                        </ng-container>
 
-          <div class="ion-margin-top">
-            <ion-button expand="block" color="primary" type="submit" [disabled]="saving">
-              {{ editing ? 'Actualizar' : 'Registrar' }}
-            </ion-button>
-          </div>
-        </form>
-      </ion-content>
+                        <!-- Opciones Dinámicas (Lookups) -->
+                        <ng-container *ngIf="field.source && lookups[field.key]">
+                            <ion-select-option *ngFor="let item of (lookups[field.key] | keyvalue)" [value]="item.key">
+                                {{ item.value[field.source.labelField] || item.value['nombre'] || item.key }}
+                            </ion-select-option>
+                        </ng-container>
+                    </ion-select>
+
+                    <!-- Validación de Errores -->
+                    <ion-text color="danger" *ngIf="form.get(field.key)?.invalid && form.get(field.key)?.touched">
+                        <p class="error-text">{{ field.label }} es requerido</p>
+                    </ion-text>
+                </div>
+
+                <div class="submit-container">
+                    <ion-button expand="block" color="primary" type="submit" class="btn-save" [disabled]="saving">
+                        {{ editing ? 'Actualizar' : 'Registrar' }}
+                    </ion-button>
+                </div>
+            </form>
+        </div>
     </ng-template>
-  </ion-modal>
-
-</ion-content>
+</ion-modal>

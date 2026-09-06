@@ -12,12 +12,47 @@ require 'vendor/autoload.php';
 $config = ['settings' => ['displayErrorDetails' => true]];
 $app = new \Slim\App($config);
 
+// --- FIX PARA LITESPEED / SUBDOMINIOS ---
+$container = $app->getContainer();
+$container['environment'] = function () {
+    $server = $_SERVER;
+    $server['SCRIPT_NAME'] = '/index.php'; 
+    
+    $uri = $server['REQUEST_URI'];
+    
+    // Lista de tus módulos (rutas que necesitan el /api)
+    $apiModules = [
+        '/usuarios', '/roles', '/usuario-roles', '/sesiones', '/clientes', 
+        '/contactos', '/sedes', '/visitas', '/proyectos', '/planes-ppa', 
+        '/variables-plantilla', '/textos-parametrizables', '/configuracion-empresa', 
+        '/plantillas-documento', '/plantilla-secciones', '/plantilla-variables'
+    ];
+    
+    // Si la URI empieza con alguno de tus módulos, le reponemos el '/api' que borró LiteSpeed
+    foreach ($apiModules as $module) {
+        if (strpos($uri, $module) === 0) {
+            $server['REQUEST_URI'] = '/api' . $uri;
+            break;
+        }
+    }
+    
+    return new \Slim\Http\Environment($server);
+};
+
+// Agregamos una ruta raíz por si alguien entra al dominio directamente sin nada
+$app->get('/', function ($request, $response) {
+    return $response->withRedirect('/docs'); // Te enviará directo al Swagger
+});
+
 // --- RUTAS GENERADAS ---
 $app->group('/api/usuarios', function () use ($app) {
+    // LOGIN MOVIDO AQUÍ PARA QUE LA RUTA SEA /api/usuarios/login
+    $app->post('/login', \App\Controllers\UsuarioController::class . ':login');
+    
     $app->get('', \App\Controllers\UsuarioController::class . ':getAll');
     $app->get('/{id}', \App\Controllers\UsuarioController::class . ':getById');
     $app->post('', \App\Controllers\UsuarioController::class . ':create');
-    $app->put('/{id}', \App\Controllers\UsuarioController::class . ':update');
+    $app->put('/{id}[/]', \App\Controllers\UsuarioController::class . ':update');
     $app->delete('/{id}', \App\Controllers\UsuarioController::class . ':delete');
 });
 
@@ -141,13 +176,10 @@ $app->group('/api/plantilla-variables', function () use ($app) {
     $app->delete('/{id}', \App\Controllers\PlantillaVariableController::class . ':delete');
 });
 
-$app->group('/api/auth', function () use ($app) {
-    $app->post('/login', \App\Controllers\UsuarioController::class . ':login');
-});
-
 $app->get('/hola', function ($request, $response) {
     return $response->withJson(['mensaje' => '¡Slim está enrutando perfectamente!']);
 });
+
 
 // --- CONFIGURACIÓN CORS ---
 
@@ -161,7 +193,6 @@ $app->add(function ($req, $res, $next) {
     $response = $next($req, $res);
     return $response
         ->withHeader('Access-Control-Allow-Origin', '*') 
-        // ¡Aquí está el cambio! Añadimos access-control-allow-origin y otros comunes
         ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization, access-control-allow-origin, cache-control')
         ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
 });

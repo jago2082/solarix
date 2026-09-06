@@ -111,11 +111,54 @@ class UsuarioDAO
         }
     }
 
-    public function update(UsuarioTO $obj, $id)
+public function update(UsuarioTO $usuario, $id)
     {
-        return false;
-    }
+        // IMPORTANTE: Verifica que el nombre de tu llave primaria sea 'id'. 
+        // Si en tu tabla se llama distinto (ej. 'lInUsu_id'), c¨¢mbialo en la l¨ªnea del WHERE.
+        $sql = "UPDATE usuarios SET 
+                    lStUsu_nomb = :nombres, 
+                    lStUsu_apel = :apellidos, 
+                    lStUsu_noco = :nombreCompleto, 
+                    lStUsu_codi = :codigo, 
+                    lStUsu_emai = :email, 
+                    lStUsu_pass = :password, 
+                    lStUsu_tele = :telefono, 
+                    lStUsu_esta = :estado
+                WHERE lInUsu_cont = :id";
 
+        try {
+            $stmt = $this->conn->prepare($sql);
+
+            // Mapeamos los datos del TO a la consulta SQL
+            $stmt->bindValue(':nombres', $usuario->getNombres());
+            $stmt->bindValue(':apellidos', $usuario->getApellidos());
+            $stmt->bindValue(':nombreCompleto', $usuario->getNombreCompleto());
+            $stmt->bindValue(':codigo', $usuario->getCodigo());
+            $stmt->bindValue(':email', $usuario->getEmail());
+            $stmt->bindValue(':password', $usuario->getPassword());
+            $stmt->bindValue(':telefono', $usuario->getTelefono());
+            $stmt->bindValue(':estado', $usuario->getEstado());
+            
+            // Pasamos el ID que viene por la URL
+            $stmt->bindValue(':id', $id);
+
+            $stmt->execute();
+
+            // rowCount() nos dice cu¨¢ntas filas fueron alteradas realmente
+            if ($stmt->rowCount() > 0) {
+                return ['status' => 'success', 'message' => 'Usuario actualizado exitosamente'];
+            } else {
+                return ['status' => 'warning', 'message' => 'No se encontraron cambios para hacer o el usuario no existe'];
+            }
+
+        } catch (\PDOException $e) {
+            return [
+                'status' => 'error',
+                'message' => 'Error al actualizar en la base de datos: ' . $e->getMessage()
+            ];
+        }
+    }
+    
     public function delete($id): array
     {
         $sql = "UPDATE usuarios SET lStUsu_esta = 'I' WHERE lInUsu_cont = :id";

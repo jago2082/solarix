@@ -1,18 +1,174 @@
-.logo {
-  width: 50%;
-  margin: 20% 0 20% 0;
+/* Fondo de la pantalla */
+
+.login-bg {
+    --background: #f1f5f9;
+    /* Gris azulado muy tenue, reemplaza tu color="secondary" */
 }
 
 
-.imgLogo{
-  width: 200px;
-  height: auto
+/* Flexbox para centrar la tarjeta vertical y horizontalmente */
+
+.login-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 20px;
 }
 
-.title {
-  margin-bottom: 30px;
+
+/* Diseño de la Tarjeta Flotante */
+
+.login-card {
+    background: #ffffff;
+    width: 100%;
+    max-width: 420px;
+    /* Limita el ancho en monitores grandes */
+    border-radius: 16px;
+    padding: 40px 30px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    /* Sombra suave y moderna */
 }
 
-.title p {
-  margin-top: 0 !important;
+
+/* Logo y Tipografía */
+
+.logo-container {
+    margin-bottom: 35px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* Centra todo perfectamente */
+    justify-content: center;
+    width: 100%;
+    .logo-img {
+        max-width: 200px;
+        margin-bottom: 12px;
+    }
+    .app-subtitle {
+        font-size: 15px;
+        color: #64748b;
+        font-weight: 500;
+        margin: 0 auto;
+        /* Ajuste para centrar */
+        text-align: center !important;
+        /* Forza el centrado sobre Ionic */
+        width: 100%;
+        display: block;
+        /* Asegura que ocupe todo el ancho disponible */
+    }
+}
+
+
+/* Entradas de Texto (Inputs) */
+
+.modern-input {
+    --border-radius: 8px;
+    --border-color: #cbd5e1;
+    --highlight-color-focused: var(--ion-color-primary);
+    /* Se pintará del color primario al enfocar */
+    font-size: 14px;
+}
+
+
+/* Forzar mayúsculas en el email */
+
+.input-mayusculas,
+.input-mayusculas::part(native) {
+    text-transform: uppercase !important;
+}
+
+
+/* Enlace de recuperación */
+
+.forgot-password-container {
+    text-align: right;
+    margin-top: 10px;
+    margin-bottom: 25px;
+    .forgot-link {
+        font-size: 13px;
+        color: var(--ion-color-primary);
+        /* Usa el tono azul/cian */
+        font-weight: 600;
+        text-decoration: none;
+        cursor: pointer;
+        transition: opacity 0.2s;
+        &:hover {
+            opacity: 0.7;
+        }
+    }
+}
+
+
+/* Botón Principal */
+
+.btn-ingresar {
+    --border-radius: 8px;
+    --box-shadow: 0 4px 12px rgba(var(--ion-color-primary-rgb), 0.3);
+    /* Sombra que respira con el color primario */
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    height: 48px;
+}
+
+
+/* Línea divisoria moderna (--- O ingresa con ---) */
+
+.divider {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 25px 0;
+    color: #94a3b8;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    &::before,
+    &::after {
+        content: '';
+        flex: 1;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    &::before {
+        margin-right: 15px;
+    }
+    &::after {
+        margin-left: 15px;
+    }
+}
+
+
+/* Botón biométrico */
+
+.btn-biometric {
+    --border-radius: 8px;
+    font-weight: 500;
+    font-size: 14px;
+    height: 48px;
+    width: 100%;
+}
+
+
+/* Forzar el centrado absoluto en el botón biométrico (NUEVA CLASE) */
+
+.centrar-contenido {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    /* Crea una separación perfecta entre el icono y el texto */
+    width: 100%;
+}
+
+
+/* Footer invisible */
+
+.login-footer {
+    background: transparent;
+    padding-bottom: 15px;
+    p {
+        font-size: 12px;
+        margin: 0;
+    }
 }

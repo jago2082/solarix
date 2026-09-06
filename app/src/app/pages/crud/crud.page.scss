@@ -1,11 +1,224 @@
-.mi-tabla th {
-  background-color: #008E45;
-  color: white;
+/* Fondo claro uniforme aplicado al contenedor principal */
+
+.admin-bg {
+    background: #f8fafc;
+    min-height: 100vh;
 }
 
-ion-input,
-ion-select,
-ion-textarea {
-  --background: white;
-  --color: black;
+
+/* Layout fluido con espaciado uniforme */
+
+.main-layout-container {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.action-bar {
+    margin-bottom: 16px;
+}
+
+
+/* Botón estilizado principal */
+
+.btn-add-user {
+    --border-radius: 12px;
+    --box-shadow: 0 4px 14px rgba(var(--ion-color-primary-rgb, 79, 70, 229), 0.25);
+    font-weight: 700;
+    height: 48px;
+    letter-spacing: 0.5px;
+}
+
+
+/* Tarjeta flotante contenedora */
+
+.table-card {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    margin: 0 0 24px 0;
+    padding: 20px;
+}
+
+.search-container {
+    width: 100%;
+    max-width: 360px;
+    margin-bottom: 20px;
+    i {
+        color: #94a3b8;
+    }
+}
+
+.search-input {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    padding: 10px 14px 10px 38px;
+    font-size: 14px;
+    color: #1e293b;
+    transition: all 0.25s ease;
+    &:focus {
+        outline: none;
+        background: #ffffff;
+        border-color: var(--ion-color-primary);
+        box-shadow: 0 0 0 3px rgba(var(--ion-color-primary-rgb), 0.15);
+    }
+}
+
+
+/* Forzado de estilos para la tabla PrimeNG */
+
+::ng-deep .tabla-moderna {
+    box-shadow: none;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #ffffff;
+    display: block;
+    .p-datatable-thead>tr>th {
+        background-color: #f8fafc !important;
+        color: #64748b !important;
+        font-weight: 700;
+        font-size: 12px;
+        border: none !important;
+        border-bottom: 1px solid #e2e8f0 !important;
+        padding: 14px 16px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .p-datatable-tbody>tr>td {
+        border: none !important;
+        border-bottom: 1px solid #f1f5f9 !important;
+        padding: 14px 16px;
+        color: #334155;
+        font-size: 14px;
+        vertical-align: middle;
+    }
+    .p-datatable-tbody>tr:hover {
+        background-color: #f8fafc;
+    }
+    .p-paginator {
+        background: transparent;
+        border: none;
+        padding-top: 16px;
+        font-size: 13px;
+        color: #64748b;
+    }
+}
+
+
+/* Tipografías e insignias */
+
+.texto-fuerte {
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.badge-estado {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    background: #fee2e2;
+    color: #991b1b;
+    display: inline-block;
+    &.activo {
+        background: #dcfce7;
+        color: #166534;
+    }
+}
+
+
+/* Columna de Acciones e Íconos */
+
+.acciones-cell {
+    white-space: nowrap;
+    ion-button {
+        --padding-start: 4px;
+        --padding-end: 4px;
+        margin: 0 2px;
+        ion-icon {
+            font-size: 20px !important;
+            display: inline-block;
+        }
+    }
+}
+
+
+/* ==========================================================================
+   CONFIGURACIÓN DEFINITIVA DEL MODAL (ALTURA Y DISPLAY CORREGIDOS)
+   ========================================================================== */
+
+::ng-deep ion-modal.modern-modal {
+    --height: auto !important;
+    --min-height: 280px !important;
+    --max-height: 85vh !important;
+    --width: 90% !important;
+    --max-width: 480px !important;
+    --border-radius: 20px !important;
+    --box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25) !important;
+    &::part(content) {
+        height: auto !important;
+        min-height: 280px !important;
+        border-radius: 20px;
+        overflow: hidden;
+    }
+    .ion-page {
+        position: relative !important;
+        display: block !important;
+        height: auto !important;
+    }
+}
+
+.modal-body-container {
+    background: #ffffff;
+    padding: 20px;
+    box-sizing: border-box;
+    max-height: calc(85vh - 56px);
+    overflow-y: auto;
+}
+
+.modal-form-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 14px;
+    height: auto;
+}
+
+.field-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.primary-input {
+    --background: #f8fafc;
+    --border-radius: 10px;
+    --border-color: #e2e8f0;
+    --padding-start: 14px;
+    color: #1e293b;
+    font-size: 14px;
+    width: 100%;
+    margin-top: 0 !important;
+}
+
+.error-text {
+    color: var(--ion-color-danger, #ef4444);
+    font-size: 11px;
+    margin: 4px 0 0 4px;
+    font-weight: 500;
+}
+
+.submit-container {
+    margin-top: 6px;
+}
+
+.btn-save {
+    --border-radius: 12px;
+    font-weight: 700;
+    height: 48px;
+    margin: 0;
 }

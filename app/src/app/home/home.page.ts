@@ -9,9 +9,6 @@ import { AlertService } from '../services/alert/alert.service';
 import { loginRequest } from '../models/loginrequest';
 import { settings } from '../../assets/config/config';
 
-
-
-
 @Component({
   standalone: true,
   selector: 'app-home',
@@ -19,6 +16,7 @@ import { settings } from '../../assets/config/config';
   styleUrls: ['home.page.scss'],
   imports: [IonicModule, CommonModule, FormsModule], // Importa IonicModule aquí
 })
+
 export class HomePage implements OnInit {
 
   user: loginRequest = new loginRequest();
@@ -51,7 +49,6 @@ export class HomePage implements OnInit {
     
   }
 
-    
   async login() {
     this.loading = true;
     const loading = await this._loadingCtrl.create({ message: 'Ingresando...' });
@@ -174,5 +171,8 @@ export class HomePage implements OnInit {
     await alert.present();
   }
 
-
+  loginBiometric() {
+    console.log('Iniciando sesión con biometría...');
+    // Aquí irá la lógica de Capacitor/Biometrics más adelante
+  }
 }

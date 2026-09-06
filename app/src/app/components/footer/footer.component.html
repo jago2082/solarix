@@ -1,15 +1,12 @@
-<ion-footer>
-  <ion-toolbar color="secondary">
-    <ion-buttons class="back-button-adjust" slot="start"> 
-      <ion-back-button *ngIf="logged()" defaultHref="/tabs" text="Atrás" color="primary" ></ion-back-button>
-        </ion-buttons >  
-        <ion-buttons slot="end">                
-              <ion-button (click)="getPass()"  *ngIf="!logged()">
-                <ion-icon slot="icon-only" src="assets/icons/settings.svg"></ion-icon>
-              </ion-button>
-              <ion-button (click)="goOut()" >
-                <ion-icon slot="icon-only" src="assets/icons/logout.svg"></ion-icon>
-              </ion-button>                                
+<ion-footer class="ion-no-border">
+    <ion-toolbar class="footer-limpio">
+
+        <!-- Botón de ATRÁS -->
+        <ion-buttons slot="start">
+            <ion-button color="primary" (click)="goBack()">
+                <ion-icon slot="start" name="arrow-back"></ion-icon>
+                ATRÁS
+            </ion-button>
         </ion-buttons>
-</ion-toolbar>
+    </ion-toolbar>
 </ion-footer>

@@ -76,7 +76,7 @@ class UsuarioBO {
 
             return [
                 'status' => 'success', 
-                'message' => 'Inicio de sesión exitoso',
+                'message' => 'Sesión iniciada correctamente',
                 'token' => $jwt, 
                 'rol' => $usuarioBD['rol'],
                 'code' => 200

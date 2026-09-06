@@ -68,7 +68,7 @@ export class AlertService {
   success(message: string) {
     Swal.fire({
       heightAuto: false,
-      title: 'Genial!',
+      title: '',
       text: message,
       icon: 'success',
       confirmButtonText: 'Aceptar',

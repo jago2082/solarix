@@ -12,6 +12,10 @@ import { TableModule } from 'primeng/table';
 import { InputTextModule } from 'primeng/inputtext';
 import { Table } from 'primeng/table';
 
+// Importar addIcons y los íconos específicos de Ionicons
+import { addIcons } from 'ionicons';
+import { create, trash, createOutline, trashOutline, addOutline, closeOutline } from 'ionicons/icons';
+
 @Component({
   selector: 'app-crud-generic',
   templateUrl: './crud.page.html',
@@ -54,7 +58,17 @@ export class CrudGenericComponent implements OnInit, OnChanges {
     private _alertCtrl: AlertController,
     private _sesion: SessionsService,
     private _entityConfig: EntityConfigService
-  ) {}
+  ) {
+    // REGISTRO DE ÍCONOS DE IONICONS
+    addIcons({
+      create,
+      trash,
+      'create-outline': createOutline,
+      'trash-outline': trashOutline,
+      'add-outline': addOutline,
+      'close-outline': closeOutline
+    });
+  }
 
   async ngOnInit() {
     if (!this._sesion.IsAdmin()) {
@@ -115,15 +129,25 @@ export class CrudGenericComponent implements OnInit, OnChanges {
       new Promise<void>((resolve) => {
         this._apiService.crudGetAll(field.source!.endpoint).subscribe({
           next: (res: any) => {
-            const list = Array.isArray(res) ? res : [];
+            let listData: any[] = [];
+            if (Array.isArray(res)) {
+              listData = res;
+            } else if (res && typeof res === 'object') {
+              listData = res.data || res.datos || res.result || res.usuarios || res.roles || Object.values(res).find(val => Array.isArray(val)) || [];
+            }
+
             this.lookups[field.key] = {};
-            for (const item of list) {
-              const key = item[field.source!.valueField];
-              this.lookups[field.key][key] = item;
+            for (const item of listData) {
+              const normalizedItem = this.normalizeItem(item);
+              const key = normalizedItem[field.source!.valueField] ?? item[field.source!.valueField];
+              if (key !== undefined && key !== null) {
+                this.lookups[field.key][key] = normalizedItem;
+              }
             }
             resolve();
           },
-          error: () => {
+          error: (err) => {
+            console.warn(`Error al cargar datos dinámicos para ${field.key}:`, err);
             this.lookups[field.key] = {};
             resolve();
           }
@@ -139,14 +163,48 @@ export class CrudGenericComponent implements OnInit, OnChanges {
     this._apiService.crudGetAll(this.config.endpoint).subscribe({
       next: (res: any) => {
         this.loading = false;
-        this.items = Array.isArray(res) ? res : [];
+
+        let rawList: any[] = [];
+        if (Array.isArray(res)) {
+          rawList = res;
+        } else if (res && typeof res === 'object') {
+          rawList = res.data || res.datos || res.result || res.roles || res.usuarios || Object.values(res).find(val => Array.isArray(val)) || [];
+        }
+
+        this.items = rawList.map(item => this.normalizeItem(item));
       },
       error: (err) => {
         this.loading = false;
-        console.error(err);
+        console.error('Error en loadItems:', err);
         this._alert.error('Error al consultar registros');
       }
     });
+  }
+
+  /**
+   * Homologa las respuestas entregadas por los DAO en PHP Slim
+   */
+  private normalizeItem(item: any): any {
+    if (!item || typeof item !== 'object') return item;
+
+    const normalized: Record<string, any> = { ...item };
+
+    // Claves primarias
+    normalized['id'] = item.id ?? item.lInUro_cont ?? item.rol_id ?? item.rolId ?? item.codigo ?? item.id_rol;
+    
+    // Relaciones
+    normalized['usuarioId'] = item.usuarioId ?? item.lInUsu_cont ?? item.usuario_id ?? item.id_usuario;
+    normalized['rolId'] = item.rolId ?? item.lInRol_cont ?? item.rol_id ?? item.id_rol;
+    normalized['clienteId'] = item.clienteId ?? item.cliente_id ?? item.id_cliente;
+    normalized['sedeId'] = item.sedeId ?? item.sede_id ?? item.id_sede;
+
+    // Atributos de texto
+    normalized['nombre'] = item.nombre ?? item.rol_nombre ?? item.rolNombre ?? item.nombres ?? item.nombreCompleto ?? item.email;
+    normalized['descripcion'] = item.descripcion ?? item.rol_descripcion ?? item.rolDescripcion ?? '';
+    normalized['estado'] = item.estado ?? item.rol_estado ?? item.rolEstado ?? 'A';
+    normalized['fecha'] = item.fecha ?? item.fechaVisita ?? item.created_at;
+
+    return normalized;
   }
 
   aplicarFiltroGlobal(event: Event) {
@@ -159,15 +217,15 @@ export class CrudGenericComponent implements OnInit, OnChanges {
     if (field.source && this.lookups[field.key]) {
       const related = this.lookups[field.key][value];
       if (related) {
-        return related[field.source.labelField] || value;
+        return related[field.source.labelField] || related['nombre'] || value;
       }
       return value;
     }
     if (field.options) {
-      const option = field.options.find(o => o.value === value);
+      const option = field.options.find(o => o.value === value || o.value === String(value));
       return option ? option.label : value;
     }
-    return value;
+    return value !== undefined && value !== null ? String(value) : '';
   }
 
   abrirModal(item?: any) {
@@ -178,7 +236,16 @@ export class CrudGenericComponent implements OnInit, OnChanges {
     if (item) {
       const patch: Record<string, any> = {};
       for (const field of this.formFields) {
-        patch[field.key] = item[field.key];
+        let val = item[field.key] ?? '';
+
+        // Formateo de cadena de fecha/hora para compatibilidad con <ion-input type="datetime-local">
+        if (field.type === 'datetime-local' && val && typeof val === 'string') {
+          val = val.replace(' ', 'T').substring(0, 16);
+        } else if (field.type === 'date' && val && typeof val === 'string') {
+          val = val.substring(0, 10);
+        }
+
+        patch[field.key] = val;
       }
       this.form.patchValue(patch);
     } else {

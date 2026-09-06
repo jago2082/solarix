@@ -1,2 +1,8 @@
 [25-Aug-2026 20:30:11 America/Bogota] PHP Notice:  Undefined property: App\DAO\UsuarioDAO::$usuarioDAO in /home/systempo/api.enersolax.systemposfac.com.co/src/DAO/UsuarioDAO.php on line 28
 [25-Aug-2026 20:47:31 America/Bogota] PHP Notice:  Undefined property: App\DAO\UsuarioDAO::$usuarioDAO in /home/systempo/api.enersolax.systemposfac.com.co/src/DAO/UsuarioDAO.php on line 29
+[31-Aug-2026 22:08:42 America/Bogota] PHP Warning:  Required @OA\Info() not found in /home/systempo/api.enersolax.systemposfac.com.co/vendor/zircote/swagger-php/src/Loggers/DefaultLogger.php on line 23
+[01-Sep-2026 00:21:48 America/Bogota] PHP Warning:  Required @OA\Info() not found in /home/systempo/api.enersolax.systemposfac.com.co/vendor/zircote/swagger-php/src/Loggers/DefaultLogger.php on line 23
+[02-Sep-2026 00:46:44 America/Bogota] PHP Warning:  Required @OA\Info() not found in /home/systempo/api.enersolax.systemposfac.com.co/vendor/zircote/swagger-php/src/Loggers/DefaultLogger.php on line 23
+[02-Sep-2026 00:51:55 America/Bogota] PHP Warning:  Required @OA\Info() not found in /home/systempo/api.enersolax.systemposfac.com.co/vendor/zircote/swagger-php/src/Loggers/DefaultLogger.php on line 23
+[02-Sep-2026 13:32:13 America/Bogota] PHP Warning:  Required @OA\Info() not found in /home/systempo/api.enersolax.systemposfac.com.co/vendor/zircote/swagger-php/src/Loggers/DefaultLogger.php on line 23
+[02-Sep-2026 14:24:10 America/Bogota] PHP Warning:  Required @OA\Info() not found in /home/systempo/api.enersolax.systemposfac.com.co/vendor/zircote/swagger-php/src/Loggers/DefaultLogger.php on line 23

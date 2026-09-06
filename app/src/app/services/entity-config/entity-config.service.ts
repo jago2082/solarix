@@ -191,7 +191,7 @@ export class EntityConfigService {
       plural: 'Sesiones',
       fields: [
         { key: 'id', label: 'ID', type: 'number', showInTable: true },
-        { key: 'usuarioId', label: 'Usuario', type: 'select', required: true, source: { endpoint: 'usuarios', valueField: 'id', labelField: 'email' }, showInTable: true },
+        { key: 'usuarioId', label: 'Usuario', type: 'select', required: true, source: { endpoint: 'usuarios', valueField: 'id', labelField: 'nombre' }, showInTable: true },
         { key: 'token', label: 'Token', type: 'textarea', showInTable: false },
         { key: 'fechaExpiracion', label: 'Fecha expiración', type: 'datetime-local', showInTable: false },
         { key: 'fechaUltimoUso', label: 'Último uso', type: 'datetime-local', showInTable: false },
@@ -215,12 +215,12 @@ export class EntityConfigService {
     },
     'usuario-roles': {
       key: 'usuario-roles',
-      endpoint: 'usuario-roles',
+      endpoint: 'usuario-roles', // Homologado a 'usuario-roles'
       label: 'Asignación usuario-rol',
       plural: 'Asignaciones usuario-rol',
       fields: [
         { key: 'id', label: 'ID', type: 'number', showInTable: true },
-        { key: 'usuarioId', label: 'Usuario', type: 'select', required: true, source: { endpoint: 'usuarios', valueField: 'id', labelField: 'email' }, showInTable: true },
+        { key: 'usuarioId', label: 'Usuario', type: 'select', required: true, source: { endpoint: 'usuarios', valueField: 'id', labelField: 'nombre' }, showInTable: true },
         { key: 'rolId', label: 'Rol', type: 'select', required: true, source: { endpoint: 'roles', valueField: 'id', labelField: 'nombre' }, showInTable: true }
       ]
     },
@@ -253,7 +253,7 @@ export class EntityConfigService {
         { key: 'id', label: 'ID', type: 'number', showInTable: true },
         { key: 'clienteId', label: 'Cliente', type: 'select', required: true, source: { endpoint: 'clientes', valueField: 'id', labelField: 'nombreCompleto' }, showInTable: true },
         { key: 'sedeId', label: 'Sede', type: 'select', source: { endpoint: 'sedes', valueField: 'id', labelField: 'nombre' }, showInTable: false },
-        { key: 'usuarioId', label: 'Técnico', type: 'select', required: true, source: { endpoint: 'usuarios', valueField: 'id', labelField: 'email' }, showInTable: true },
+        { key: 'usuarioId', label: 'Técnico', type: 'select', required: true, source: { endpoint: 'usuarios', valueField: 'id', labelField: 'nombre' }, showInTable: true },
         { key: 'fecha', label: 'Fecha', type: 'datetime-local', required: true, showInTable: true },
         { key: 'observaciones', label: 'Observaciones', type: 'textarea', showInTable: false },
         { key: 'estado', label: 'Estado', type: 'select', required: true, options: [{ label: 'Pendiente', value: 'P' }, { label: 'Realizada', value: 'R' }, { label: 'Cancelada', value: 'C' }], showInTable: true }

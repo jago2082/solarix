@@ -1,49 +1,79 @@
-ion-card {
-  cursor: pointer;
+/* Fondo general del panel (Gris tenue para dar contraste a las tarjetas) */
+
+.admin-bg {
+    --background: #f8fafc;
 }
 
-.menu-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 1rem;
-  min-height: 140px;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.1s ease;
+
+/* Tarjetas flotantes estilo SaaS */
+
+.modern-menu-card {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 24px 16px;
+    background: #ffffff;
+    border-radius: 20px;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    /* Efecto de elevación al pasar el mouse */
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 24px rgba(var(--ion-color-primary-rgb, 79, 70, 229), 0.12);
+        border-color: rgba(var(--ion-color-primary-rgb), 0.3);
+    }
 }
 
-.menu-card:active {
-  transform: scale(0.98);
+
+/* Contenedor "Squircle" del ícono con fondo translúcido */
+
+.modern-icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    border-radius: 16px;
+    /* Fondo con 10% de opacidad del color primario Slate Indigo */
+    background: rgba(var(--ion-color-primary-rgb, 79, 70, 229), 0.1);
+    margin: 0 auto 16px auto;
+    transition: transform 0.3s ease;
 }
 
-.menu-icon-wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: var(--ion-color-primary);
-  margin-bottom: 0.75rem;
+.modern-menu-card:active .modern-icon-wrapper {
+    transform: scale(0.9);
 }
 
-.menu-icon {
-  font-size: 32px;
-  color: #fff;
+
+/* El ícono hereda el color primario dinámico */
+
+.modern-icon {
+    font-size: 30px;
+    color: var(--ion-color-primary);
+    line-height: 1;
 }
 
-.menu-title {
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 0;
+
+/* Tipografías del menú */
+
+.modern-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 4px 0;
+    letter-spacing: -0.3px;
 }
 
-.menu-subtitle {
-  font-size: 0.75rem;
-  color: var(--ion-color-medium);
-  padding: 0;
-  margin-top: 0.25rem;
+.modern-subtitle {
+    font-size: 13px;
+    color: #64748b;
+    padding: 0;
+    margin: 0;
+    font-weight: 400;
 }

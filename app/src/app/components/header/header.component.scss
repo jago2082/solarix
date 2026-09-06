@@ -1,27 +1,13 @@
-.back-button-adjust {
-  margin-top: 8px; // ajusta el valor a lo que necesites
+.header-blanco {
+    --background: #ffffff;
+    --border-width: 0;
+    box-shadow: 0 1px 15px rgba(0, 0, 0, 0.04);
 }
 
-ion-button {
-	ion-badge {
-	    position: absolute;
-    opacity: 0.9;
-    top: 10;
-    right: 0;
-    font-size: 10px;
-    background-color: lightcoral;
-    color: black;
-    padding: 3px;
-		& ~ ion-icon {
-			margin-right: 1.2rem;
-		}
-	}
-}
-.wrap-text {
-  overflow: visible;
-  text-overflow: unset;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  white-space: normal;
-  word-break: break-all;
+.titulo-oscuro {
+    color: #0f172a;
+    /* Gris pizarra casi negro */
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 0.3px;
 }

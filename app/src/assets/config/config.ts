@@ -1,31 +1,38 @@
 import { gnconex } from "../../app/models/gnconex";
 
-export const centralizacionUrl :string= "https://consultoria.digitalware.co:442/Apps/Centralizacion/api/";
-export const appVersion:string = '26.0.8.0';
-export const appCopyright = 'SYSTEM POSFAC © 2020-2025';
-export const appGooglePlayUrl = "";
-export const appAppStoreUrl = "";
-export const developer = 'ESP SOLUCIONES INFORMATICAS S.A.S.';
-export const developerMail = 'proyectos@systemposfac.com.co';
-export const developerWeb = 'https://www.systemposfac.com.co';
-export const developerMode:boolean = false;
-// export const developerUrl="http://localhost/RSEVSERV/api/"ApiRestSystemPosFac
-export const developerUrl="https://api.enersolax.systemposfac.com.co/"
-export const url_cliente="https://api.enersolax.systemposfac.com.co/"
-export const name_client="SOLAXGEN"
-export const logoCompany ="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKoAAAA5CAYAAACmhLBvAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAhdEVYdENyZWF0aW9uIFRpbWUAMjAyNjowODoyNSAxOTozMDo1OL/2oWMAAA/wSURBVHhe7ZsJcBVVFoZPEkAICVsSlqAMiwriyqgoWiAooIiMQZChFBhxHLFUUEpQqVEoR7RGXMZ1dCo4og6yKQXIZhAUEYQAWUhCCAkhIRBCQhYSsr/kzvlv3+Z1vyV5DwLlq7pf1an0Xbr7dfff595z+iZIMKTR/M4JVn81mt81WqiagEALVRMQaKFqAgItVE1AoIWqCQi0UDUBgRaqJiDQQtUEBFqomoBAC1UTEGihagICLVRNQHBRhVrb6KB15emqpNGcPxdlmR8EurQihd4vS6LLRDDt7f0X1RJ4/Pzzz1RUVKRKRJdffjkNGTJElTSXihYXal79GfrTydWU56gmYpH2CQ6jvX2mqNbAY/jw4bR9+3ZVInr44Ydp5cqVqqS5VJzX0L+9Jou9Zr0q2Vl8JpnFyiJt5EObptFcIH6rqFE00pyyLTS26Bs6Vl+map0cqOM6EWJYYyvjr0Zzgfgt1LT6U5TtOEuJtadpVMFyN7E2Si9qESm2LVQ21NPMnHgamhZHf8veS2uLj1NNg0O1ajSe8VuoO2uOG+JjEZ5uqKO/Fv4gg6dziCAlUEOwrYkFqzjrqKNJR3bQ8rJ8OlRbQ2tKC+mJoyk0KPkXyqisUL00Gnf8FmpBQxULkXdjC2JLrCmh6Sc3yymBxPSi+MvtQ0K7y2qI9M/ZOym+stzWDkFP6NKD+rcPl/00Gk/4HfV/U5FKs4p/MjymEizsm+6jaHR4b3owN452VhbJ9rFh0fTJFUMohN+HiVk7KL6KRWruI8UaTCPCI2hp/0HUOpjrfMThcNC3335LmzZtosLCQgoJCaGbbrqJJk+eTNddd53q5Q4uddeuXbR161bat28f1dfXU+fOnWno0KE0adIkioiIUD2d+BL14zjff/89/fjjj3T06FEKCgqiG2+8kR599FH5e/Ly8mj37t2qN8m2K664gtavX69qDHANV111lSo52bx5M1VUOEeca665xu06Dxw4QBs3bqTffvuN6urqqEePHnTvvfdSTEyMbF+3bp38C8LDw+m+++5TJSfFxcX03Xff0Z49eyg/P1/e1wEDBsjj3HPPPRTs8oxwrbiPJrfccotM323YsIHi4uJke+vWreU9fOSRR6h7d8NpnRcQqj9wtC9mnYoTEVn/FhGZn4mIjFgRcehzEVucItsfy90u/pG/X2RUlcpylaNeTM78VUQmrBGR+78XkXs3iMj4TSJyT5z4e3a6qGtokP18ZdWqVeLKK6/Ey+VmrVq1ElOmTBF8k1VvJ4mJiYIF6XE/WJs2beS+x48fV3sY3HXXXbZ+LFTVYsDCF9dff72tj9XGjRsnFi1aZKt77733RGNjo3juueds9f379xdlZWXqyAbvvPOOW5+CggLZxi+pNH7JbH2s1rNnT7F8+XJbHY5hpaqqSsyePVveA2s/q+Ges2NQexgsXrzY1ufll18WAwcOtNWZ1q5dOzFv3jzBL7Xa2z/8FqrJu0V7lEj/KyIOLhHZ1YYwG/gBWOFASawsyhHj0lmsezeySDeLHnu2iC/yj6kevsMey+NNcDX2SqKkpETtJQR7CcFvtse+roaHyN5L7dm0UFevXu3zca0GoYIGfklHjx5ta4OwIWLAXtjWhod98OBB2YYXCtcJs/bxZG3btrWVrUKtrKxs8gW2GhzBtm3b1J7uQvXFPvvsM7W3f5y3UMG7hftERPoSMSJrrappmsKaKrG+uEBknC1XNf7xwAMP2C6ahzcxYcIEwcOYTTBXX321SEhIkPukpKSI9u3b2/Zrzni4PCcWb0LNzs4WPITa2mD4HRBCp06d3NpMM4UK4P15ymFr//TTT+X5Xc89d+5cuQ8EzkOxrc00iHLw4MHi5ptv9tgOswr1ySefdGvv16+fGD9+vLyvrveOp0ri5MmTcl9vQo2MjBRDhgwRPD1xaxs0aJDc118uSKhg1vEd4l+nklXp4oIbbL1ocwgE8D4QbmxsrOA5mqoVbg8UN/rzzz8/N8RCcDx/svWB/fDDD7Ldm1B5Pmyrh2hxbgyjoKamRpY7dOhg6wezChXw/NHWDnFgmLTW4eHzHFL2xwhhbTPthRdeEKWlxsgGMC2YNm2aWz9TqHiZrfU475dffilfBJOioiI3rz9z5kzZ5kmo8+fPl9dugnvt2sf6G32lSaHm1JaKkXkrxMhjq8TI3O/EyJzVYuTRNWJk9joxI2+7OMzDfU1DvSiur1Z7NE05CyjmQIIYlZggRickidH7k9lSxOh9aWJeeq44VeMUmCdc54ILFy4Up06dUq3GXMtKenq6rX/Xrl2lMF2B93r77bdtfTEcAk9CPX36tBwGzTqIkYMZ2d+V1NRUN4/pKlTw5ptv2vpYDS8BXkQTDk7c+kAQnsC1TZ061dbXFOpjjz1mq1+2bJmsdwXCg5c2+0HQeNFdhTpmzBi1hxOc//7777f142BWtfpOk6H2H9p0oqigdjIFZVgpW5m0b8/k0ficbfLMXVq1NXZohnCOAAeHd6LEs9WUWAGrocRyWC0tzi+l6Uk5eHFUb3cQfVp55ZVXqFu3bnTbbbfRSy+9RIcPH1YtBhxAqS0DROF9+vRRJSeI0tkb0Q033KBqiHbs2EH8MFTJDiJdZB5MeEpC/BKpkp1rr72Wnn/+eVXyDntQYs+lSnZYEPIaAYtGLpSxgmt6/PHHVckOru2pp55SJTvIfljhl4peffVVN2OHQDyVUb2IeF5Lv/76qyo5uf3229WWE5wfUb8VZBf8pdmc0JzOt/I7YOY92cwvT7xdUO+gTWeOq56+8UzPy6k9PgJYjynTVcG0t7yOthV6T/xDmDz3UiUn8fHxxJG1TO9Mnz793I3guZT8a2IVoiu4oTy3VSUDDsjUlp3y8nK1ZdC3b1+15RnX43rjjTfeUFtOpkyZIlNnJkiFuRIVFaW2PMMRu9pywsO7TJtZwfkhSk+GdJMVHsnUlpOePXuqLTs8+qit86dZof4xtDvFhPZWAmUzhaVsRbH9YpujA3vViZGRtmM4jxtCbx8p8epVO3bsSL/88gu9/vrrFBYWpmrtLFmyhHi4prNnz6qai09TowBort0kLS1NbTlB/rW5a/EkXis8JVJbLQde7EsJK6R5Pom+i+ZF3Eh3h0azdZd2D6x9Nz5AsPzq5At51bVUy2/ygn696KnorjSiYwfDOoezhbG1p46tWtORCu/HCw0NlZ4V3oCjY5o4cSLxnEm1GuCBf/jhhzLpbSUpKUltuQMxZWRkqJJBly5d1JYdnpOqLQOe96otz7ge1xMYThcsWKBKTrKysmjWrFmqZCTrMd2xwnNxr9MUgI8criCZj48OViZMmCA/aPhiTY1OFwV+QJeMuelHxai9BzloqlU1/lNdXS0jU2vkyB5HvPXWW3Bb52zEiBFuwRSCGp7Hqr2cYMLPUwdbX3+DqeRkz5kPBFMseNsxXIOp2tpaMXbsWFsf1+Q7Ev8mM2bMsLXBeP4uo3xXEDy65lq9BVPeAjKA6N+aDQCuwRTKnsD1WvutXLlStfjOeQu12lEv/pOfKWYeSRIrT+WJM3VNi6/a4RB9fk4UUVuTxKjdh0WNw78vUrhJECi+tOBin3jiCduN4wDDdjOGDRsm613TU8hvfvzxx1JsECh7X/HQQw/Z+sDOJz2F4+KlAchAoOxLemrOnDm2dvZWYv/+/W6JejPyR7LfUw4X18ZBpYzely5dKr98ueZBYaZQeYSx1SMH/MEHH0hnYIJ7tH79enls5KwhWJPfvVAr6uvE/Qd3qM+hm0Xk7jgRvXureDQtSWRVGg/KJLXMSO5vLCiRIo3ackBExaWKSXtz/RLrhg0bbBcL69Wrl0xKQ0yuDxUPCVzqhD8MHsz191jNKtSNGzfa2vBbTe+MvKi1Db/F/F0fffSRrc0fM4UKnn76abd2XBdecHjp3r1729ogWPNT6qUUqk9zVCvVDQ76c+YeiseyPET/KhCq4791Ioh6tW0n++0qKaPxCWk0Pe2ILB8ox6p/M8oPoZ+Ka2ja/pNU34jf3jyjRo2iW2+9VZUMjh07JhdsYNEI0jYmmLPy8Ci3sXjjq6++kosjfAER+tdff91ssICUEHt4j8fNzMy0/R5v58aCmmnTpqmSASJsc/6HlBsWzZjgOnFO8Oyzz9Jrr70mrTl4GqS23GERyUU5VrAABqkrHlUoJydH1Rrgul2fw6XAb6HOy01xilSJDtsjwrvQ1wOupSoOlh5OSqOYlMO0s5wfFtqZPu3a8jZErYz3+el0Hf0vx57q8QYeNlYH3XHHHarGM3iwq1atkiuMTHhol+mV5tI4yIVi5Y+3jIIr48ePp9WrV8sAxxsDBw6k+fPnq5ITdhIy98lTEFVD8p8GeSRQJSPt9MUXX6iSAQKrQ4cOyW0cF8ZzS1ue0woCpNjYWFVy57LLLqMtW7bQgw8+qGq8g1wu7qOnVWYXG5+X+cGTzstNpaXFBTax4e+Mbj1pQZ++cqnewiO59OHxQm5DnxDq3boNxQ8dSA72nHNTT9LS/Mpz+wdxn5geYfSfm32/cOT/4FkgKCSoEe1CxDxEyYTz1KlTZRrLE8iv8rAjo39EyhzEyJuOpDw89t133+2W80O6y+pV0BdRrxV4dnhhHJfnj3I5HHKX+ECBlwT53G3btqneRIMHD5YZibVr16oaAx7aPeY8sYQQ3tcEfdDXCjx4QkICnThxQqajkLHAsjucB1kHLNczwTJD1wwITynkEkF4Unw4wRI91OFl4amMPB+WBnKQp/Yg+cLs3LlTlYjuvPNO23lMePolc90muM+ePrw0hc9CzayuoNiCHFpTXESlDt5FelOINJoW9nPe3JikDNpV6lxcLYU6rL9q5aEmo5j+mVUhF13jGG8O7Eh/7eebB9N4Bmtz8TLMnDlT1dh5//33afbs2apE8gPCihUrVCkw8HvhdKXDQZtYrJn81l7TPozGRXWlEMt8LiYxk+enplDhUVtT/HD7YuDZCcX0zQlMC4IpdWRXigo1pgca34GXf/HFF+U2pjoYVRYtWkTPPPOMbU6MDwZjxoyx5VmXLVsmF5kHEi3+f/0xCUdYqMb/9MP6skfdPcL+ibHa0UiTdpZQcFAwrR3mOamuaRrMj9esWaNKTqKjo+WQD7Hm5ubaVuADzMNRZx3CA4GWF+r+oyxU9pZyjhpMD0SG0X9vsX8hAmfrGulAiYPu6B5YN+z3AuaiZjSPLIMvYL6JBS0I8AINVlMLA4FykNWWWtGEbh3ores8R9phbYK1SC8ALABBIAPDwpWmFn7gky9WcCUnJwekSEGLe9TJ+07QgNA29GzfzhTZ9sJXzWh8A8EU/lkQ0TyGfIB/tMNqM2QpvKWvAoUWF+qZugbq2EYHR5qWpcWFqtFcDFp+jqrRXAS0UDUBgRaqJiDQQtUEBFqomoBAC1UTEGihagICLVRNQKCFqgkItFA1AYEWqiYAIPo/119a7rES14AAAAAASUVORK5CYII="
+// Configuración general de la aplicación
+export const centralizacionUrl: string = "https://consultoria.digitalware.co:442/Apps/Centralizacion/api/";
+export const appVersion: string = '26.0.8.0';
+export const appCopyright: string = 'SYSTEM POSFAC © 2020-2025';
 
+// Tiendas de aplicaciones
+export const appGooglePlayUrl: string = "";
+export const appAppStoreUrl: string = "";
 
+// Información del desarrollador
+export const developer: string = 'ESP SOLUCIONES INFORMATICAS S.A.S.';
+export const developerMail: string = 'proyectos@systemposfac.com.co';
+export const developerWeb: string = 'https://www.systemposfac.com.co';
+export const developerMode: boolean = false;
+
+// URLs y cliente
+export const developerUrl: string = "https://api.enersolax.systemposfac.com.co/";
+export const url_cliente: string = "https://api.enersolax.systemposfac.com.co/";
+export const name_client: string = "SOLAXGEN";
+
+// Recursos
+export const logoCompany: string = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKoAAAA5CAYAAACmhLBvAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAhdEVYdENyZWF0aW9uIFRpbWUAMjAyNjowODoyNSAxOTozMDo1OL/2oWMAAA/wSURBVHhe7ZsJcBVVFoZPEkAICVsSlqAMiwriyqgoWiAooIiMQZChFBhxHLFUUEpQqVEoR7RGXMZ1dCo4og6yKQXIZhAUEYQAWUhCCAkhIRBCQhYSsr/kzvlv3+Z1vyV5DwLlq7pf1an0Xbr7dfff595z+iZIMKTR/M4JVn81mt81WqiagEALVRMQaKFqAgItVE1AoIWqCQi0UDUBgRaqJiDQQtUEBFqomoBAC1UTEGihagICLVRNQHBRhVrb6KB15emqpNGcPxdlmR8EurQihd4vS6LLRDDt7f0X1RJ4/Pzzz1RUVKRKRJdffjkNGTJElTSXihYXal79GfrTydWU56gmYpH2CQ6jvX2mqNbAY/jw4bR9+3ZVInr44Ydp5cqVqqS5VJzX0L+9Jou9Zr0q2Vl8JpnFyiJt5EObptFcIH6rqFE00pyyLTS26Bs6Vl+map0cqOM6EWJYYyvjr0Zzgfgt1LT6U5TtOEuJtadpVMFyN7E2Si9qESm2LVQ21NPMnHgamhZHf8veS2uLj1NNg0O1ajSe8VuoO2uOG+JjEZ5uqKO/Fv4gg6dziCAlUEOwrYkFqzjrqKNJR3bQ8rJ8OlRbQ2tKC+mJoyk0KPkXyqisUL00Gnf8FmpBQxULkXdjC2JLrCmh6Sc3yymBxPSi+MvtQ0K7y2qI9M/ZOym+stzWDkFP6NKD+rcPl/00Gk/4HfV/U5FKs4p/MjymEizsm+6jaHR4b3owN452VhbJ9rFh0fTJFUMohN+HiVk7KL6KRWruI8UaTCPCI2hp/0HUOpjrfMThcNC3335LmzZtosLCQgoJCaGbbrqJJk+eTNddd53q5Q4uddeuXbR161bat28f1dfXU+fOnWno0KE0adIkioiIUD2d+BL14zjff/89/fjjj3T06FEKCgqiG2+8kR599FH5e/Ly8mj37t2qN8m2K664gtavX69qDHANV111lSo52bx5M1VUOEeca665xu06Dxw4QBs3bqTffvuN6urqqEePHnTvvfdSTEyMbF+3bp38C8LDw+m+++5TJSfFxcX03Xff0Z49eyg/P1/e1wEDBsjj3HPPPRTs8oxwrbiPJrfccotM323YsIHi4uJke+vWreU9fOSRR6h7d8NpnRcQqj9wtC9mnYoTEVn/FhGZn4mIjFgRcehzEVucItsfy90u/pG/X2RUlcpylaNeTM78VUQmrBGR+78XkXs3iMj4TSJyT5z4e3a6qGtokP18ZdWqVeLKK6/Ey+VmrVq1ElOmTBF8k1VvJ4mJiYIF6XE/WJs2beS+x48fV3sY3HwwwfT3vXrr11llU1sdr2X169fX4124e/fuo1atX7/e+p4/s2a1a1ev1q9e3T1/v48cOnSY1at3X3U/01q3bt3F3Llzdd3evXs/sGbN/ftt3LixWLNmTfXj/fv3i/Pnz4u0tDRx9uxZ3a/u81//+tf/ePbsWZGTk3Nfd+3atap94cKF4u233xa/vff/A3v//v3i6NGj9+/fv1/ceeed6sfp6enize39/64A///zH2oE+/z586pP2X///X133XWX2LBhg3jvvffUfufOnf2f/3v21yL183x8fHzqxx06dNDjffLJJ2Ljxo3yvO/y4/R96KGHxL333iueeeYZ8fbbb4vCwsL/c+/e3f3/3n306FHx1ltviZkzZ4qPPvpI9/v3v/+tnn///v3iwIED+56y1/Xee++Jn3/+WT33ypUrxcsvvyw+//xzcezYMf3ePffcI5KSkoQpS0pKW3XatGlSly4t1p3Xf/Xq1fL7/fv3ixdeeEGkpKToXnPnzpX6s/fI9N8//vhjMW/ePP3b/1i0aJHYsmWLiI2NFXv27Hnr3///gXv37u3+m7/H292d3v3I3z937tz/3P+ff/4pFi5cKJycnNS5/ePbb78VaWlpYt26dVKmefPm3f/4/3/6/f1//vx523EGBQUJWwX25JNPqvbBgwdrf159340bN+rv3aRJk8Xzzz8vtm/fLtXGjh37wAMP/L+/8s4433777f98993/G9j/4x24f3p6utQ/efJkvV84X2xsrPox23///fe/1atXqwP7qaeekvM1a9ZMv/fcc88JHvOee/14bNmypa2v3/e6+2A/q5977jn1fvA+/fjjj+pve/vtt+v19f/8eSNGjJA0N23aJOnn92v3v//v3bv//v/9+2/3X6m/R/yL/2f+/fv4v5Xp0/3d/8//3/+/2///77v+/r+/839+7eXl5frfH/38f/8+f1aI1f5v+c63W3e93X3m+Xfv+c712Xv+4m/63r//4/8+/718p0412+3+b/v3fv/312v1m/79f3/f/f///p360a7/1//3v2///423f/s3f32e92e//27aO+/58v3v93f1++e163f97u6/+u7d/f+b7d/9s73/f3X5ffvvf//916p1a///132+/+//0+e2//33m3f+v///8+/f+xvv7/233X9/mO8/2O39d3/3f+3/+//+//9b";
+
+// Configuración de conexión principal
 export const settings: gnconex = {
-    id: 2,
-    CNX_NOMB: name_client,
-    CNX_IPSR: url_cliente,
-    // CNX_IPSR:'http://localhost:4835/api/',
-    CNX_BACK: "#008E45",
-    CNX_LOGO: logoCompany,
-    CNX_LINK: "",
-    CNX_CPRI: "",
-    CNX_CSEG: "",
-    CNX_CTER: "",
-    CNX_FCLA: "S"
+  id: 2,
+  CNX_NOMB: name_client,
+  CNX_IPSR: url_cliente,
+  CNX_BACK: "#008E45",
+  CNX_LOGO: logoCompany,
+  CNX_LINK: "",
+  CNX_CPRI: "",
+  CNX_CSEG: "",
+  CNX_CTER: "",
+  CNX_FCLA: "S"
 };

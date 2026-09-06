@@ -1,32 +1,41 @@
-<app-header headerName="Administración"></app-header>
+<app-header headerName="ADMINISTRACIÓN"></app-header>
 
-<ion-content class="ion-padding" color="secondary">
-  <ion-grid>
-    <ion-row>
-      <ion-col size="6" sizeMd="4" sizeLg="3">
-        <ion-card button (click)="goToUsers()" class="menu-card">
-          <div class="menu-icon-wrapper">
-            <ion-icon name="people" class="menu-icon"></ion-icon>
-          </div>
-          <ion-card-title class="menu-title">Usuarios</ion-card-title>
-          <ion-card-content class="menu-subtitle">
-            Gestionar usuarios
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-      <ion-col size="6" sizeMd="4" sizeLg="3" *ngFor="let entity of entities">
-        <ion-card button (click)="goToEntity(entity)" class="menu-card">
-          <div class="menu-icon-wrapper">
-            <ion-icon name="grid" class="menu-icon"></ion-icon>
-          </div>
-          <ion-card-title class="menu-title">{{ entity.plural }}</ion-card-title>
-          <ion-card-content class="menu-subtitle">
-            Gestionar {{ entity.plural.toLowerCase() }}
-          </ion-card-content>
-        </ion-card>
-      </ion-col>
-    </ion-row>
-  </ion-grid>
+<ion-content class="admin-bg">
+    <ion-grid class="ion-padding">
+        <ion-row class="ion-align-items-stretch">
 
-  <app-footer></app-footer>
+            <!-- Opción Usuarios (Ícono corregido) -->
+            <ion-col size="6" sizeMd="4" sizeLg="3">
+                <ion-card button (click)="goToUsers()" class="modern-menu-card">
+                    <div class="modern-icon-wrapper">
+                        <ion-icon name="people" class="modern-icon"></ion-icon>
+                    </div>
+                    <div class="menu-info">
+                        <ion-card-title class="modern-title">Usuarios</ion-card-title>
+                        <ion-card-content class="modern-subtitle">
+                            Gestionar usuarios
+                        </ion-card-content>
+                    </div>
+                </ion-card>
+            </ion-col>
+
+            <!-- Opciones Dinámicas -->
+            <ion-col size="6" sizeMd="4" sizeLg="3" *ngFor="let entity of entities">
+                <ion-card button (click)="goToEntity(entity)" class="modern-menu-card">
+                    <div class="modern-icon-wrapper">
+                        <ion-icon [name]="getIconForEntity(entity.plural)" class="modern-icon"></ion-icon>
+                    </div>
+                    <div class="menu-info">
+                        <ion-card-title class="modern-title">{{ entity.plural }}</ion-card-title>
+                        <ion-card-content class="modern-subtitle">
+                            Gestionar {{ entity.plural.toLowerCase() }}
+                        </ion-card-content>
+                    </div>
+                </ion-card>
+            </ion-col>
+
+        </ion-row>
+    </ion-grid>
+
+    <app-footer></app-footer>
 </ion-content>

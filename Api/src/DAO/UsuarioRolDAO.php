@@ -1,19 +1,20 @@
 <?php
 namespace App\DAO;
+
 use App\Config\Database;
 use App\TO\UsuarioRolTO;
 use PDO;
+use PDOException;
 
 class UsuarioRolDAO {
     private $conn;
 
     public function __construct() {
-        $db = new Database();
         $this->conn = Database::getInstance()->getConnection();
     }
 
     public function getAll() {
-        // Alias para ocultar los campos de base de datos
+        // Alias para ocultar los campos reales de la base de datos
         $sql = "SELECT 
                     lInUro_cont AS id,
                     lInUsu_cont AS usuarioId,
@@ -25,7 +26,7 @@ class UsuarioRolDAO {
             $stmt = $this->conn->prepare($sql);
             $stmt->execute();
             return $stmt->fetchAll(PDO::FETCH_ASSOC);
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             return [];
         }
     }
@@ -41,10 +42,10 @@ class UsuarioRolDAO {
                 
         try {
             $stmt = $this->conn->prepare($sql);
-            $stmt->bindValue(':id', $id);
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_ASSOC);
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             return false;
         }
     }
@@ -54,13 +55,13 @@ class UsuarioRolDAO {
                 VALUES (:usuarioId, :rolId)";
         try {
             $stmt = $this->conn->prepare($sql);
-            $stmt->bindValue(':usuarioId', $usuarioRol->getUsuarioId());
-            $stmt->bindValue(':rolId', $usuarioRol->getRolId());
+            $stmt->bindValue(':usuarioId', $usuarioRol->getUsuarioId(), PDO::PARAM_INT);
+            $stmt->bindValue(':rolId', $usuarioRol->getRolId(), PDO::PARAM_INT);
             $stmt->execute();
             
             return ['status' => 'success', 'message' => 'Rol asignado al usuario exitosamente'];
-        } catch (\PDOException $e) {
-            // Manejamos la violación de la clave única (UNIQUE KEY)
+        } catch (PDOException $e) {
+            // Manejamos la violación de clave única (UNIQUE KEY)
             if ($e->getCode() == 23000) {
                 return ['status' => 'error', 'message' => 'Este usuario ya tiene asignado este rol.'];
             }
@@ -91,7 +92,7 @@ class UsuarioRolDAO {
             $stmt = $this->conn->prepare($sql);
             $stmt->execute($parametros);
             return ['status' => 'success', 'message' => 'Asignación actualizada exitosamente'];
-        } catch (\PDOException $e) {
+        } catch (PDOException $e) {
             if ($e->getCode() == 23000) {
                 return ['status' => 'error', 'message' => 'La actualización genera una asignación duplicada.'];
             }
@@ -100,20 +101,19 @@ class UsuarioRolDAO {
     }
 
     public function delete($id) {
-        // En esta tabla intermedia SÍ hacemos borrado físico, ya que no hay campo de estado
+        // En esta tabla intermedia se realiza borrado físico (DELETE)
         $sql = "DELETE FROM usuario_roles WHERE lInUro_cont = :id";
         
         try {
             $stmt = $this->conn->prepare($sql);
-            $stmt->bindValue(':id', $id);
+            $stmt->bindValue(':id', $id, PDO::PARAM_INT);
             $stmt->execute();
             
             if ($stmt->rowCount() > 0) {
                 return ['status' => 'success', 'message' => 'Asignación de rol eliminada exitosamente'];
-            } else {
-                return ['status' => 'error', 'message' => 'La asignación no existe'];
             }
-        } catch (\PDOException $e) {
+            return ['status' => 'error', 'message' => 'La asignación no existe'];
+        } catch (PDOException $e) {
             return ['status' => 'error', 'message' => 'Error al eliminar la asignación.'];
         }
     }

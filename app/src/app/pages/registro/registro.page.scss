@@ -1,14 +1,185 @@
-.mi-tabla ::ng-deep .p-datatable-thead > tr > th {
-  background-color: var(--ion-color-primary);
-  color: white;
+/* Fondo general claro (Slate Indigo Theme) */
+
+.admin-bg {
+    --background: #f8fafc;
+}
+
+
+/* Botón Agregar Usuario estilo SaaS */
+
+.btn-add-user {
+    --border-radius: 12px;
+    --box-shadow: 0 4px 14px rgba(var(--ion-color-primary-rgb, 79, 70, 229), 0.25);
+    font-weight: 700;
+    height: 48px;
+    letter-spacing: 0.5px;
+    margin-bottom: 16px;
+}
+
+
+/* Tarjeta contenedora de la tabla */
+
+.table-card {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #f1f5f9;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    margin: 0;
+    padding: 20px;
+}
+
+
+/* Contenedor e Input de búsqueda */
+
+.search-container {
+    width: 100%;
+    max-width: 360px;
+    margin-bottom: 20px;
+    i {
+        color: #94a3b8;
+    }
+}
+
+.search-input {
+    width: 100%;
+    border-radius: 10px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    padding: 10px 14px 10px 38px;
+    font-size: 14px;
+    color: #1e293b;
+    transition: all 0.25s ease;
+    &:focus {
+        outline: none;
+        background: #ffffff;
+        border-color: var(--ion-color-primary);
+        box-shadow: 0 0 0 3px rgba(var(--ion-color-primary-rgb), 0.15);
+    }
+}
+
+
+/* Estilos de Tabla PrimeNG */
+
+::ng-deep .tabla-moderna {
+    box-shadow: none;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #ffffff;
+    display: block;
+    .p-datatable-thead>tr>th {
+        background-color: #f8fafc;
+        color: #64748b;
+        font-weight: 700;
+        font-size: 12px;
+        border: none;
+        border-bottom: 1px solid #e2e8f0;
+        padding: 14px 16px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+    .p-datatable-tbody>tr>td {
+        border: none;
+        border-bottom: 1px solid #f1f5f9;
+        padding: 14px 16px;
+        color: #334155;
+        font-size: 14px;
+        vertical-align: middle;
+    }
+    .p-datatable-tbody>tr:hover {
+        background-color: #f8fafc;
+    }
+    .p-paginator {
+        background: transparent;
+        border: none;
+        padding-top: 16px;
+        font-size: 13px;
+        color: #64748b;
+        .p-paginator-page,
+        .p-paginator-next,
+        .p-paginator-last,
+        .p-paginator-first,
+        .p-paginator-prev {
+            border-radius: 8px;
+            color: #64748b;
+            &.p-highlight {
+                background: rgba(var(--ion-color-primary-rgb), 0.1);
+                color: var(--ion-color-primary);
+                font-weight: 700;
+            }
+        }
+    }
+}
+
+
+/* Tipografías */
+
+.texto-fuerte {
+    font-weight: 600;
+    color: #0f172a;
+}
+
+
+/* Insignias de Estado */
+
+.badge-estado {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    background: #fee2e2;
+    color: #991b1b;
+    display: inline-block;
+    &.activo {
+        background: #dcfce7;
+        color: #166534;
+    }
+}
+
+
+/* Forzado de visibilidad de íconos en la rejilla */
+
+.acciones-cell {
+    ion-button {
+        margin: 0 2px;
+        ion-icon {
+            font-size: 18px;
+            display: block;
+        }
+    }
+}
+
+
+/* Formulario Modal Limpio y Botón de Cierre */
+
+ion-modal ion-header ion-toolbar ion-button[color="light"] {
+    --color: #ffffff !important;
+    ion-icon {
+        font-size: 22px;
+        color: #ffffff !important;
+    }
+}
+
+.modal-content {
+    --background: #ffffff;
 }
 
 .primary-input {
-  --background: #ffffff;
-  --color: #000000;
+    --background: #f8fafc;
+    --border-radius: 10px;
+    --border-color: #e2e8f0;
+    --padding-start: 14px;
+    color: #1e293b;
+    font-size: 14px;
 }
 
-ion-select.primary-input {
-  --background: #ffffff;
-  --color: #000000;
+.error-text {
+    font-size: 12px;
+    margin: 4px 0 0 4px;
+    font-weight: 500;
+}
+
+.btn-save {
+    --border-radius: 12px;
+    font-weight: 700;
+    height: 46px;
 }

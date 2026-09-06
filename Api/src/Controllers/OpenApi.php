@@ -5,11 +5,11 @@ namespace App\Controllers;
  * @OA\Info(
  *     title="API de Mi Sistema ERP",
  *     version="1.0.0",
- *     description="Documentaci贸n de endpoints de la API REST para Slim 3"
- * ),
+ *     description="Documentaci��n de endpoints de la API REST para Slim 3"
+ * )
  * @OA\Server(
- *     url="http://localhost:8000",
- *     description="Servidor de Desarrollo"
+ *     url="https://api.enersolax.systemposfac.com.co",
+ *     description="Servidor de Producci��n"
  * )
  */
 class OpenApi {}

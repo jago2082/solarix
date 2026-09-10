@@ -73,7 +73,27 @@ export class AdminPage implements OnInit {
       this._nav.navigateRoot('tabs/in', { animated: true });
       return;
     }
-    this.entities = this._entityConfig.getAll().filter(e => e.key !== 'usuarios' && !e.hidden);
+
+    const orden: Record<string, number> = {
+      'roles': 1,
+      'usuario-roles': 2,
+      'clientes': 3,
+      'contactos': 4,
+      'sedes': 5,
+      'visitas': 6,
+      'proyectos': 7,
+      'planes-ppa': 8,
+      'variables-plantilla': 9,
+      'plantillas-documento': 10,
+      'plantilla-secciones': 11,
+      'plantilla-variables': 12,
+      'textos-parametrizables': 13,
+      'configuracion-empresa': 14
+    };
+
+    this.entities = this._entityConfig.getAll()
+      .filter(e => e.key !== 'usuarios' && !e.hidden)
+      .sort((a, b) => (orden[a.key] ?? 99) - (orden[b.key] ?? 99));
   }
 
   // 3. Mapeo completo con las tarjetas faltantes

@@ -2,7 +2,7 @@
     <ion-toolbar class="footer-limpio">
 
         <!-- Botón de ATRÁS -->
-        <ion-buttons slot="start">
+        <ion-buttons slot="start" *ngIf="!hideBack">
             <ion-button color="primary" (click)="goBack()">
                 <ion-icon slot="start" name="arrow-back"></ion-icon>
                 ATRÁS

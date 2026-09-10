@@ -31,11 +31,6 @@ class VariablePlantillaTO {
     private $tarifaConvencional;
 
     /**
-     * @OA\Property(property="tarifaPpa", type="number", format="float", example=480.00, description="Tarifa de energía acordada en el plan PPA ($/kWh)")
-     */
-    private $tarifaPpa;
-
-    /**
      * @OA\Property(property="consumoEnergia", type="number", format="float", example=120000.00, description="Consumo estimado de energía (kWh)")
      */
     private $consumoEnergia;
@@ -46,29 +41,14 @@ class VariablePlantillaTO {
     private $generacionEnergia;
 
     /**
-     * @OA\Property(property="costoConsumoSinSsfv", type="number", format="float", example=78060000.00, description="Costo total de consumo sin sistema solar ($)")
-     */
-    private $costoConsumoSinSsfv;
-
-    /**
      * @OA\Property(property="costoRedRemanente", type="number", format="float", example=16262500.00, description="Costo de la energía remanente tomada de la red ($)")
      */
     private $costoRedRemanente;
 
     /**
-     * @OA\Property(property="costoSsfvPpa", type="number", format="float", example=45600000.00, description="Costo pagado por la energía solar generada PPA ($)")
+     * @OA\Property(property="fechaCreacion", type="string", format="date-time", example="2025-01-01T00:00:00", description="Fecha y hora de creación del registro")
      */
-    private $costoSsfvPpa;
-
-    /**
-     * @OA\Property(property="costoSsfvCostoRed", type="number", format="float", example=61862500.00, description="Costo combinado (Red Remanente + PPA) ($)")
-     */
-    private $costoSsfvCostoRed;
-
-    /**
-     * @OA\Property(property="ahorroMillones", type="number", format="float", example=16.19, description="Ahorro estimado proyectado (en millones de $)")
-     */
-    private $ahorroMillones;
+    private $fechaCreacion;
 
     // Getters y Setters
     public function getId() { return $this->id; }
@@ -83,27 +63,15 @@ class VariablePlantillaTO {
     public function getTarifaConvencional() { return $this->tarifaConvencional; }
     public function setTarifaConvencional($tarifaConvencional) { $this->tarifaConvencional = $tarifaConvencional; }
 
-    public function getTarifaPpa() { return $this->tarifaPpa; }
-    public function setTarifaPpa($tarifaPpa) { $this->tarifaPpa = $tarifaPpa; }
-
     public function getConsumoEnergia() { return $this->consumoEnergia; }
     public function setConsumoEnergia($consumoEnergia) { $this->consumoEnergia = $consumoEnergia; }
 
     public function getGeneracionEnergia() { return $this->generacionEnergia; }
     public function setGeneracionEnergia($generacionEnergia) { $this->generacionEnergia = $generacionEnergia; }
 
-    public function getCostoConsumoSinSsfv() { return $this->costoConsumoSinSsfv; }
-    public function setCostoConsumoSinSsfv($costoConsumoSinSsfv) { $this->costoConsumoSinSsfv = $costoConsumoSinSsfv; }
-
     public function getCostoRedRemanente() { return $this->costoRedRemanente; }
     public function setCostoRedRemanente($costoRedRemanente) { $this->costoRedRemanente = $costoRedRemanente; }
 
-    public function getCostoSsfvPpa() { return $this->costoSsfvPpa; }
-    public function setCostoSsfvPpa($costoSsfvPpa) { $this->costoSsfvPpa = $costoSsfvPpa; }
-
-    public function getCostoSsfvCostoRed() { return $this->costoSsfvCostoRed; }
-    public function setCostoSsfvCostoRed($costoSsfvCostoRed) { $this->costoSsfvCostoRed = $costoSsfvCostoRed; }
-
-    public function getAhorroMillones() { return $this->ahorroMillones; }
-    public function setAhorroMillones($ahorroMillones) { $this->ahorroMillones = $ahorroMillones; }
+    public function getFechaCreacion() { return $this->fechaCreacion; }
+    public function setFechaCreacion($fechaCreacion) { $this->fechaCreacion = $fechaCreacion; }
 }

@@ -1,7 +1,34 @@
 <?php
 // Ocultar avisos de deprecación producidos por Slim 3 en PHP 8+
 error_reporting(E_ALL & ~E_DEPRECATED & ~E_NOTICE);
-ini_set('display_errors', '1');
+ini_set('display_errors', '0');
+ini_set('log_errors', '1');
+ini_set('error_log', __DIR__ . '/error_log');
+
+// Buffer de salida para evitar que errores fatales rompan los headers
+if (ob_get_level() === 0) ob_start();
+
+function devolverErrorJson($mensaje, $code = 500, $detalle = '') {
+    while (ob_get_level() > 0) @ob_end_clean();
+    http_response_code($code);
+    header('Content-Type: application/json');
+    $respuesta = ['status' => 'error', 'message' => $mensaje];
+    if ($detalle) $respuesta['details'] = $detalle;
+    echo json_encode($respuesta);
+    exit;
+}
+
+// Captura excepciones y errores fatales para devolver siempre JSON
+set_exception_handler(function (Throwable $e) {
+    devolverErrorJson($e->getMessage(), 500, $e->getFile() . ':' . $e->getLine());
+});
+
+register_shutdown_function(function () {
+    $error = error_get_last();
+    if ($error && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR, E_USER_ERROR], true)) {
+        devolverErrorJson($error['message'], 500, $error['file'] . ':' . $error['line']);
+    }
+});
 
 use OpenApi\Generator;
 use Slim\Http\Request;
@@ -24,7 +51,7 @@ $container['environment'] = function () {
     $apiModules = [
         '/usuarios', '/roles', '/usuario-roles', '/sesiones', '/clientes', 
         '/contactos', '/sedes', '/visitas', '/proyectos', '/planes-ppa', 
-        '/variables-plantilla', '/textos-parametrizables', '/configuracion-empresa', 
+        '/variables-plantilla', '/dtlle-Variables-plantilla', '/textos-parametrizables', '/configuracion-empresa', 
         '/plantillas-documento', '/plantilla-secciones', '/plantilla-variables'
     ];
     
@@ -134,6 +161,16 @@ $app->group('/api/variables-plantilla', function () use ($app) {
     $app->post('', \App\Controllers\VariablePlantillaController::class . ':create');
     $app->put('/{id}', \App\Controllers\VariablePlantillaController::class . ':update');
     $app->delete('/{id}', \App\Controllers\VariablePlantillaController::class . ':delete');
+});
+
+$app->group('/api/dtlle-Variables-plantilla', function () use ($app) {
+    $app->get('', \App\Controllers\DtlleVariablePlantillaController::class . ':getAll');
+    $app->get('/por-vpl/{vplCont}', \App\Controllers\DtlleVariablePlantillaController::class . ':getByVplCont');
+    $app->get('/{id}', \App\Controllers\DtlleVariablePlantillaController::class . ':getById');
+    $app->post('', \App\Controllers\DtlleVariablePlantillaController::class . ':create');
+    $app->put('/{id}', \App\Controllers\DtlleVariablePlantillaController::class . ':update');
+    $app->delete('/por-vpl/{vplCont}', \App\Controllers\DtlleVariablePlantillaController::class . ':deleteByVplCont');
+    $app->delete('/{id}', \App\Controllers\DtlleVariablePlantillaController::class . ':delete');
 });
 
 $app->group('/api/textos-parametrizables', function () use ($app) {

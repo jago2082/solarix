@@ -14,6 +14,8 @@ export interface CrudField {
   options?: SelectOption[];
   source?: { endpoint: string; valueField: string; labelField: string };
   showInTable?: boolean;
+  /** Campo calculado: se oculta en el formulario y su valor se genera automáticamente */
+  computed?: boolean;
 }
 
 export interface EntityConfig {
@@ -22,6 +24,8 @@ export interface EntityConfig {
   label: string;
   plural: string;
   fields: CrudField[];
+  /** Si es true, no se muestra en el menú de administración */
+  hidden?: boolean;
 }
 
 @Injectable({
@@ -234,14 +238,30 @@ export class EntityConfigService {
         { key: 'planPpaId', label: 'Plan PPA', type: 'select', required: true, source: { endpoint: 'planes-ppa', valueField: 'id', labelField: 'nombre' }, showInTable: true },
         { key: 'anoProyeccion', label: 'Año proyección', type: 'number', required: true, showInTable: true },
         { key: 'tarifaConvencional', label: 'Tarifa convencional', type: 'number', required: true, showInTable: true },
-        { key: 'tarifaPpa', label: 'Tarifa PPA', type: 'number', required: true, showInTable: true },
         { key: 'consumoEnergia', label: 'Consumo energía', type: 'number', required: true, showInTable: true },
         { key: 'generacionEnergia', label: 'Generación energía', type: 'number', required: true, showInTable: true },
-        { key: 'costoConsumoSinSsfv', label: 'Costo consumo sin SSFV', type: 'number', required: true, showInTable: false },
-        { key: 'costoRedRemanente', label: 'Costo red remanente', type: 'number', required: true, showInTable: false },
-        { key: 'costoSsfvPpa', label: 'Costo SSFV PPA', type: 'number', required: true, showInTable: false },
-        { key: 'costoSsfvCostoRed', label: 'Costo SSFV + red', type: 'number', required: true, showInTable: false },
-        { key: 'ahorroMillones', label: 'Ahorro (millones)', type: 'number', required: true, showInTable: true }
+        { key: 'costoRedRemanente', label: 'Costo red remanente', type: 'number', required: true, showInTable: true }
+      ]
+    },
+    'detalle-variables-plantilla': {
+      key: 'detalle-variables-plantilla',
+      endpoint: 'dtlle-Variables-plantilla',
+      label: 'Detalle de variable',
+      plural: 'Detalles de variables',
+      hidden: true,
+      fields: [
+        { key: 'id', label: 'ID', type: 'number', showInTable: true },
+        { key: 'vplCont', label: 'Variable plantilla', type: 'select', required: true, source: { endpoint: 'variables-plantilla', valueField: 'id', labelField: 'id' }, showInTable: true },
+        { key: 'anoProyeccion', label: 'Año proyección', type: 'number', required: true, showInTable: true },
+        { key: 'tarifaConvencional', label: 'Tarifa convencional', type: 'number', showInTable: true },
+        { key: 'tarifaPpa', label: 'Tarifa PPA', type: 'number', showInTable: true },
+        { key: 'consumoEnergia', label: 'Consumo energía', type: 'number', showInTable: true },
+        { key: 'generacionEnergia', label: 'Generación energía', type: 'number', showInTable: true },
+        { key: 'costoConsumoSinSsfv', label: 'Costo consumo sin SSFV', type: 'number', showInTable: false },
+        { key: 'costoRedRemanente', label: 'Costo red remanente', type: 'number', showInTable: false },
+        { key: 'costoSsfvPpa', label: 'Costo SSFV PPA', type: 'number', showInTable: false },
+        { key: 'costoSsfvCostoRed', label: 'Costo SSFV + red', type: 'number', showInTable: false },
+        { key: 'ahorroMillones', label: 'Ahorro (millones)', type: 'number', showInTable: true }
       ]
     },
     visitas: {

@@ -19,14 +19,9 @@ class VariablePlantillaDAO {
                     lInPpa_cont AS planPpaId,
                     lInVpl_anop AS anoProyeccion,
                     lDcVpl_tcon AS tarifaConvencional,
-                    lDcVpl_tppa AS tarifaPpa,
                     lDcVpl_coen AS consumoEnergia,
                     lDcVpl_geen AS generacionEnergia,
-                    lDcVpl_cocu AS costoConsumoSinSsfv,
                     lDcVpl_crer AS costoRedRemanente,
-                    lDcVpl_cssf AS costoSsfvPpa,
-                    lDcVpl_cscr AS costoSsfvCostoRed,
-                    lDcVpl_amil AS ahorroMillones,
                     lDtVpl_fecr AS fechaCreacion
                 FROM variables_plantilla";
                 
@@ -45,14 +40,9 @@ class VariablePlantillaDAO {
                     lInPpa_cont AS planPpaId,
                     lInVpl_anop AS anoProyeccion,
                     lDcVpl_tcon AS tarifaConvencional,
-                    lDcVpl_tppa AS tarifaPpa,
                     lDcVpl_coen AS consumoEnergia,
                     lDcVpl_geen AS generacionEnergia,
-                    lDcVpl_cocu AS costoConsumoSinSsfv,
                     lDcVpl_crer AS costoRedRemanente,
-                    lDcVpl_cssf AS costoSsfvPpa,
-                    lDcVpl_cscr AS costoSsfvCostoRed,
-                    lDcVpl_amil AS ahorroMillones,
                     lDtVpl_fecr AS fechaCreacion
                 FROM variables_plantilla 
                 WHERE lInVpl_cont = :id";
@@ -69,30 +59,23 @@ class VariablePlantillaDAO {
 
     public function create(VariablePlantillaTO $variable) {
         $sql = "INSERT INTO variables_plantilla (
-                    lInPpa_cont, lInVpl_anop, lDcVpl_tcon, lDcVpl_tppa, 
-                    lDcVpl_coen, lDcVpl_geen, lDcVpl_cocu, lDcVpl_crer, 
-                    lDcVpl_cssf, lDcVpl_cscr, lDcVpl_amil
+                    lInPpa_cont, lInVpl_anop, lDcVpl_tcon,
+                    lDcVpl_coen, lDcVpl_geen, lDcVpl_crer
                 ) VALUES (
-                    :planPpaId, :anoProyeccion, :tarifaConvencional, :tarifaPpa, 
-                    :consumoEnergia, :generacionEnergia, :costoConsumoSinSsfv, :costoRedRemanente, 
-                    :costoSsfvPpa, :costoSsfvCostoRed, :ahorroMillones
+                    :planPpaId, :anoProyeccion, :tarifaConvencional,
+                    :consumoEnergia, :generacionEnergia, :costoRedRemanente
                 )";
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindValue(':planPpaId', $variable->getPlanPpaId());
             $stmt->bindValue(':anoProyeccion', $variable->getAnoProyeccion(), PDO::PARAM_INT);
             $stmt->bindValue(':tarifaConvencional', $variable->getTarifaConvencional());
-            $stmt->bindValue(':tarifaPpa', $variable->getTarifaPpa());
             $stmt->bindValue(':consumoEnergia', $variable->getConsumoEnergia());
             $stmt->bindValue(':generacionEnergia', $variable->getGeneracionEnergia());
-            $stmt->bindValue(':costoConsumoSinSsfv', $variable->getCostoConsumoSinSsfv());
             $stmt->bindValue(':costoRedRemanente', $variable->getCostoRedRemanente());
-            $stmt->bindValue(':costoSsfvPpa', $variable->getCostoSsfvPpa());
-            $stmt->bindValue(':costoSsfvCostoRed', $variable->getCostoSsfvCostoRed());
-            $stmt->bindValue(':ahorroMillones', $variable->getAhorroMillones());
             $stmt->execute();
             
-            return ['status' => 'success', 'message' => 'Variable de plantilla registrada exitosamente'];
+            return ['status' => 'success', 'message' => 'Variable de plantilla registrada exitosamente', 'id' => $this->conn->lastInsertId()];
         } catch (\PDOException $e) {
             return ['status' => 'error', 'message' => 'Error al registrar la variable: ' . $e->getMessage()];
         }
@@ -114,10 +97,6 @@ class VariablePlantillaDAO {
             $campos[] = 'lDcVpl_tcon = :tarifaConvencional';
             $parametros[':tarifaConvencional'] = $variable->getTarifaConvencional();
         }
-        if ($variable->getTarifaPpa() !== null) {
-            $campos[] = 'lDcVpl_tppa = :tarifaPpa';
-            $parametros[':tarifaPpa'] = $variable->getTarifaPpa();
-        }
         if ($variable->getConsumoEnergia() !== null) {
             $campos[] = 'lDcVpl_coen = :consumoEnergia';
             $parametros[':consumoEnergia'] = $variable->getConsumoEnergia();
@@ -126,25 +105,9 @@ class VariablePlantillaDAO {
             $campos[] = 'lDcVpl_geen = :generacionEnergia';
             $parametros[':generacionEnergia'] = $variable->getGeneracionEnergia();
         }
-        if ($variable->getCostoConsumoSinSsfv() !== null) {
-            $campos[] = 'lDcVpl_cocu = :costoConsumoSinSsfv';
-            $parametros[':costoConsumoSinSsfv'] = $variable->getCostoConsumoSinSsfv();
-        }
         if ($variable->getCostoRedRemanente() !== null) {
             $campos[] = 'lDcVpl_crer = :costoRedRemanente';
             $parametros[':costoRedRemanente'] = $variable->getCostoRedRemanente();
-        }
-        if ($variable->getCostoSsfvPpa() !== null) {
-            $campos[] = 'lDcVpl_cssf = :costoSsfvPpa';
-            $parametros[':costoSsfvPpa'] = $variable->getCostoSsfvPpa();
-        }
-        if ($variable->getCostoSsfvCostoRed() !== null) {
-            $campos[] = 'lDcVpl_cscr = :costoSsfvCostoRed';
-            $parametros[':costoSsfvCostoRed'] = $variable->getCostoSsfvCostoRed();
-        }
-        if ($variable->getAhorroMillones() !== null) {
-            $campos[] = 'lDcVpl_amil = :ahorroMillones';
-            $parametros[':ahorroMillones'] = $variable->getAhorroMillones();
         }
 
         if (empty($campos)) {

@@ -44,6 +44,9 @@
                             </ng-template>
                         </td>
                         <td class="ion-text-center acciones-cell">
+                            <ion-button *ngIf="hasDetailView" fill="clear" size="small" color="secondary" (click)="verDetalle(item)" title="Ver proyección">
+                                <ion-icon slot="icon-only" name="eye-outline"></ion-icon>
+                            </ion-button>
                             <ion-button fill="clear" size="small" color="primary" (click)="abrirModal(item)" title="Editar">
                                 <ion-icon slot="icon-only" name="create-outline"></ion-icon>
                             </ion-button>

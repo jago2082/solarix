@@ -14,7 +14,7 @@ import { Table } from 'primeng/table';
 
 // Importar addIcons y los íconos específicos de Ionicons
 import { addIcons } from 'ionicons';
-import { create, trash, createOutline, trashOutline, addOutline, closeOutline } from 'ionicons/icons';
+import { create, trash, createOutline, trashOutline, addOutline, closeOutline, eyeOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-crud-generic',
@@ -66,7 +66,8 @@ export class CrudGenericComponent implements OnInit, OnChanges {
       'create-outline': createOutline,
       'trash-outline': trashOutline,
       'add-outline': addOutline,
-      'close-outline': closeOutline
+      'close-outline': closeOutline,
+      'eye-outline': eyeOutline
     });
   }
 
@@ -103,7 +104,16 @@ export class CrudGenericComponent implements OnInit, OnChanges {
   }
 
   get formFields(): CrudField[] {
-    return this.config?.fields.filter(f => f.key !== 'id') || [];
+    return this.config?.fields.filter(f => f.key !== 'id' && !f.computed) || [];
+  }
+
+  get computedFields(): CrudField[] {
+    return this.config?.fields.filter(f => f.computed) || [];
+  }
+
+  /** Indica si la entidad actual soporta vista de detalle de proyección */
+  get hasDetailView(): boolean {
+    return this.entityKey === 'variables-plantilla';
   }
 
   get globalFilterFields(): string[] {
@@ -114,7 +124,7 @@ export class CrudGenericComponent implements OnInit, OnChanges {
     if (!this.config) return;
     const group: Record<string, any> = {};
     for (const field of this.config.fields) {
-      if (field.key === 'id') continue;
+      if (field.key === 'id' || field.computed) continue;
       const validators: ValidatorFn[] = [];
       if (field.required) validators.push(Validators.required);
       group[field.key] = ['', validators];
@@ -282,6 +292,11 @@ export class CrudGenericComponent implements OnInit, OnChanges {
       body[field.key] = this.parseValue(field, raw[field.key]);
     }
 
+    // Calcular campos automáticos (ej. variables de proyección)
+    if (this.entityKey === 'variables-plantilla') {
+      this.calcularCamposProyeccion(body);
+    }
+
     const loading = await this._loadingCtrl.create({
       message: this.editing ? 'Actualizando...' : 'Registrando...'
     });
@@ -307,6 +322,41 @@ export class CrudGenericComponent implements OnInit, OnChanges {
         this._alert.error('Error en la operación');
       }
     });
+  }
+
+  /**
+   * Calcula los campos derivados de una variable de proyección.
+   * Unidades: tarifas en $/kWh, consumo/generación en GWh, costos en millones de $.
+   * ($/kWh × GWh = millones de $)
+   */
+  private calcularCamposProyeccion(body: Record<string, any>) {
+    const tarifaConvencional = Number(body['tarifaConvencional']) || 0;
+    const consumo = Number(body['consumoEnergia']) || 0;
+    const generacion = Number(body['generacionEnergia']) || 0;
+    const costoRed = Number(body['costoRedRemanente']) || 0;
+
+    // Descuento del plan PPA (porcentaje) obtenido del lookup cargado
+    const plan = this.lookups['planPpaId']?.[body['planPpaId']];
+    const descuento = plan ? (Number(plan['descuento']) || 0) / 100 : 0;
+
+    const tarifaPpa = tarifaConvencional * (1 - descuento);
+    const costoConsumoSinSsfv = tarifaConvencional * consumo;
+    const costoSsfvPpa = tarifaPpa * generacion;
+    const costoSsfvCostoRed = costoSsfvPpa + costoRed;
+
+    body['tarifaPpa'] = tarifaPpa;
+    body['costoConsumoSinSsfv'] = costoConsumoSinSsfv;
+    body['costoSsfvPpa'] = costoSsfvPpa;
+    body['costoSsfvCostoRed'] = costoSsfvCostoRed;
+    body['ahorroMillones'] = costoConsumoSinSsfv - costoSsfvCostoRed;
+  }
+
+  /** Navega a la página de detalle de proyección del plan PPA */
+  verDetalle(item: any) {
+    const planPpaId = item?.planPpaId;
+    if (planPpaId) {
+      this._nav.navigateForward(`tabs/admin/variables-plantilla/detalle/${planPpaId}`, { animated: true });
+    }
   }
 
   async eliminar(item: any) {

@@ -94,14 +94,9 @@ class VariablePlantillaController {
         $variableTO->setPlanPpaId((int)$data['planPpaId']);
         $variableTO->setAnoProyeccion((int)$data['anoProyeccion']);
         $variableTO->setTarifaConvencional(isset($data['tarifaConvencional']) ? (float)$data['tarifaConvencional'] : 0);
-        $variableTO->setTarifaPpa(isset($data['tarifaPpa']) ? (float)$data['tarifaPpa'] : 0);
         $variableTO->setConsumoEnergia(isset($data['consumoEnergia']) ? (float)$data['consumoEnergia'] : 0);
         $variableTO->setGeneracionEnergia(isset($data['generacionEnergia']) ? (float)$data['generacionEnergia'] : 0);
-        $variableTO->setCostoConsumoSinSsfv(isset($data['costoConsumoSinSsfv']) ? (float)$data['costoConsumoSinSsfv'] : 0);
         $variableTO->setCostoRedRemanente(isset($data['costoRedRemanente']) ? (float)$data['costoRedRemanente'] : 0);
-        $variableTO->setCostoSsfvPpa(isset($data['costoSsfvPpa']) ? (float)$data['costoSsfvPpa'] : 0);
-        $variableTO->setCostoSsfvCostoRed(isset($data['costoSsfvCostoRed']) ? (float)$data['costoSsfvCostoRed'] : 0);
-        $variableTO->setAhorroMillones(isset($data['ahorroMillones']) ? (float)$data['ahorroMillones'] : 0);
 
         $resultado = $this->bo->create($variableTO);
         $statusCode = ($resultado['status'] === 'success') ? 201 : 400;
@@ -144,14 +139,9 @@ class VariablePlantillaController {
         if (isset($data['planPpaId'])) $variableTO->setPlanPpaId((int)$data['planPpaId']);
         if (isset($data['anoProyeccion'])) $variableTO->setAnoProyeccion((int)$data['anoProyeccion']);
         if (isset($data['tarifaConvencional'])) $variableTO->setTarifaConvencional((float)$data['tarifaConvencional']);
-        if (isset($data['tarifaPpa'])) $variableTO->setTarifaPpa((float)$data['tarifaPpa']);
         if (isset($data['consumoEnergia'])) $variableTO->setConsumoEnergia((float)$data['consumoEnergia']);
         if (isset($data['generacionEnergia'])) $variableTO->setGeneracionEnergia((float)$data['generacionEnergia']);
-        if (isset($data['costoConsumoSinSsfv'])) $variableTO->setCostoConsumoSinSsfv((float)$data['costoConsumoSinSsfv']);
         if (isset($data['costoRedRemanente'])) $variableTO->setCostoRedRemanente((float)$data['costoRedRemanente']);
-        if (isset($data['costoSsfvPpa'])) $variableTO->setCostoSsfvPpa((float)$data['costoSsfvPpa']);
-        if (isset($data['costoSsfvCostoRed'])) $variableTO->setCostoSsfvCostoRed((float)$data['costoSsfvCostoRed']);
-        if (isset($data['ahorroMillones'])) $variableTO->setAhorroMillones((float)$data['ahorroMillones']);
 
         $resultado = $this->bo->update($variableTO, $args['id']);
         $statusCode = ($resultado['status'] === 'success') ? 200 : 400;

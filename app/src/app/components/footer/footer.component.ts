@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { IonicModule, NavController, AlertController } from '@ionic/angular';
 import { ApiService } from 'src/app/services/api/api.service';
@@ -13,6 +13,7 @@ import { ConfigService } from 'src/app/services/config/config.service';
   imports: [IonicModule, CommonModule]
 })
 export class FooterComponent implements OnInit {
+  @Input() hideBack = false;
   data: any[] = [];
   count = 0;
   emp_codi = 101;

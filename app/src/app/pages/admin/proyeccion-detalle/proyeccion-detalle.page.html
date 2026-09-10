@@ -1,0 +1,143 @@
+<app-header [headerName]="'DETALLE DE PROYECCIÓN'"></app-header>
+
+<ion-content class="content-scroll">
+<div class="admin-bg main-layout-container">
+
+    <!-- Selector de plan y parámetros -->
+    <ion-card class="params-card">
+        <ion-card-content>
+            <div class="params-grid">
+                <ion-select [(ngModel)]="planPpaId" (ionChange)="onPlanChange()" fill="outline" class="primary-input" label="Plan PPA" labelPlacement="floating">
+                    <ion-select-option *ngFor="let p of planes" [value]="p.id">
+                        {{ p.nombre }}
+                    </ion-select-option>
+                </ion-select>
+
+                <ion-input [(ngModel)]="indexacionConvencional" type="number" fill="outline" class="primary-input" label="Indexación tarifa convencional (%/año)" labelPlacement="floating"></ion-input>
+                <ion-input [(ngModel)]="indexacionPpa" type="number" fill="outline" class="primary-input" label="Indexación tarifa PPA (%/año)" labelPlacement="floating"></ion-input>
+                <ion-input [(ngModel)]="degradacionAnual" type="number" fill="outline" class="primary-input" label="Degradación generación (%/año)" labelPlacement="floating"></ion-input>
+            </div>
+
+            <div class="plan-info" *ngIf="plan">
+                <ion-chip color="primary">Duración: {{ duracionAnos }} años</ion-chip>
+                <ion-chip color="secondary">Descuento: {{ plan.descuento }}%</ion-chip>
+            </div>
+        </ion-card-content>
+    </ion-card>
+
+    <!-- Tabla de proyección -->
+    <ion-card class="table-card" *ngIf="plan">
+        <div class="table-wrapper">
+            <table class="tabla-proyeccion">
+                <thead>
+                    <tr>
+                        <th>AÑO</th>
+                        <th>Tarifa convencional [$/kWh]</th>
+                        <th>Tarifa Energía PPA SSFV [$/kWh]</th>
+                        <th>Consumo Energía [GWh]</th>
+                        <th>Generación Energía SSFV-PPA [GWh]</th>
+                        <th>Costo Consumo sin SSFV [$] Millones</th>
+                        <th>Costo red remanente [$] Millones</th>
+                        <th>Costo SSFV PPA [$] Millones</th>
+                        <th>Costo SSFV [$]+Costo red [$] Millones</th>
+                        <th>Ahorro [$] Millones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Primera fila: valores digitables -->
+                    <tr class="fila-input">
+                        <td class="col-ano">1</td>
+                        <td><input type="number" [(ngModel)]="tarifaConvencional" (ngModelChange)="calculado && calcular()" class="cell-input" /></td>
+                        <td class="calc">{{ filas[0] ? (filas[0].tarifaPpa | number:'1.0-0') : '' }}</td>
+                        <td><input type="number" [(ngModel)]="consumoEnergia" (ngModelChange)="calculado && calcular()" class="cell-input" /></td>
+                        <td><input type="number" [(ngModel)]="generacionEnergia" (ngModelChange)="calculado && calcular()" class="cell-input" /></td>
+                        <td class="calc">{{ filas[0] ? (filas[0].costoConsumoSinSsfv | number:'1.2-2') : '' }}</td>
+                        <td><input type="number" [(ngModel)]="costoRedRemanente" (ngModelChange)="calculado && calcular()" class="cell-input" /></td>
+                        <td class="calc">{{ filas[0] ? (filas[0].costoSsfvPpa | number:'1.0-0') : '' }}</td>
+                        <td class="calc">{{ filas[0] ? (filas[0].costoSsfvCostoRed | number:'1.2-2') : '' }}</td>
+                        <td class="calc ahorro">{{ filas[0] ? (filas[0].ahorroMillones | number:'1.2-2') : '' }}</td>
+                    </tr>
+
+                    <!-- Filas calculadas (años 2..N) -->
+                    <tr *ngFor="let fila of filas.slice(1)">
+                        <td class="col-ano">{{ fila.ano }}</td>
+                        <td>{{ fila.tarifaConvencional | number:'1.0-0' }}</td>
+                        <td class="ppa">{{ fila.tarifaPpa | number:'1.0-0' }}</td>
+                        <td>{{ fila.consumoEnergia | number:'1.4-4' }}</td>
+                        <td class="ppa">{{ fila.generacionEnergia | number:'1.4-4' }}</td>
+                        <td>{{ fila.costoConsumoSinSsfv | number:'1.2-2' }}</td>
+                        <td>{{ fila.costoRedRemanente | number:'1.0-0' }}</td>
+                        <td>{{ fila.costoSsfvPpa | number:'1.0-0' }}</td>
+                        <td class="ppa">{{ fila.costoSsfvCostoRed | number:'1.2-2' }}</td>
+                        <td class="ahorro">{{ fila.ahorroMillones | number:'1.2-2' }}</td>
+                    </tr>
+                </tbody>
+                <tfoot *ngIf="calculado">
+                    <tr class="fila-total">
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{{ totalConsumo | number:'1.3-3' }}</td>
+                        <td>{{ totalGeneracion | number:'1.3-3' }}</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>{{ totalCostoSsfvRed | number:'1.0-0' }}</td>
+                        <td class="ahorro">{{ totalAhorro | number:'1.0-0' }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="action-bar-inner">
+            <ion-button color="primary" (click)="calcular()" [disabled]="!inputsValidos">
+                CALCULAR PROYECCIÓN
+            </ion-button>
+            <ion-button color="success" (click)="guardarProyeccion()" [disabled]="!calculado || guardando">
+                GUARDAR PROYECCIÓN
+            </ion-button>
+        </div>
+    </ion-card>
+
+    <!-- Resumen -->
+    <ion-card class="resumen-card" *ngIf="calculado">
+        <ion-card-content>
+            <div class="resumen-grid">
+                <div class="resumen-bloque">
+                    <h3>Ahorro por periodo</h3>
+                    <div class="resumen-fila" *ngFor="let b of ahorroPorBloques">
+                        <span>{{ b.rango }}</span>
+                        <strong>{{ b.valor | number:'1.0-0' }}</strong>
+                    </div>
+                    <div class="resumen-fila total">
+                        <span>Total</span>
+                        <strong>{{ totalAhorro | number:'1.0-0' }}</strong>
+                    </div>
+                </div>
+
+                <div class="resumen-bloque">
+                    <h3>Impacto ambiental</h3>
+                    <div class="resumen-fila">
+                        <span>Factor</span>
+                        <strong>{{ factorCo2 | number:'1.3-3' }}</strong>
+                    </div>
+                    <div class="resumen-fila">
+                        <span>CO2 (t)</span>
+                        <strong>{{ totalCo2 | number:'1.0-0' }}</strong>
+                    </div>
+                    <div class="resumen-fila">
+                        <span>Árboles</span>
+                        <strong>{{ totalArboles | number:'1.0-0' }}</strong>
+                    </div>
+                </div>
+            </div>
+        </ion-card-content>
+    </ion-card>
+
+    <ion-button fill="clear" color="primary" class="btn-back" (click)="volver()">
+        ATRÁS
+    </ion-button>
+
+    <app-footer [hideBack]="true"></app-footer>
+</div>
+</ion-content>

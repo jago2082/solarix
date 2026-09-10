@@ -83,6 +83,18 @@ export const routes: Routes = [
     loadComponent: () => import('./pages/admin/entities/variables-plantilla.page').then( m => m.VariablesPlantillaPage)
   },
   {
+    path: 'tabs/admin/detalle-variables-plantilla',
+    loadComponent: () => import('./pages/admin/entities/detalle-variables-plantilla.page').then( m => m.DetalleVariablesPlantillaPage)
+  },
+  {
+    path: 'tabs/admin/variables-plantilla/detalle',
+    loadComponent: () => import('./pages/admin/proyeccion-detalle/proyeccion-detalle.page').then( m => m.ProyeccionDetallePage)
+  },
+  {
+    path: 'tabs/admin/variables-plantilla/detalle/:planPpaId',
+    loadComponent: () => import('./pages/admin/proyeccion-detalle/proyeccion-detalle.page').then( m => m.ProyeccionDetallePage)
+  },
+  {
     path: 'tabs/admin/visitas',
     loadComponent: () => import('./pages/admin/entities/visitas.page').then( m => m.VisitasPage)
   }

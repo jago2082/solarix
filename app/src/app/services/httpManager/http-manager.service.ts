@@ -192,9 +192,10 @@ export class HttpManagerService {
     if (error.error instanceof ErrorEvent) {
       console.error("Ocurrió un error:", error.error.message);
     } else {
-      console.error(
-        `Backend returned code ${error.status}, ` + `body was: ${error.error}`
-      );
+      console.error(`Backend returned code ${error.status}`);
+      console.error('Response body:', error.error);
+      if (error.error?.message) console.error('Backend message:', error.error.message);
+      if (error.error?.details) console.error('Backend details:', error.error.details);
 
       if (error.status == 401) {
         console.log('saliendo...');

@@ -73,7 +73,7 @@ export class AdminPage implements OnInit {
       this._nav.navigateRoot('tabs/in', { animated: true });
       return;
     }
-    this.entities = this._entityConfig.getAll().filter(e => e.key !== 'usuarios');
+    this.entities = this._entityConfig.getAll().filter(e => e.key !== 'usuarios' && !e.hidden);
   }
 
   // 3. Mapeo completo con las tarjetas faltantes

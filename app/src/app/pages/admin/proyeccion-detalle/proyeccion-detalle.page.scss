@@ -1,0 +1,169 @@
+.admin-bg {
+    background: #f8fafc;
+    min-height: 100vh;
+}
+
+.main-layout-container {
+    padding: 16px;
+    max-width: 1400px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    width: 100%;
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.params-card,
+.table-card,
+.resumen-card {
+    border-radius: 12px;
+    margin: 0 0 16px 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.table-card {
+    overflow: hidden;
+    padding: 12px;
+}
+
+.params-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 12px;
+
+    > * {
+        min-width: 0;
+        width: 100%;
+    }
+}
+
+.plan-info {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.table-wrapper {
+    overflow: auto;
+    max-height: 65vh;
+    -webkit-overflow-scrolling: touch;
+
+    // Encabezado fijo durante el scroll vertical
+    thead th {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+    }
+}
+
+.tabla-proyeccion {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 1100px;
+
+    th, td {
+        border: 1px solid #d7dbe0;
+        padding: 6px 8px;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    thead th {
+        background: #1a1a2e;
+        color: #fff;
+        font-weight: 600;
+        font-size: 11px;
+        text-transform: uppercase;
+    }
+
+    tbody tr:nth-child(even) {
+        background: #f4f6f9;
+    }
+
+    .col-ano {
+        font-weight: 700;
+        background: #eef1f5;
+    }
+
+    .ppa {
+        color: #1e9e50;
+        font-weight: 600;
+    }
+
+    .ahorro {
+        color: #1e9e50;
+        font-weight: 700;
+        background: #fff3cd;
+    }
+
+    .calc {
+        background: #f0f4ff;
+        color: #333;
+    }
+
+    .fila-input {
+        background: #e8f0fe;
+
+        .cell-input {
+            width: 90px;
+            border: 1px solid #7aa7f0;
+            border-radius: 6px;
+            padding: 4px 6px;
+            text-align: center;
+            font-weight: 600;
+            background: #fff;
+        }
+    }
+
+    .fila-total {
+        background: #e6e9ef;
+        font-weight: 700;
+    }
+}
+
+.action-bar-inner {
+    padding: 12px 16px 16px;
+}
+
+.resumen-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 24px;
+}
+
+.resumen-bloque {
+    h3 {
+        margin: 0 0 10px;
+        font-size: 14px;
+        text-transform: uppercase;
+        color: #555;
+    }
+
+    .resumen-fila {
+        display: flex;
+        justify-content: space-between;
+        padding: 6px 0;
+        border-bottom: 1px solid #eee;
+        font-size: 14px;
+
+        &.total {
+            font-weight: 700;
+            border-bottom: 2px solid #333;
+        }
+    }
+}
+
+.btn-back {
+    margin: 8px 0 16px;
+    font-weight: 600;
+    align-self: flex-start;
+}
+
+// El footer ya trae un botón ATRÁS; se oculta en esta pantalla para evitar duplicados
+app-footer {
+    display: none;
+}

@@ -229,19 +229,31 @@ class PropuestaPdfController {
 <body>';
 
         // Portada
-        $html .= '<table class="portada" style="border-collapse: collapse; width: 297mm; height: 210mm;">';
+        $nombreMayusculas = mb_strtoupper($valores['PROYECTO_NOMBRE'], 'UTF-8');
+        $html .= '<table width="100%" height="210mm" cellpadding="0" cellspacing="0" style="border-collapse: collapse; width: 297mm; height: 210mm;">';
         $html .= '<tr>';
-        $html .= '<td style="width: 42%; background-color: #000000; color: #ffffff; padding: 45px 30px; vertical-align: top; height: 210mm;">';
-        $html .= '<div style="font-size: 12px; letter-spacing: 1.5px; padding-bottom: 160px;">Oferta ' . $valores['PROYECTO_CODIGO'] . '</div>';
-        $html .= '<h1 style="font-size: 28px; font-weight: bold; line-height: 1.25; margin: 0; padding: 0 0 45px 0; text-transform: uppercase;">' . mb_strtoupper($valores['PROYECTO_NOMBRE'], 'UTF-8') . '</h1>';
-        $html .= '<div style="font-size: 24px; font-weight: bold; padding-bottom: 20px;">PPA</div>';
-        $html .= '<div style="font-size: 20px; font-weight: 300;">Energía Solar Fotovoltaica</div>';
+        $html .= '<td width="42%" height="210mm" bgcolor="#000000" valign="top">';
+        $html .= '<table width="100%" cellpadding="0" cellspacing="0">';
+        $html .= '<tr><td width="100%" valign="top" style="padding: 30px 25px 0 25px;">';
+        $html .= '<font face="Arial" size="2" color="#ffffff">Oferta ' . $valores['PROYECTO_CODIGO'] . '</font>';
+        $html .= '<br/><br/><br/><br/><br/><br/><br/><br/>';
+        $html .= '<font face="Arial" size="6" color="#ffffff"><b>' . $nombreMayusculas . '</b></font>';
+        $html .= '<br/><br/><br/><br/>';
+        $html .= '<font face="Arial" size="5" color="#ffffff"><b>PPA</b></font>';
+        $html .= '<br/><br/>';
+        $html .= '<font face="Arial" size="4" color="#ffffff">Energía Solar Fotovoltaica</font>';
+        $html .= '</td></tr>';
+        $html .= '</table>';
         $html .= '</td>';
-        $html .= '<td style="width: 58%; background-color: #1a1a1a; padding: 0; vertical-align: top; height: 210mm;">';
-        $html .= '<div style="text-align: right; padding: 20px 20px 0 0; height: 160px;">' . $logo . '</div>';
+        $html .= '<td width="58%" height="210mm" bgcolor="#1a1a1a" valign="top">';
+        $html .= '<table width="100%" height="100%" cellpadding="0" cellspacing="0">';
+        $html .= '<tr><td width="100%" height="160" align="right" valign="top" style="padding: 15px 15px 0 0;">' . $logo . '</td></tr>';
+        $html .= '<tr><td width="100%" valign="top">';
         if ($imagenFondo) {
-            $html .= '<img src="' . $imagenFondo . '" style="width: 100%; height: 175mm; display: block;" alt="" />';
+            $html .= '<img src="' . $imagenFondo . '" width="100%" height="175mm" alt="" />';
         }
+        $html .= '</td></tr>';
+        $html .= '</table>';
         $html .= '</td>';
         $html .= '</tr>';
         $html .= '</table>';
@@ -300,8 +312,8 @@ class PropuestaPdfController {
                 $svg = file_get_contents($ruta);
                 $svg = preg_replace('/<\?xml.*?\?>/s', '', $svg);
                 $svg = preg_replace('/<!DOCTYPE.*?>/s', '', $svg);
-                $svg = str_replace('fill="#000000"', 'fill="#ffffff"', $svg);
-                $svg = str_replace('fill="black"', 'fill="white"', $svg);
+                $svg = preg_replace('/fill="[^"]*"/', 'fill="#ffffff"', $svg);
+                $svg = str_replace('fill="#ffffff"none', 'fill="none"', $svg);
                 $svg = preg_replace('/width="[^"]*"/', 'width="160px"', $svg);
                 $svg = preg_replace('/height="[^"]*"/', 'height="160px"', $svg);
                 return '<div class="portada-logo" style="display: inline-block; width: 160px; height: 160px;">' . trim($svg) . '</div>';

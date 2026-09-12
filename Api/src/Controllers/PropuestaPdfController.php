@@ -271,6 +271,7 @@ class PropuestaPdfController {
             } elseif ($tituloMay !== 'PORTADA') {
                 $logoPagina = $this->cargarLogoSvg(false);
                 if ((int)$seccion['id'] === 3) {
+                    $logoPagina = $this->cargarLogoSvg(true);
                     $html .= $this->renderSeccionSolaxGen($seccion, $numero, $valoresCompletos, $logoPagina, $valores);
                 } else {
                     $contenido = $seccion['contenido'] ?? '';
@@ -301,7 +302,7 @@ class PropuestaPdfController {
             $contenido = '<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">';
             $contenido .= '<tr>';
             $contenido .= '<td width="42%" valign="top" style="padding-right: 25px;">';
-            $contenido .= '<div style="font-size: 14px; line-height: 1.6; margin-bottom: 20px;">' . nl2br($texto) . '</div>';
+            $contenido .= '<div style="font-size: 13px; line-height: 1.5; color: #ffffff; margin-bottom: 20px;">' . nl2br($texto) . '</div>';
             $contenido .= ($valoresSeccion['LOGO_ENERSOLAX'] ?? $valores['LOGO_ENERSOLAX'] ?? '');
             $contenido .= '</td>';
             $contenido .= '<td width="58%" valign="top" style="padding-left: 25px;">';
@@ -311,11 +312,11 @@ class PropuestaPdfController {
             $contenido .= '</table>';
         }
 
-        $html = '<div class="contenido-pagina" style="page-break-after: always;">';
+        $html = '<div class="contenido-pagina" style="page-break-after: always; background-color: #000000; color: #ffffff;">';
         $html .= '<div class="logo-pagina">' . $logoPagina . '</div>';
-        $html .= '<h2>0' . $numero . ' ' . $titulo . '</h2>';
+        $html .= '<h2 style="color: #ffffff;">0' . $numero . ' ' . $titulo . '</h2>';
         $html .= '<div class="contenido">' . $contenido . '</div>';
-        $html .= '<div class="pie">' . $valores['EMPRESA_NOMBRE'] . ' · ' . $valores['EMPRESA_SITIO_WEB'] . '</div>';
+        $html .= '<div class="pie" style="color: #cccccc;">' . $valores['EMPRESA_NOMBRE'] . ' · ' . $valores['EMPRESA_SITIO_WEB'] . '</div>';
         $html .= '</div>';
         return $html;
     }

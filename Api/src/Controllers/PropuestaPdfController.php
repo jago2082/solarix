@@ -286,8 +286,9 @@ class PropuestaPdfController {
 
     private function renderContenidoNegro($variables, $valores) {
         $logo = $this->cargarLogoSvg(true, 160);
-        $html = '<div style="width: 297mm; height: 210mm; position: relative; background-color: #000000; color: #ffffff; padding: 40px 50px; box-sizing: border-box; page-break-after: always;">';
+        $html = '<div style="width: 297mm; height: 210mm; position: relative; background-color: #000000; color: #ffffff; page-break-after: always;">';
         $html .= '<div class="portada-logo" style="position: absolute; top: 20px; right: 20px; width: 160px; height: 160px;">' . $logo . '</div>';
+        $html .= '<div style="padding: 100px 50px 40px 50px; width: 100%; height: 100%; box-sizing: border-box;">';
         $html .= '<h1 style="font-size: 42px; font-weight: bold; margin: 0 0 50px 0;">Contenido</h1>';
         $html .= '<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">';
 
@@ -317,6 +318,7 @@ class PropuestaPdfController {
         }
 
         $html .= '</table>';
+        $html .= '</div>';
         $html .= '</div>';
         return $html;
     }

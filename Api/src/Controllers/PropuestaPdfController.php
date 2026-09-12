@@ -222,7 +222,7 @@ class PropuestaPdfController {
         .subtitulo { font-size: 28px; font-weight: bold; margin: 0 0 15px 0; }
         .tipo { font-size: 22px; font-weight: 300; margin: 0; }
         .portada-logo { position: absolute; top: 20px; right: 20px; width: 160px; height: 160px; z-index: 10; }
-        .portada-logo svg { width: 160px; height: 160px; }
+        .portada-logo svg, .portada-logo img { width: 160px; height: auto; }
         .portada-fondo { position: absolute; bottom: 300px; right: 0; width: 100%; height: calc(100% - 180px); object-fit: cover; }
         .contenido-pagina { position: relative; padding: 40px; padding-top: 100px; }
         .contenido-pagina h2 { font-size: 18px; color: #1a4a7a; border-bottom: 2px solid #1a4a7a; padding-bottom: 8px; margin-top: 0; }
@@ -286,7 +286,7 @@ class PropuestaPdfController {
 
     private function renderContenidoNegro($logo, $variables, $valores) {
         $html = '<div style="width: 297mm; height: 210mm; position: relative; overflow: hidden; background-color: #000000; color: #ffffff; padding: 40px 50px; box-sizing: border-box; page-break-after: always;">';
-        $html .= '<div style="position: absolute; top: 20px; right: 20px; width: 160px; height: 160px;">' . $logo . '</div>';
+        $html .= '<div class="portada-logo" style="position: absolute; top: 20px; right: 20px; width: 160px; height: 160px;">' . $logo . '</div>';
         $html .= '<h1 style="font-size: 42px; font-weight: bold; margin: 0 0 50px 0;">Contenido</h1>';
         $html .= '<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">';
 

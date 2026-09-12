@@ -262,9 +262,10 @@ class PropuestaPdfController {
             $valoresCompletos = array_merge($valores, $valoresSeccion);
 
             $titulo = $seccion['titulo'] ?? $seccion['codigo'];
-            if (mb_strtoupper($titulo, 'UTF-8') === 'CONTENIDO') {
+            $tituloMay = mb_strtoupper($titulo, 'UTF-8');
+            if ($tituloMay === 'CONTENIDO') {
                 $html .= $this->renderContenidoNegro($logo, $variablesSeccion, $valoresCompletos);
-            } else {
+            } elseif ($tituloMay !== 'PORTADA') {
                 $contenido = $seccion['contenido'] ?? '';
                 $contenido = $this->reemplazarVariables($contenido, $valoresCompletos);
 

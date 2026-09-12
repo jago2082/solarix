@@ -205,15 +205,15 @@ class PropuestaPdfController {
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; color: #333; }
         .portada { height: 210mm; width: 297mm; border-collapse: collapse; }
         .portada td { padding: 0; vertical-align: top; }
-        .portada-izq { width: 42%; background-color: #000000; color: #ffffff; padding: 55px 35px !important; }
-        .portada-der { width: 58%; position: relative; background-color: #1a1a1a; }
-        .portada-der img.fondo { width: 100%; height: 210mm; object-fit: cover; display: block; }
-        .portada-logo { position: absolute; top: 20px; right: 20px; width: 200px; }
+        .portada-izq { width: 42%; background-color: #000000; color: #ffffff; padding: 45px 30px; }
+        .portada-der { width: 58%; background-color: #1a1a1a; }
+        .portada-der img { width: 100%; height: 210mm; display: block; }
+        .portada-logo { width: 200px; height: 200px; }
         .portada-logo svg { width: 200px; height: 200px; }
-        .oferta { font-size: 12px; letter-spacing: 1.5px; margin-bottom: 160px; }
-        .titulo { font-size: 30px; font-weight: bold; line-height: 1.3; margin: 0 0 45px 0; text-transform: uppercase; }
-        .subtitulo { font-size: 26px; font-weight: bold; margin: 0 0 20px 0; }
-        .tipo { font-size: 22px; font-weight: 300; margin: 0; }
+        .oferta { font-size: 12px; letter-spacing: 1.5px; }
+        .titulo { font-size: 28px; font-weight: bold; line-height: 1.25; text-transform: uppercase; }
+        .subtitulo { font-size: 24px; font-weight: bold; }
+        .tipo { font-size: 20px; font-weight: 300; }
         .contenido-pagina { padding: 40px; }
         .contenido-pagina h2 { font-size: 18px; color: #1a4a7a; border-bottom: 2px solid #1a4a7a; padding-bottom: 8px; margin-top: 0; }
         .contenido { text-align: justify; font-size: 11px; line-height: 1.5; }
@@ -229,18 +229,18 @@ class PropuestaPdfController {
 <body>';
 
         // Portada
-        $html .= '<table class="portada">';
+        $html .= '<table class="portada" style="border-collapse: collapse; width: 297mm; height: 210mm;">';
         $html .= '<tr>';
-        $html .= '<td class="portada-izq">';
-        $html .= '<div class="oferta">Oferta ' . $valores['PROYECTO_CODIGO'] . '</div>';
-        $html .= '<h1 class="titulo">' . mb_strtoupper($valores['PROYECTO_NOMBRE'], 'UTF-8') . '</h1>';
-        $html .= '<div class="subtitulo">PPA</div>';
-        $html .= '<div class="tipo">Energía Solar Fotovoltaica</div>';
+        $html .= '<td style="width: 42%; background-color: #000000; color: #ffffff; padding: 45px 30px; vertical-align: top; height: 210mm;">';
+        $html .= '<div style="font-size: 12px; letter-spacing: 1.5px; padding-bottom: 160px;">Oferta ' . $valores['PROYECTO_CODIGO'] . '</div>';
+        $html .= '<h1 style="font-size: 28px; font-weight: bold; line-height: 1.25; margin: 0; padding: 0 0 45px 0; text-transform: uppercase;">' . mb_strtoupper($valores['PROYECTO_NOMBRE'], 'UTF-8') . '</h1>';
+        $html .= '<div style="font-size: 24px; font-weight: bold; padding-bottom: 20px;">PPA</div>';
+        $html .= '<div style="font-size: 20px; font-weight: 300;">Energía Solar Fotovoltaica</div>';
         $html .= '</td>';
-        $html .= '<td class="portada-der">';
-        $html .= $logo;
+        $html .= '<td style="width: 58%; background-color: #1a1a1a; padding: 0; vertical-align: top; height: 210mm;">';
+        $html .= '<div style="text-align: right; padding: 20px 20px 0 0; height: 160px;">' . $logo . '</div>';
         if ($imagenFondo) {
-            $html .= '<img class="fondo" src="' . $imagenFondo . '" alt="" />';
+            $html .= '<img src="' . $imagenFondo . '" style="width: 100%; height: 175mm; display: block;" alt="" />';
         }
         $html .= '</td>';
         $html .= '</tr>';
@@ -302,11 +302,11 @@ class PropuestaPdfController {
                 $svg = preg_replace('/<!DOCTYPE.*?>/s', '', $svg);
                 $svg = str_replace('fill="#000000"', 'fill="#ffffff"', $svg);
                 $svg = str_replace('fill="black"', 'fill="white"', $svg);
-                $svg = preg_replace('/width="[^"]*"/', 'width="120px"', $svg);
-                $svg = preg_replace('/height="[^"]*"/', 'height="120px"', $svg);
-                return '<div class="portada-logo">' . trim($svg) . '</div>';
+                $svg = preg_replace('/width="[^"]*"/', 'width="160px"', $svg);
+                $svg = preg_replace('/height="[^"]*"/', 'height="160px"', $svg);
+                return '<div class="portada-logo" style="display: inline-block; width: 160px; height: 160px;">' . trim($svg) . '</div>';
             }
-            return '<img class="portada-logo" src="' . $ruta . '" alt="logo" />';
+            return '<img class="portada-logo" src="' . $ruta . '" alt="logo" style="width: 200px; height: auto;" />';
         }
 
         return '';

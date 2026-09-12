@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers;
 
 use Slim\Http\Request;
@@ -253,38 +254,65 @@ class PropuestaPdfController {
         $html .= '</div>';
         $html .= '</div>';
 
-        // Contenido
-        $html .= '<div class="contenido-pagina" style="page-break-after: always;">';
-        $html .= '<h2>Contenido</h2>';
-        $html .= '<table style="width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px;">';
-        $numero = 1;
-        foreach ($secciones as $seccion) {
-            $titulo = $seccion['titulo'] ?? $seccion['codigo'];
-            $html .= '<tr>';
-            $html .= '<td style="padding: 12px 0; border-bottom: 1px solid #ccc; width: 60px; color: #1a4a7a; font-weight: bold;">0' . $numero . '</td>';
-            $html .= '<td style="padding: 12px 0; border-bottom: 1px solid #ccc; color: #333;">' . $titulo . '</td>';
-            $html .= '</tr>';
-            $numero++;
-        }
-        $html .= '</table>';
-        $html .= '</div>';
-
         // Secciones de la plantilla
         foreach ($secciones as $index => $seccion) {
             $numero = $index + 1;
-            $contenido = $seccion['contenido'] ?? '';
             $variablesSeccion = $this->plantillaVariableDao->getBySeccionId($seccion['id']);
             $valoresSeccion = $this->construirValoresVariables($variablesSeccion, $valores);
-            $contenido = $this->reemplazarVariables($contenido, array_merge($valores, $valoresSeccion));
+            $valoresCompletos = array_merge($valores, $valoresSeccion);
 
-            $html .= '<div class="contenido-pagina" style="page-break-after: always;">';
-            $html .= '<h2>0' . $numero . ' ' . ($seccion['titulo'] ?? $seccion['codigo']) . '</h2>';
-            $html .= '<div class="contenido">' . $contenido . '</div>';
-            $html .= '<div class="pie">' . $valores['EMPRESA_NOMBRE'] . ' · ' . $valores['EMPRESA_SITIO_WEB'] . '</div>';
-            $html .= '</div>';
+            $titulo = $seccion['titulo'] ?? $seccion['codigo'];
+            if (mb_strtoupper($titulo, 'UTF-8') === 'CONTENIDO') {
+                $html .= $this->renderContenidoNegro($logo, $variablesSeccion, $valoresCompletos);
+            } else {
+                $contenido = $seccion['contenido'] ?? '';
+                $contenido = $this->reemplazarVariables($contenido, $valoresCompletos);
+
+                $html .= '<div class="contenido-pagina" style="page-break-after: always;">';
+                $html .= '<h2>0' . $numero . ' ' . $titulo . '</h2>';
+                $html .= '<div class="contenido">' . $contenido . '</div>';
+                $html .= '<div class="pie">' . $valores['EMPRESA_NOMBRE'] . ' · ' . $valores['EMPRESA_SITIO_WEB'] . '</div>';
+                $html .= '</div>';
+            }
         }
 
         $html .= '</body></html>';
+        return $html;
+    }
+
+    private function renderContenidoNegro($logo, $variables, $valores) {
+        $html = '<div style="width: 297mm; height: 210mm; position: relative; overflow: hidden; background-color: #000000; color: #ffffff; padding: 40px 50px; box-sizing: border-box; page-break-after: always;">';
+        $html .= '<div style="position: absolute; top: 20px; right: 20px; width: 160px; height: 160px;">' . $logo . '</div>';
+        $html .= '<h1 style="font-size: 42px; font-weight: bold; margin: 0 0 50px 0;">Contenido</h1>';
+        $html .= '<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">';
+
+        $items = [];
+        foreach ($variables as $v) {
+            $codigo = $v['codigo'] ?? '';
+            $valor = $valores[$codigo] ?? $v['formato'] ?? '';
+            if ($valor !== '') {
+                $items[] = ['numero' => $codigo, 'texto' => $valor];
+            }
+        }
+
+        $porFila = 3;
+        $chunks = array_chunk($items, $porFila);
+        foreach ($chunks as $fila) {
+            $html .= '<tr style="height: 80px;">';
+            for ($i = 0; $i < $porFila; $i++) {
+                $item = $fila[$i] ?? null;
+                $html .= '<td width="33%" valign="top" style="padding: 0 30px 40px 0;">';
+                if ($item) {
+                    $html .= '<div style="font-size: 36px; font-weight: bold; color: #ffffff; margin-bottom: 10px;">0' . $item['numero'] . '</div>';
+                    $html .= '<div style="font-size: 16px; font-weight: bold; color: #ffffff; line-height: 1.2;">' . nl2br($item['texto']) . '</div>';
+                }
+                $html .= '</td>';
+            }
+            $html .= '</tr>';
+        }
+
+        $html .= '</table>';
+        $html .= '</div>';
         return $html;
     }
 
@@ -301,7 +329,8 @@ class PropuestaPdfController {
             $codigo = $v['codigo'] ?? '';
             $nombre = $this->normalizarNombre($v['nombre'] ?? '');
             $clave = $mapa[$nombre] ?? $nombre;
-            $valor = $valoresBase[$clave] ?? '';
+            $formato = $v['formato'] ?? '';
+            $valor = $formato !== '' ? $formato : ($valoresBase[$clave] ?? '');
 
             $resultado[$codigo] = $valor;
             $resultado[$nombre] = $valor;
@@ -312,6 +341,12 @@ class PropuestaPdfController {
     private function normalizarNombre($nombre) {
         $nombre = mb_strtoupper($nombre, 'UTF-8');
         $nombre = preg_replace('/[^A-Z0-9]/', '', $nombre);
+
+
+
+
+
+
         return $nombre;
     }
 

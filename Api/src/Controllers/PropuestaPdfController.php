@@ -9,6 +9,7 @@ use App\DAO\ClienteDAO;
 use App\DAO\SedeDAO;
 use App\DAO\PlantillaDocumentoDAO;
 use App\DAO\PlantillaSeccionDAO;
+use App\DAO\PlantillaVariableDAO;
 use App\DAO\VariablePlantillaDAO;
 use App\DAO\DtlleVariablePlantillaDAO;
 use App\DAO\ConfiguracionEmpresaDAO;
@@ -22,6 +23,7 @@ class PropuestaPdfController {
     private $sedeDao;
     private $plantillaDocDao;
     private $plantillaSeccionDao;
+    private $plantillaVariableDao;
     private $variablePlantillaDao;
     private $dtlleVariablePlantillaDao;
     private $configEmpresaDao;
@@ -33,6 +35,7 @@ class PropuestaPdfController {
         $this->sedeDao = new SedeDAO();
         $this->plantillaDocDao = new PlantillaDocumentoDAO();
         $this->plantillaSeccionDao = new PlantillaSeccionDAO();
+        $this->plantillaVariableDao = new PlantillaVariableDAO();
         $this->variablePlantillaDao = new VariablePlantillaDAO();
         $this->dtlleVariablePlantillaDao = new DtlleVariablePlantillaDAO();
         $this->configEmpresaDao = new ConfiguracionEmpresaDAO();
@@ -270,7 +273,9 @@ class PropuestaPdfController {
         foreach ($secciones as $index => $seccion) {
             $numero = $index + 1;
             $contenido = $seccion['contenido'] ?? '';
-            $contenido = $this->reemplazarVariables($contenido, $valores);
+            $variablesSeccion = $this->plantillaVariableDao->getBySeccionId($seccion['id']);
+            $valoresSeccion = $this->construirValoresVariables($variablesSeccion, $valores);
+            $contenido = $this->reemplazarVariables($contenido, array_merge($valores, $valoresSeccion));
 
             $html .= '<div class="contenido-pagina" style="page-break-after: always;">';
             $html .= '<h2>0' . $numero . ' ' . ($seccion['titulo'] ?? $seccion['codigo']) . '</h2>';
@@ -281,6 +286,33 @@ class PropuestaPdfController {
 
         $html .= '</body></html>';
         return $html;
+    }
+
+    private function construirValoresVariables($variables, $valoresBase) {
+        $mapa = [
+            'CODIGODEOFERTA' => 'PROYECTO_CODIGO',
+            'EMPRESAOENTIDAD' => 'EMPRESA_NOMBRE',
+            'NOMBREDELAPROPUESTA' => 'PROYECTO_NOMBRE',
+            'LOGO' => 'EMPRESA_LOGO'
+        ];
+
+        $resultado = [];
+        foreach ($variables as $v) {
+            $codigo = $v['codigo'] ?? '';
+            $nombre = $this->normalizarNombre($v['nombre'] ?? '');
+            $clave = $mapa[$nombre] ?? $nombre;
+            $valor = $valoresBase[$clave] ?? '';
+
+            $resultado[$codigo] = $valor;
+            $resultado[$nombre] = $valor;
+        }
+        return $resultado;
+    }
+
+    private function normalizarNombre($nombre) {
+        $nombre = mb_strtoupper($nombre, 'UTF-8');
+        $nombre = preg_replace('/[^A-Z0-9]/', '', $nombre);
+        return $nombre;
     }
 
     private function reemplazarVariables($contenido, $valores) {

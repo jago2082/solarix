@@ -269,20 +269,54 @@ class PropuestaPdfController {
             if ($tituloMay === 'CONTENIDO') {
                 $html .= $this->renderContenidoNegro($variablesSeccion, $valoresCompletos);
             } elseif ($tituloMay !== 'PORTADA') {
-                $contenido = $seccion['contenido'] ?? '';
-                $contenido = $this->reemplazarVariables($contenido, $valoresCompletos);
                 $logoPagina = $this->cargarLogoSvg(false);
+                if ((int)$seccion['id'] === 3) {
+                    $html .= $this->renderSeccionSolaxGen($seccion, $numero, $valoresCompletos, $logoPagina, $valores);
+                } else {
+                    $contenido = $seccion['contenido'] ?? '';
+                    $contenido = $this->reemplazarVariables($contenido, $valoresCompletos);
 
-                $html .= '<div class="contenido-pagina" style="page-break-after: always;">';
-                $html .= '<div class="logo-pagina">' . $logoPagina . '</div>';
-                $html .= '<h2>0' . $numero . ' ' . $titulo . '</h2>';
-                $html .= '<div class="contenido">' . $contenido . '</div>';
-                $html .= '<div class="pie">' . $valores['EMPRESA_NOMBRE'] . ' · ' . $valores['EMPRESA_SITIO_WEB'] . '</div>';
-                $html .= '</div>';
+                    $html .= '<div class="contenido-pagina" style="page-break-after: always;">';
+                    $html .= '<div class="logo-pagina">' . $logoPagina . '</div>';
+                    $html .= '<h2>0' . $numero . ' ' . $titulo . '</h2>';
+                    $html .= '<div class="contenido">' . $contenido . '</div>';
+                    $html .= '<div class="pie">' . $valores['EMPRESA_NOMBRE'] . ' · ' . $valores['EMPRESA_SITIO_WEB'] . '</div>';
+                    $html .= '</div>';
+                }
             }
         }
 
         $html .= '</body></html>';
+        return $html;
+    }
+
+    private function renderSeccionSolaxGen($seccion, $numero, $valoresSeccion, $logoPagina, $valores) {
+        $titulo = $seccion['titulo'] ?? $seccion['codigo'];
+        $contenido = $seccion['contenido'] ?? '';
+
+        if ($contenido !== '') {
+            $contenido = $this->reemplazarVariables($contenido, $valoresSeccion);
+        } else {
+            $contenido = '<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">';
+            $contenido .= '<tr>';
+            $contenido .= '<td width="48%" valign="top" style="padding-right: 25px;">';
+            $contenido .= '<p style="font-size: 14px; line-height: 1.6; margin: 0 0 20px 0;">' . ($valoresSeccion['2'] ?? '') . '</p>';
+            $contenido .= '<p style="font-size: 14px; line-height: 1.6; margin: 0 0 20px 0;">' . ($valoresSeccion['3'] ?? '') . '</p>';
+            $contenido .= ($valoresSeccion['5'] ?? '');
+            $contenido .= '</td>';
+            $contenido .= '<td width="52%" valign="top" style="padding-left: 25px;">';
+            $contenido .= ($valoresSeccion['4'] ?? '');
+            $contenido .= '</td>';
+            $contenido .= '</tr>';
+            $contenido .= '</table>';
+        }
+
+        $html = '<div class="contenido-pagina" style="page-break-after: always; background-color: #000000; color: #ffffff;">';
+        $html .= '<div class="logo-pagina">' . $logoPagina . '</div>';
+        $html .= '<h2 style="color: #ffffff;">0' . $numero . ' ' . $titulo . '</h2>';
+        $html .= '<div class="contenido">' . $contenido . '</div>';
+        $html .= '<div class="pie" style="color: #cccccc;">' . $valores['EMPRESA_NOMBRE'] . ' · ' . $valores['EMPRESA_SITIO_WEB'] . '</div>';
+        $html .= '</div>';
         return $html;
     }
 

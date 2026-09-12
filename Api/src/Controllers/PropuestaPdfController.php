@@ -300,11 +300,11 @@ class PropuestaPdfController {
             $texto = $valoresSeccion['1'] ?? '';
             $contenido = '<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">';
             $contenido .= '<tr>';
-            $contenido .= '<td width="48%" valign="top" style="padding-right: 25px;">';
+            $contenido .= '<td width="42%" valign="top" style="padding-right: 25px;">';
             $contenido .= '<div style="font-size: 14px; line-height: 1.6; margin-bottom: 20px;">' . nl2br($texto) . '</div>';
             $contenido .= ($valoresSeccion['LOGO_ENERSOLAX'] ?? $valores['LOGO_ENERSOLAX'] ?? '');
             $contenido .= '</td>';
-            $contenido .= '<td width="52%" valign="top" style="padding-left: 25px;">';
+            $contenido .= '<td width="58%" valign="top" style="padding-left: 25px;">';
             $contenido .= ($valoresSeccion['IMAGENES_H3'] ?? $valores['IMAGENES_H3'] ?? '');
             $contenido .= '</td>';
             $contenido .= '</tr>';
@@ -484,7 +484,7 @@ class PropuestaPdfController {
     }
 
     private function cargarGridImagenesH3() {
-        $html = '<table style="float: right; width: 48%; margin-left: 20px; border-collapse: collapse;">';
+        $html = '<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">';
         for ($fila = 0; $fila < 4; $fila++) {
             $html .= '<tr>';
             for ($col = 0; $col < 4; $col++) {

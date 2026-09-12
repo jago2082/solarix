@@ -285,8 +285,8 @@ class PropuestaPdfController {
     }
 
     private function renderContenidoNegro($logo, $variables, $valores) {
-        $html = '<div style="width: 297mm; height: 210mm; position: relative; overflow: hidden; background-color: #000000; color: #ffffff; padding: 40px 50px; box-sizing: border-box; page-break-after: always;">';
-        $html .= '<div class="portada-logo" style="position: absolute; top: 60px; right: 40px; width: 140px; height: 140px;">' . $logo . '</div>';
+        $html = '<div style="width: 297mm; height: 210mm; background-color: #000000; color: #ffffff; padding: 40px 50px; box-sizing: border-box; page-break-after: always;">';
+        $html .= '<div style="text-align: right; width: 100%; margin-bottom: 20px;">' . $logo . '</div>';
         $html .= '<h1 style="font-size: 42px; font-weight: bold; margin: 0 0 50px 0;">Contenido</h1>';
         $html .= '<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">';
 

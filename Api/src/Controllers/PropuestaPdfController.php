@@ -265,7 +265,7 @@ class PropuestaPdfController {
             $titulo = $seccion['titulo'] ?? $seccion['codigo'];
             $tituloMay = mb_strtoupper($titulo, 'UTF-8');
             if ($tituloMay === 'CONTENIDO') {
-                $html .= $this->renderContenidoNegro($logo, $variablesSeccion, $valoresCompletos);
+                $html .= $this->renderContenidoNegro($variablesSeccion, $valoresCompletos);
             } elseif ($tituloMay !== 'PORTADA') {
                 $contenido = $seccion['contenido'] ?? '';
                 $contenido = $this->reemplazarVariables($contenido, $valoresCompletos);
@@ -284,9 +284,10 @@ class PropuestaPdfController {
         return $html;
     }
 
-    private function renderContenidoNegro($logo, $variables, $valores) {
+    private function renderContenidoNegro($variables, $valores) {
+        $logo = $this->cargarLogoSvg(true, 120);
         $html = '<div style="width: 297mm; height: 210mm; background-color: #000000; color: #ffffff; padding: 40px 50px; box-sizing: border-box; page-break-after: always;">';
-        $html .= '<div style="text-align: right; width: 100%; margin-bottom: 20px;">' . $logo . '</div>';
+        $html .= '<div style="text-align: right; width: 100%; margin-bottom: 10px;">' . $logo . '</div>';
         $html .= '<h1 style="font-size: 42px; font-weight: bold; margin: 0 0 50px 0;">Contenido</h1>';
         $html .= '<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">';
 
@@ -361,7 +362,7 @@ class PropuestaPdfController {
         }, $contenido);
     }
 
-    private function cargarLogoSvg($forzarBlanco = true) {
+    private function cargarLogoSvg($forzarBlanco = true, $ancho = 160) {
         $rutas = [
             __DIR__ . '/../../assets/logo.svg',
             __DIR__ . '/../../assets/logo.png',
@@ -383,12 +384,13 @@ class PropuestaPdfController {
                     $svg = str_replace('fill="#ffffff"none', 'fill="none"', $svg);
                     $svg = preg_replace('/(<svg[^>]*>)/', '$1<style>* { fill: #ffffff; }</style>', $svg, 1);
                 }
-                $svg = preg_replace('/width="[^"]*"/', 'width="160px"', $svg);
-                $svg = preg_replace('/height="[^"]*"/', 'height="160px"', $svg);
+                $anchoPx = $ancho . 'px';
+                $svg = preg_replace('/width="[^"]*"/', 'width="' . $anchoPx . '"', $svg);
+                $svg = preg_replace('/height="[^"]*"/', 'height="' . $anchoPx . '"', $svg);
                 return trim($svg);
             } else {
                 $data = file_get_contents($ruta);
-                return '<img src="data:' . $mime . ';base64,' . base64_encode($data) . '" alt="logo" style="width: 160px; height: auto;" />';
+                return '<img src="data:' . $mime . ';base64,' . base64_encode($data) . '" alt="logo" style="width: ' . $ancho . 'px; height: auto;" />';
             }
         }
 

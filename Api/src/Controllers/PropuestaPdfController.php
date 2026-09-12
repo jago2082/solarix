@@ -263,17 +263,17 @@ class PropuestaPdfController {
 
             $titulo = $seccion['titulo'] ?? $seccion['codigo'];
             if (mb_strtoupper($titulo, 'UTF-8') === 'CONTENIDO') {
-                $html .= $this->renderContenidoNegro($logo, $variablesSeccion, $valoresCompletos);
-            } else {
-                $contenido = $seccion['contenido'] ?? '';
-                $contenido = $this->reemplazarVariables($contenido, $valoresCompletos);
-
-                $html .= '<div class="contenido-pagina" style="page-break-after: always;">';
-                $html .= '<h2>0' . $numero . ' ' . $titulo . '</h2>';
-                $html .= '<div class="contenido">' . $contenido . '</div>';
-                $html .= '<div class="pie">' . $valores['EMPRESA_NOMBRE'] . ' · ' . $valores['EMPRESA_SITIO_WEB'] . '</div>';
-                $html .= '</div>';
+                continue;
             }
+
+            $contenido = $seccion['contenido'] ?? '';
+            $contenido = $this->reemplazarVariables($contenido, $valoresCompletos);
+
+            $html .= '<div class="contenido-pagina" style="page-break-after: always;">';
+            $html .= '<h2>0' . $numero . ' ' . $titulo . '</h2>';
+            $html .= '<div class="contenido">' . $contenido . '</div>';
+            $html .= '<div class="pie">' . $valores['EMPRESA_NOMBRE'] . ' · ' . $valores['EMPRESA_SITIO_WEB'] . '</div>';
+            $html .= '</div>';
         }
 
         $html .= '</body></html>';

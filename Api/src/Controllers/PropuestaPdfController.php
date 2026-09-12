@@ -9,11 +9,11 @@ use App\DAO\ClienteDAO;
 use App\DAO\SedeDAO;
 use App\DAO\PlantillaDocumentoDAO;
 use App\DAO\PlantillaSeccionDAO;
-use App\DAO\PlantillaVariableDAO;
 use App\DAO\VariablePlantillaDAO;
 use App\DAO\DtlleVariablePlantillaDAO;
 use App\DAO\ConfiguracionEmpresaDAO;
-use Mpdf\Mpdf;
+use Dompdf\Dompdf;
+use Dompdf\Options;
 
 class PropuestaPdfController {
     private $planPpaDao;
@@ -33,7 +33,6 @@ class PropuestaPdfController {
         $this->sedeDao = new SedeDAO();
         $this->plantillaDocDao = new PlantillaDocumentoDAO();
         $this->plantillaSeccionDao = new PlantillaSeccionDAO();
-        $this->plantillaVariableDao = new PlantillaVariableDAO();
         $this->variablePlantillaDao = new VariablePlantillaDAO();
         $this->dtlleVariablePlantillaDao = new DtlleVariablePlantillaDAO();
         $this->configEmpresaDao = new ConfiguracionEmpresaDAO();
@@ -89,11 +88,17 @@ class PropuestaPdfController {
         }
 
         try {
-            $mpdf = new Mpdf(['mode' => 'utf-8', 'format' => 'A4-L', 'margin_left' => 0, 'margin_right' => 0, 'margin_top' => 0, 'margin_bottom' => 0]);
-            $mpdf->SetAuthor($empresa['nombre'] ?? 'Enersolax');
-            $mpdf->SetTitle($plan['nombre'] ?? 'Propuesta PPA');
-            $mpdf->WriteHTML($html);
-            $pdfOutput = $mpdf->Output('', 'S');
+            $options = new Options();
+            $options->set('isRemoteEnabled', true);
+            $options->set('isHtml5ParserEnabled', true);
+            $options->set('defaultFont', 'Arial');
+            $options->set('defaultPaperSize', 'A4');
+
+            $dompdf = new Dompdf($options);
+            $dompdf->setPaper('A4', 'landscape');
+            $dompdf->loadHtml($html);
+            $dompdf->render();
+            $pdfOutput = $dompdf->output();
 
             $res = $res->withHeader('Content-Type', 'application/pdf')
                        ->withHeader('Content-Disposition', 'inline; filename="propuesta_' . $planId . '.pdf"');
@@ -194,7 +199,7 @@ class PropuestaPdfController {
     }
 
     private function construirHtml($plantilla, $secciones, $valores, $empresa, $modoDebug = false) {
-        $imagenFondo = $modoDebug ? $this->urlImagenPortada() : $this->rutaImagenPortada();
+        $imagenFondo = $this->urlImagenPortada();
         $logo = $valores['EMPRESA_LOGO'];
 
         $html = '<!DOCTYPE html>
@@ -202,19 +207,19 @@ class PropuestaPdfController {
 <head>
     <meta charset="UTF-8">
     <style>
-        @page { margin: 0; padding: 0; }
+        @page { margin: 0; padding: 0; size: A4 landscape; }
+        * { box-sizing: border-box; }
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; color: #333; }
-        .portada { height: 210mm; width: 297mm; border-collapse: collapse; }
-        .portada td { padding: 0; vertical-align: top; }
-        .portada-izq { width: 42%; background-color: #000000; color: #ffffff; padding: 45px 30px; }
-        .portada-der { width: 58%; background-color: #1a1a1a; }
-        .portada-der img { width: 100%; height: 210mm; display: block; }
-        .portada-logo { width: 200px; height: 200px; }
-        .portada-logo svg { width: 200px; height: 200px; }
-        .oferta { font-size: 16px; letter-spacing: 1.5px; }
-        .titulo { font-size: 28px; font-weight: bold; line-height: 1.25; text-transform: uppercase; }
-        .subtitulo { font-size: 24px; font-weight: bold; }
-        .tipo { font-size: 20px; font-weight: 300; }
+        .portada { width: 297mm; height: 210mm; position: relative; overflow: hidden; }
+        .portada-izq { position: absolute; top: 0; left: 0; width: 42%; height: 100%; background-color: #000000; color: #ffffff; padding: 40px 30px; }
+        .portada-der { position: absolute; top: 0; right: 0; width: 58%; height: 100%; background-color: #1a1a1a; }
+        .oferta { font-size: 14px; letter-spacing: 1.5px; margin-bottom: 80px; }
+        .titulo { font-size: 34px; font-weight: bold; line-height: 1.15; margin: 0 0 35px 0; text-transform: uppercase; }
+        .subtitulo { font-size: 28px; font-weight: bold; margin: 0 0 15px 0; }
+        .tipo { font-size: 22px; font-weight: 300; margin: 0; }
+        .portada-logo { position: absolute; top: 20px; right: 20px; width: 160px; height: 160px; z-index: 10; }
+        .portada-logo svg { width: 160px; height: 160px; }
+        .portada-fondo { position: absolute; bottom: 0; right: 0; width: 100%; height: calc(100% - 180px); object-fit: cover; }
         .contenido-pagina { padding: 40px; }
         .contenido-pagina h2 { font-size: 18px; color: #1a4a7a; border-bottom: 2px solid #1a4a7a; padding-bottom: 8px; margin-top: 0; }
         .contenido { text-align: justify; font-size: 11px; line-height: 1.5; }
@@ -230,26 +235,20 @@ class PropuestaPdfController {
 <body>';
 
         // Portada
-        $nombreMayusculas = mb_strtoupper($valores['PROYECTO_NOMBRE'], 'UTF-8');
-        $html .= '<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">';
-        $html .= '<tr>';
-        $html .= '<td width="42%" height="210mm" bgcolor="#000000" valign="top" style="padding: 40px 30px 0 30px;">';
-        $html .= '<div style="font-family: Arial; font-size: 14px; color: #ffffff; letter-spacing: 1.5px;">Oferta ' . $valores['PROYECTO_CODIGO'] . '</div>';
-        $html .= '<br/><br/><br/><br/><br/><br/>';
-        $html .= '<div style="font-family: Arial; font-size: 32px; color: #ffffff; font-weight: bold; line-height: 1.2; text-transform: uppercase;">' . $nombreMayusculas . '</div>';
-        $html .= '<br/><br/><br/><br/>';
-        $html .= '<div style="font-family: Arial; font-size: 28px; color: #ffffff; font-weight: bold;">PPA</div>';
-        $html .= '<br/><br/>';
-        $html .= '<div style="font-family: Arial; font-size: 22px; color: #ffffff;">Energía Solar Fotovoltaica</div>';
-        $html .= '</td>';
-        $html .= '<td width="58%" height="210mm" bgcolor="#1a1a1a" valign="top">';
-        $html .= '<div align="right" style="padding: 20px 20px 0 0;">' . $logo . '</div>';
+        $html .= '<div class="portada">';
+        $html .= '<div class="portada-izq">';
+        $html .= '<div class="oferta">Oferta ' . $valores['PROYECTO_CODIGO'] . '</div>';
+        $html .= '<h1 class="titulo">' . mb_strtoupper($valores['PROYECTO_NOMBRE'], 'UTF-8') . '</h1>';
+        $html .= '<div class="subtitulo">PPA</div>';
+        $html .= '<div class="tipo">Energía Solar Fotovoltaica</div>';
+        $html .= '</div>';
+        $html .= '<div class="portada-der">';
+        $html .= '<div class="portada-logo">' . $logo . '</div>';
         if ($imagenFondo) {
-            $html .= '<img src="' . $imagenFondo . '" width="100%" height="175mm" alt="" />';
+            $html .= '<img class="portada-fondo" src="' . $imagenFondo . '" alt="" />';
         }
-        $html .= '</td>';
-        $html .= '</tr>';
-        $html .= '</table>';
+        $html .= '</div>';
+        $html .= '</div>';
 
         // Resumen
         $html .= '<div class="contenido-pagina" style="page-break-after: always;">';
@@ -307,18 +306,18 @@ class PropuestaPdfController {
                 $svg = preg_replace('/<!DOCTYPE.*?>/s', '', $svg);
                 $svg = preg_replace('/fill="[^"]*"/', 'fill="#ffffff"', $svg);
                 $svg = str_replace('fill="#ffffff"none', 'fill="none"', $svg);
+                $svg = preg_replace('/(<svg[^>]*>)/', '$1<style>* { fill: #ffffff; }</style>', $svg, 1);
                 $svg = preg_replace('/width="[^"]*"/', 'width="160px"', $svg);
                 $svg = preg_replace('/height="[^"]*"/', 'height="160px"', $svg);
-                $svg = preg_replace('/(<svg[^>]*>)/', '$1<style>* { fill: #fff; }</style>', $svg, 1);
-                return '<div class="portada-logo" style="display: inline-block; width: 160px; height: 160px;">' . trim($svg) . '</div>';
+                return trim($svg);
             }
-            return '<img class="portada-logo" src="' . $ruta . '" alt="logo" style="width: 200px; height: auto;" />';
+            return '<img src="' . $ruta . '" alt="logo" style="width: 160px; height: auto;" />';
         }
 
         return '';
     }
 
-    private function rutaImagenPortada() {
+    private function urlImagenPortada() {
         $rutasApi = [
             __DIR__ . '/../../assets/portada.jpg',
             __DIR__ . '/../../assets/portada.png',
@@ -330,30 +329,26 @@ class PropuestaPdfController {
             __DIR__ . '/../../../../app/src/assets/portada.webp'
         ];
 
-        foreach (array_merge($rutasApi, $rutasApp) as $ruta) {
-            if (file_exists($ruta)) return $ruta;
+        $ruta = '';
+        foreach (array_merge($rutasApi, $rutasApp) as $r) {
+            if (file_exists($r)) {
+                $ruta = $r;
+                break;
+            }
         }
 
-        return '';
-    }
-
-    private function urlImagenPortada() {
-        $ruta = $this->rutaImagenPortada();
         if (!$ruta) return '';
 
         $docRoot = $_SERVER['DOCUMENT_ROOT'] ?? '';
         if ($docRoot && strpos($ruta, $docRoot) === 0) {
             $rel = str_replace('\\', '/', substr($ruta, strlen($docRoot)));
-            return $rel;
+        } else {
+            $rel = '/assets/portada.' . pathinfo($ruta, PATHINFO_EXTENSION);
         }
 
-        $base = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost');
-        foreach (['jpg', 'png', 'webp'] as $ext) {
-            if (file_exists(__DIR__ . '/../../assets/portada.' . $ext)) {
-                return $base . '/assets/portada.' . $ext;
-            }
-        }
-        return '';
+        $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        return $scheme . '://' . $host . $rel;
     }
 
     private function formatoMoneda($valor) {

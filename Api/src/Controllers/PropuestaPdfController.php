@@ -300,6 +300,7 @@ class PropuestaPdfController {
         foreach ($rutas as $ruta) {
             if (!file_exists($ruta)) continue;
             $ext = strtolower(pathinfo($ruta, PATHINFO_EXTENSION));
+            $mime = $ext === 'svg' ? 'image/svg+xml' : 'image/' . $ext;
             if ($ext === 'svg') {
                 $svg = file_get_contents($ruta);
                 $svg = preg_replace('/<\?xml.*?\?>/s', '', $svg);
@@ -309,9 +310,11 @@ class PropuestaPdfController {
                 $svg = preg_replace('/(<svg[^>]*>)/', '$1<style>* { fill: #ffffff; }</style>', $svg, 1);
                 $svg = preg_replace('/width="[^"]*"/', 'width="160px"', $svg);
                 $svg = preg_replace('/height="[^"]*"/', 'height="160px"', $svg);
-                return trim($svg);
+                $data = trim($svg);
+            } else {
+                $data = file_get_contents($ruta);
             }
-            return '<img src="' . $ruta . '" alt="logo" style="width: 160px; height: auto;" />';
+            return '<img src="data:' . $mime . ';base64,' . base64_encode($data) . '" alt="logo" style="width: 160px; height: auto;" />';
         }
 
         return '';

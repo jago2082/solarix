@@ -294,28 +294,28 @@ class PropuestaPdfController {
         $titulo = $seccion['titulo'] ?? $seccion['codigo'];
         $contenido = $seccion['contenido'] ?? '';
 
-        if ($contenido !== '') {
+        if ($contenido !== '' && strtoupper($contenido) !== 'NA') {
             $contenido = $this->reemplazarVariables($contenido, $valoresSeccion);
         } else {
+            $texto = $valoresSeccion['1'] ?? '';
             $contenido = '<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">';
             $contenido .= '<tr>';
             $contenido .= '<td width="48%" valign="top" style="padding-right: 25px;">';
-            $contenido .= '<p style="font-size: 14px; line-height: 1.6; margin: 0 0 20px 0;">' . ($valoresSeccion['2'] ?? '') . '</p>';
-            $contenido .= '<p style="font-size: 14px; line-height: 1.6; margin: 0 0 20px 0;">' . ($valoresSeccion['3'] ?? '') . '</p>';
-            $contenido .= ($valoresSeccion['5'] ?? '');
+            $contenido .= '<div style="font-size: 14px; line-height: 1.6; margin-bottom: 20px;">' . nl2br($texto) . '</div>';
+            $contenido .= ($valoresSeccion['LOGO_ENERSOLAX'] ?? $valores['LOGO_ENERSOLAX'] ?? '');
             $contenido .= '</td>';
             $contenido .= '<td width="52%" valign="top" style="padding-left: 25px;">';
-            $contenido .= ($valoresSeccion['4'] ?? '');
+            $contenido .= ($valoresSeccion['IMAGENES_H3'] ?? $valores['IMAGENES_H3'] ?? '');
             $contenido .= '</td>';
             $contenido .= '</tr>';
             $contenido .= '</table>';
         }
 
-        $html = '<div class="contenido-pagina" style="page-break-after: always; background-color: #000000; color: #ffffff;">';
+        $html = '<div class="contenido-pagina" style="page-break-after: always;">';
         $html .= '<div class="logo-pagina">' . $logoPagina . '</div>';
-        $html .= '<h2 style="color: #ffffff;">0' . $numero . ' ' . $titulo . '</h2>';
+        $html .= '<h2>0' . $numero . ' ' . $titulo . '</h2>';
         $html .= '<div class="contenido">' . $contenido . '</div>';
-        $html .= '<div class="pie" style="color: #cccccc;">' . $valores['EMPRESA_NOMBRE'] . ' · ' . $valores['EMPRESA_SITIO_WEB'] . '</div>';
+        $html .= '<div class="pie">' . $valores['EMPRESA_NOMBRE'] . ' · ' . $valores['EMPRESA_SITIO_WEB'] . '</div>';
         $html .= '</div>';
         return $html;
     }

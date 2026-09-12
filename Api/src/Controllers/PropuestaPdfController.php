@@ -199,15 +199,15 @@ class PropuestaPdfController {
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; color: #333; }
         .portada { height: 210mm; width: 297mm; border-collapse: collapse; }
         .portada td { padding: 0; vertical-align: top; }
-        .portada-izq { width: 42%; background-color: #000000; color: #ffffff; padding: 45px 30px !important; }
+        .portada-izq { width: 42%; background-color: #000000; color: #ffffff; padding: 55px 35px !important; }
         .portada-der { width: 58%; position: relative; background-color: #1a1a1a; }
         .portada-der img.fondo { width: 100%; height: 210mm; object-fit: cover; display: block; }
-        .portada-logo { position: absolute; top: 25px; right: 25px; width: 120px; }
-        .portada-logo svg { width: 120px; height: 120px; }
-        .oferta { font-size: 12px; letter-spacing: 1.5px; margin-bottom: 40px; }
-        .titulo { font-size: 32px; font-weight: bold; line-height: 1.15; margin: 0 0 25px 0; text-transform: uppercase; }
-        .subtitulo { font-size: 24px; font-weight: bold; margin: 0 0 12px 0; }
-        .tipo { font-size: 20px; font-weight: 300; margin: 0; }
+        .portada-logo { position: absolute; top: 20px; right: 20px; width: 200px; }
+        .portada-logo svg { width: 200px; height: 200px; }
+        .oferta { font-size: 12px; letter-spacing: 1.5px; margin-bottom: 80px; }
+        .titulo { font-size: 30px; font-weight: bold; line-height: 1.3; margin: 0 0 45px 0; text-transform: uppercase; }
+        .subtitulo { font-size: 26px; font-weight: bold; margin: 0 0 20px 0; }
+        .tipo { font-size: 22px; font-weight: 300; margin: 0; }
         .contenido-pagina { padding: 40px; }
         .contenido-pagina h2 { font-size: 18px; color: #1a4a7a; border-bottom: 2px solid #1a4a7a; padding-bottom: 8px; margin-top: 0; }
         .contenido { text-align: justify; font-size: 11px; line-height: 1.5; }

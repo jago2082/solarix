@@ -231,30 +231,22 @@ class PropuestaPdfController {
 
         // Portada
         $nombreMayusculas = mb_strtoupper($valores['PROYECTO_NOMBRE'], 'UTF-8');
-        $html .= '<table width="100%" height="210mm" cellpadding="0" cellspacing="0" style="border-collapse: collapse; width: 297mm; height: 210mm;">';
+        $html .= '<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">';
         $html .= '<tr>';
-        $html .= '<td width="42%" height="210mm" bgcolor="#000000" valign="top">';
-        $html .= '<table width="100%" cellpadding="0" cellspacing="0">';
-        $html .= '<tr><td width="100%" valign="top" style="padding: 30px 25px 0 25px;">';
-        $html .= '<font face="Arial" size="6" color="#ffffff">Oferta ' . $valores['PROYECTO_CODIGO'] . '</font>';
-        $html .= '<br/><br/><br/><br/><br/><br/><br/><br/>';
-        $html .= '<font face="Arial" size="6" color="#ffffff"><b>' . $nombreMayusculas . '</b></font>';
+        $html .= '<td width="42%" height="210mm" bgcolor="#000000" valign="top" style="padding: 40px 30px 0 30px;">';
+        $html .= '<div style="font-family: Arial; font-size: 14px; color: #ffffff; letter-spacing: 1.5px;">Oferta ' . $valores['PROYECTO_CODIGO'] . '</div>';
+        $html .= '<br/><br/><br/><br/><br/><br/>';
+        $html .= '<div style="font-family: Arial; font-size: 32px; color: #ffffff; font-weight: bold; line-height: 1.2; text-transform: uppercase;">' . $nombreMayusculas . '</div>';
         $html .= '<br/><br/><br/><br/>';
-        $html .= '<font face="Arial" size="5" color="#ffffff"><b>PPA</b></font>';
+        $html .= '<div style="font-family: Arial; font-size: 28px; color: #ffffff; font-weight: bold;">PPA</div>';
         $html .= '<br/><br/>';
-        $html .= '<font face="Arial" size="4" color="#ffffff">Energía Solar Fotovoltaica</font>';
-        $html .= '</td></tr>';
-        $html .= '</table>';
+        $html .= '<div style="font-family: Arial; font-size: 22px; color: #ffffff;">Energía Solar Fotovoltaica</div>';
         $html .= '</td>';
         $html .= '<td width="58%" height="210mm" bgcolor="#1a1a1a" valign="top">';
-        $html .= '<table width="100%" height="100%" cellpadding="0" cellspacing="0">';
-        $html .= '<tr><td width="100%" height="160" align="right" valign="top" style="padding: 15px 15px 0 0;">' . $logo . '</td></tr>';
-        $html .= '<tr><td width="100%" valign="top">';
+        $html .= '<div align="right" style="padding: 20px 20px 0 0;">' . $logo . '</div>';
         if ($imagenFondo) {
             $html .= '<img src="' . $imagenFondo . '" width="100%" height="175mm" alt="" />';
         }
-        $html .= '</td></tr>';
-        $html .= '</table>';
         $html .= '</td>';
         $html .= '</tr>';
         $html .= '</table>';
@@ -317,6 +309,7 @@ class PropuestaPdfController {
                 $svg = str_replace('fill="#ffffff"none', 'fill="none"', $svg);
                 $svg = preg_replace('/width="[^"]*"/', 'width="160px"', $svg);
                 $svg = preg_replace('/height="[^"]*"/', 'height="160px"', $svg);
+                $svg = preg_replace('/(<svg[^>]*>)/', '$1<style>* { fill: #fff; }</style>', $svg, 1);
                 return '<div class="portada-logo" style="display: inline-block; width: 160px; height: 160px;">' . trim($svg) . '</div>';
             }
             return '<img class="portada-logo" src="' . $ruta . '" alt="logo" style="width: 200px; height: auto;" />';

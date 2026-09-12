@@ -82,7 +82,7 @@ class PropuestaPdfController {
         $html = $this->construirHtml($plantilla, $secciones, $valores, $empresa);
 
         try {
-            $mpdf = new Mpdf(['mode' => 'utf-8', 'format' => 'A4', 'margin_left' => 0, 'margin_right' => 0, 'margin_top' => 0, 'margin_bottom' => 0]);
+            $mpdf = new Mpdf(['mode' => 'utf-8', 'format' => 'A4-L', 'margin_left' => 0, 'margin_right' => 0, 'margin_top' => 0, 'margin_bottom' => 0]);
             $mpdf->SetAuthor($empresa['nombre'] ?? 'Enersolax');
             $mpdf->SetTitle($plan['nombre'] ?? 'Propuesta PPA');
             $mpdf->WriteHTML($html);
@@ -197,11 +197,11 @@ class PropuestaPdfController {
     <style>
         @page { margin: 0; padding: 0; }
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; color: #333; }
-        .portada { height: 297mm; width: 210mm; border-collapse: collapse; }
+        .portada { height: 210mm; width: 297mm; border-collapse: collapse; }
         .portada td { padding: 0; vertical-align: top; }
         .portada-izq { width: 42%; background-color: #000000; color: #ffffff; padding: 50px 35px !important; }
         .portada-der { width: 58%; position: relative; background-color: #1a1a1a; }
-        .portada-der img.fondo { width: 100%; height: 297mm; object-fit: cover; display: block; }
+        .portada-der img.fondo { width: 100%; height: 210mm; object-fit: cover; display: block; }
         .portada-logo { position: absolute; top: 25px; right: 25px; width: 140px; }
         .oferta { font-size: 11px; letter-spacing: 1px; margin-bottom: 70px; }
         .titulo { font-size: 34px; font-weight: bold; line-height: 1.1; margin: 0 0 35px 0; text-transform: uppercase; }

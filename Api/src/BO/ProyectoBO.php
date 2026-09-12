@@ -12,6 +12,7 @@ class ProyectoBO {
 
     public function getAll() { return $this->dao->getAll(); }
     public function getById($id) { return $this->dao->getById($id); }
+    public function getEstados() { return $this->dao->getEstados(); }
     public function create(ProyectoTO $proyectoTO) { return $this->dao->create($proyectoTO); }
     
     public function update(ProyectoTO $proyectoTO, $id) {

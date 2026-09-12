@@ -4,7 +4,8 @@
     "require": {
         "slim/slim": "^3.12",
         "firebase/php-jwt": "^6.10",
-        "zircote/swagger-php": "^4.10"
+        "zircote/swagger-php": "^4.10",
+        "mpdf/mpdf": "^8.1"
     },
     "autoload": {
         "psr-4": {

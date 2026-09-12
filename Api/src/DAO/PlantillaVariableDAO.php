@@ -8,7 +8,7 @@ class PlantillaVariableDAO {
     private $conn;
 
     public function __construct() {
-        $db = new Database();
+
         $this->conn = Database::getInstance()->getConnection();
     }
 
@@ -49,6 +49,27 @@ class PlantillaVariableDAO {
             return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (\PDOException $e) {
             return false;
+        }
+    }
+
+    public function getBySeccionId($seccionId) {
+        $sql = "SELECT 
+                    lInPva_cont AS id,
+                    lInPse_cont AS seccionId,
+                    lStPva_codi AS codigo,
+                    lStPva_nomb AS nombre,
+                    lStPva_tipo AS tipo,
+                    lStPva_form AS formato
+                FROM plantilla_variables 
+                WHERE lInPse_cont = :seccionId";
+                
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindValue(':seccionId', $seccionId);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
+            return [];
         }
     }
 

@@ -8,7 +8,7 @@ class PlantillaDocumentoDAO {
     private $conn;  
 
     public function __construct() {
-        $db = new Database();
+
         $this->conn = Database::getInstance()->getConnection();
     }
 
@@ -47,6 +47,28 @@ class PlantillaDocumentoDAO {
         try {
             $stmt = $this->conn->prepare($sql);
             $stmt->bindValue(':id', $id);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
+            return false;
+        }
+    }
+
+    public function getActiva() {
+        $sql = "SELECT 
+                    lInPtd_cont AS id,
+                    lStPtd_nomb AS nombre,
+                    lStPtd_codi AS codigo,
+                    lStPtd_vers AS version,
+                    lStPtd_esta AS estado,
+                    lStPtd_fecr AS fechaCreacion
+                FROM plantillas_documento 
+                WHERE lStPtd_esta = 'A'
+                ORDER BY lInPtd_cont ASC
+                LIMIT 1";
+                
+        try {
+            $stmt = $this->conn->prepare($sql);
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (\PDOException $e) {

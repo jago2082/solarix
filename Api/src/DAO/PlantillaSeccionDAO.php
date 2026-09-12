@@ -8,7 +8,7 @@ class PlantillaSeccionDAO {
     private $conn;
 
     public function __construct() {
-        $db = new Database();
+
         $this->conn = Database::getInstance()->getConnection();
     }
 
@@ -53,6 +53,29 @@ class PlantillaSeccionDAO {
             return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (\PDOException $e) {
             return false;
+        }
+    }
+
+    public function getByPlantillaId($plantillaId) {
+        $sql = "SELECT 
+                    lInPse_cont AS id,
+                    lInPtd_cont AS plantillaId,
+                    lStPse_codi AS codigo,
+                    lStPse_titu AS titulo,
+                    lInPse_orde AS orden,
+                    lStPse_cont AS contenido,
+                    lStPse_acti AS estado
+                FROM plantilla_secciones 
+                WHERE lInPtd_cont = :plantillaId AND lStPse_acti = 'A'
+                ORDER BY lInPse_orde ASC";
+                
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->bindValue(':plantillaId', $plantillaId);
+            $stmt->execute();
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (\PDOException $e) {
+            return [];
         }
     }
 

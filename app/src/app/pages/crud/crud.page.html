@@ -47,6 +47,9 @@
                             <ion-button *ngIf="hasDetailView" fill="clear" size="small" color="secondary" (click)="verDetalle(item)" title="Ver proyección">
                                 <ion-icon slot="icon-only" name="eye-outline"></ion-icon>
                             </ion-button>
+                            <ion-button *ngIf="hasPdfView" fill="clear" size="small" color="tertiary" (click)="generarPdf(item)" title="Generar propuesta PDF">
+                                <ion-icon slot="icon-only" name="document-text"></ion-icon>
+                            </ion-button>
                             <ion-button fill="clear" size="small" color="primary" (click)="abrirModal(item)" title="Editar">
                                 <ion-icon slot="icon-only" name="create-outline"></ion-icon>
                             </ion-button>
@@ -83,12 +86,12 @@
                 <div *ngFor="let field of formFields; trackBy: trackByField" class="field-container">
 
                     <!-- Entradas de Texto / Número / Email / Password / Fecha / Datetime -->
-                    <ion-input *ngIf="field.type === 'text' || field.type === 'number' || field.type === 'email' || field.type === 'password' || field.type === 'date' || field.type === 'datetime-local'" [type]="field.type" [placeholder]="field.label | uppercase" [formControlName]="field.key"
-                        fill="outline" class="primary-input">
+                    <ion-input *ngIf="field.type === 'text' || field.type === 'number' || field.type === 'email' || field.type === 'password' || field.type === 'date' || field.type === 'datetime-local'" [type]="field.type" [formControlName]="field.key"
+                        fill="outline" [label]="field.label" labelPlacement="floating" class="primary-input">
                     </ion-input>
 
                     <!-- Textarea -->
-                    <ion-textarea *ngIf="field.type === 'textarea'" [placeholder]="field.label | uppercase" [formControlName]="field.key" fill="outline" rows="3" class="primary-input">
+                    <ion-textarea *ngIf="field.type === 'textarea'" [formControlName]="field.key" fill="outline" [label]="field.label" labelPlacement="floating" rows="3" class="primary-input">
                     </ion-textarea>
 
                     <!-- Selects (Soporta Opciones Estáticas y Fuentes Dinámicas Lookups) -->

@@ -157,7 +157,7 @@ export class EntityConfigService {
         { key: 'visitaId', label: 'Visita', type: 'select', source: { endpoint: 'visitas', valueField: 'id', labelField: 'observaciones' }, showInTable: false },
         { key: 'codigo', label: 'Código', type: 'text', required: true, showInTable: true },
         { key: 'nombre', label: 'Nombre', type: 'text', required: true, showInTable: true },
-        { key: 'estado', label: 'Estado', type: 'select', required: true, options: [{ label: 'Activo', value: 'A' }, { label: 'Inactivo', value: 'I' }, { label: 'Finalizado', value: 'F' }], showInTable: true }
+        { key: 'estado', label: 'Estado comercial', type: 'select', required: true, source: { endpoint: 'proyectos/estados', valueField: 'value', labelField: 'label' }, showInTable: true }
       ]
     },
     roles: {

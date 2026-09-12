@@ -5,6 +5,7 @@ import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators, V
 import { ApiService } from 'src/app/services/api/api.service';
 import { AlertService } from 'src/app/services/alert/alert.service';
 import { SessionsService } from 'src/app/services/sessions/sessions.service';
+import { HttpManagerService } from 'src/app/services/httpManager/http-manager.service';
 import { EntityConfigService, EntityConfig, CrudField } from 'src/app/services/entity-config/entity-config.service';
 import { HeaderComponent } from 'src/app/components/header/header.component';
 import { FooterComponent } from 'src/app/components/footer/footer.component';
@@ -14,7 +15,7 @@ import { Table } from 'primeng/table';
 
 // Importar addIcons y los íconos específicos de Ionicons
 import { addIcons } from 'ionicons';
-import { create, trash, createOutline, trashOutline, addOutline, closeOutline, eyeOutline } from 'ionicons/icons';
+import { create, trash, createOutline, trashOutline, addOutline, closeOutline, eyeOutline, documentText } from 'ionicons/icons';
 
 @Component({
   selector: 'app-crud-generic',
@@ -57,7 +58,8 @@ export class CrudGenericComponent implements OnInit, OnChanges {
     private _loadingCtrl: LoadingController,
     private _alertCtrl: AlertController,
     private _sesion: SessionsService,
-    private _entityConfig: EntityConfigService
+    private _entityConfig: EntityConfigService,
+    private _http: HttpManagerService
   ) {
     // REGISTRO DE ÍCONOS DE IONICONS
     addIcons({
@@ -67,7 +69,8 @@ export class CrudGenericComponent implements OnInit, OnChanges {
       'trash-outline': trashOutline,
       'add-outline': addOutline,
       'close-outline': closeOutline,
-      'eye-outline': eyeOutline
+      'eye-outline': eyeOutline,
+      'document-text': documentText
     });
   }
 
@@ -114,6 +117,11 @@ export class CrudGenericComponent implements OnInit, OnChanges {
   /** Indica si la entidad actual soporta vista de detalle de proyección */
   get hasDetailView(): boolean {
     return this.entityKey === 'variables-plantilla';
+  }
+
+  /** Indica si la entidad actual soporta generación de propuesta PDF */
+  get hasPdfView(): boolean {
+    return this.entityKey === 'planes-ppa';
   }
 
   get globalFilterFields(): string[] {
@@ -357,6 +365,14 @@ export class CrudGenericComponent implements OnInit, OnChanges {
     if (planPpaId) {
       this._nav.navigateForward(`tabs/admin/variables-plantilla/detalle/${planPpaId}`, { animated: true });
     }
+  }
+
+  /** Abre el PDF de propuesta del plan PPA */
+  generarPdf(item: any) {
+    const id = item?.id;
+    if (!id) return;
+    const url = `${this._http.baseUrl}api/planes-ppa/${id}/pdf`;
+    window.open(url, '_blank');
   }
 
   async eliminar(item: any) {

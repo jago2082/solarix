@@ -63,6 +63,10 @@ class ProyectoController {
         return $res->withJson(['status' => 'error', 'message' => 'Proyecto no encontrado'], 404);
     }
 
+    public function getEstados(Request $req, Response $res) {
+        return $res->withJson($this->bo->getEstados(), 200);
+    }
+
     /**
      * @OA\Post(
      *     path="/proyectos",

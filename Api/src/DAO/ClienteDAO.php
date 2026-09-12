@@ -8,7 +8,7 @@ use PDO;
         private $conn;
     
         public function __construct() {
-            $db = new Database();
+
             $this->conn = Database::getInstance()->getConnection();
         }
     

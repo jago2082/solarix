@@ -134,6 +134,7 @@ $app->group('/api/visitas', function () use ($app) {
 
 $app->group('/api/proyectos', function () use ($app) {
     $app->get('', \App\Controllers\ProyectoController::class . ':getAll');
+    $app->get('/estados', \App\Controllers\ProyectoController::class . ':getEstados');
     $app->get('/{id}', \App\Controllers\ProyectoController::class . ':getById');
     $app->post('', \App\Controllers\ProyectoController::class . ':create');
     $app->put('/{id}', \App\Controllers\ProyectoController::class . ':update');
@@ -142,6 +143,7 @@ $app->group('/api/proyectos', function () use ($app) {
 
 $app->group('/api/planes-ppa', function () use ($app) {
     $app->get('', \App\Controllers\PlanPpaController::class . ':getAll');
+    $app->get('/{id}/pdf', \App\Controllers\PropuestaPdfController::class . ':generarPropuesta');
     $app->get('/{id}', \App\Controllers\PlanPpaController::class . ':getById');
     $app->post('', \App\Controllers\PlanPpaController::class . ':create');
     $app->put('/{id}', \App\Controllers\PlanPpaController::class . ':update');

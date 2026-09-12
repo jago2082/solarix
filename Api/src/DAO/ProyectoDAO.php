@@ -8,7 +8,7 @@ class ProyectoDAO {
     private $conn;
 
     public function __construct() {
-        $db = new Database();
+
         $this->conn = Database::getInstance()->getConnection();
     }
 
@@ -55,6 +55,40 @@ class ProyectoDAO {
             return $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (\PDOException $e) {
             return false;
+        }
+    }
+
+    public function getEstados() {
+        $sql = "SHOW COLUMNS FROM proyectos WHERE Field = 'lStPro_esta'";
+        try {
+            $stmt = $this->conn->prepare($sql);
+            $stmt->execute();
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$row || !isset($row['Type'])) {
+                return ['status' => 'success', 'data' => []];
+            }
+
+            preg_match_all("/'([^']+)'/", $row['Type'], $matches);
+            $etiquetas = [
+                'PROSPECTO'   => 'Prospecto',
+                'PROPUESTA'   => 'Propuesta',
+                'NEGOCIACION' => 'Negociación',
+                'APROBADO'    => 'Aprobado',
+                'RECHAZADO'   => 'Rechazado',
+                'EJECUCION'   => 'Ejecución'
+            ];
+
+            $estados = [];
+            foreach ($matches[1] as $valor) {
+                $estados[] = [
+                    'value' => $valor,
+                    'label' => $etiquetas[$valor] ?? ucfirst(strtolower($valor))
+                ];
+            }
+
+            return ['status' => 'success', 'data' => $estados];
+        } catch (\PDOException $e) {
+            return ['status' => 'error', 'message' => 'Error al consultar estados del proyecto'];
         }
     }
 

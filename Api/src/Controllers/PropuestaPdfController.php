@@ -226,7 +226,7 @@ class PropuestaPdfController {
         .portada-fondo { position: absolute; bottom: 300px; right: 0; width: 100%; height: calc(100% - 180px); object-fit: cover; }
         .contenido-pagina { position: relative; padding: 40px; padding-top: 100px; }
         .contenido-pagina h2 { font-size: 18px; color: #1a4a7a; border-bottom: 2px solid #1a4a7a; padding-bottom: 8px; margin-top: 0; }
-        .logo-pagina { position: absolute; top: 20px; right: 20px; width: 120px; height: 120px; }
+        .logo-pagina { position: absolute; top: 20px; right: 20px; width: 160px; height: 160px; }
         .contenido { text-align: justify; font-size: 11px; line-height: 1.5; }
         .tabla-proyeccion { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 10px; }
         .tabla-proyeccion th { background-color: #1a4a7a; color: #fff; padding: 6px; text-align: right; }
@@ -383,13 +383,13 @@ class PropuestaPdfController {
                     $svg = str_replace('fill="#ffffff"none', 'fill="none"', $svg);
                     $svg = preg_replace('/(<svg[^>]*>)/', '$1<style>* { fill: #ffffff; }</style>', $svg, 1);
                 }
-                $svg = preg_replace('/width="[^"]*"/', 'width="300px"', $svg);
-                $svg = preg_replace('/height="[^"]*"/', 'height="300px"', $svg);
-                $data = trim($svg);
+                $svg = preg_replace('/width="[^"]*"/', 'width="160px"', $svg);
+                $svg = preg_replace('/height="[^"]*"/', 'height="160px"', $svg);
+                return trim($svg);
             } else {
                 $data = file_get_contents($ruta);
+                return '<img src="data:' . $mime . ';base64,' . base64_encode($data) . '" alt="logo" style="width: 160px; height: auto;" />';
             }
-            return '<img src="data:' . $mime . ';base64,' . base64_encode($data) . '" alt="logo" style="width: 300px; height: auto;" />';
         }
 
         return '';

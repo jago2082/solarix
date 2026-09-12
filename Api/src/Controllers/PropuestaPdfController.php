@@ -123,7 +123,7 @@ class PropuestaPdfController {
         $v['EMPRESA_EMAIL'] = $empresa['email'] ?? '';
         $v['EMPRESA_SITIO_WEB'] = $empresa['sitioWeb'] ?? '';
         $v['EMPRESA_DESCRIPCION'] = $empresa['descripcion'] ?? '';
-        $v['EMPRESA_LOGO'] = $this->cargarLogoSvg();
+        $v['EMPRESA_LOGO'] = $this->cargarLogoSvg(true);
 
         $v['PLAN_NOMBRE'] = $plan['nombre'] ?? '';
         $v['PLAN_CODIGO'] = $plan['codigo'] ?? '';
@@ -224,8 +224,9 @@ class PropuestaPdfController {
         .portada-logo { position: absolute; top: 20px; right: 20px; width: 160px; height: 160px; z-index: 10; }
         .portada-logo svg { width: 160px; height: 160px; }
         .portada-fondo { position: absolute; bottom: 300px; right: 0; width: 100%; height: calc(100% - 180px); object-fit: cover; }
-        .contenido-pagina { padding: 40px; }
+        .contenido-pagina { position: relative; padding: 40px; padding-top: 100px; }
         .contenido-pagina h2 { font-size: 18px; color: #1a4a7a; border-bottom: 2px solid #1a4a7a; padding-bottom: 8px; margin-top: 0; }
+        .logo-pagina { position: absolute; top: 20px; right: 20px; width: 120px; height: 120px; }
         .contenido { text-align: justify; font-size: 11px; line-height: 1.5; }
         .tabla-proyeccion { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 10px; }
         .tabla-proyeccion th { background-color: #1a4a7a; color: #fff; padding: 6px; text-align: right; }
@@ -268,8 +269,10 @@ class PropuestaPdfController {
             } elseif ($tituloMay !== 'PORTADA') {
                 $contenido = $seccion['contenido'] ?? '';
                 $contenido = $this->reemplazarVariables($contenido, $valoresCompletos);
+                $logoPagina = $this->cargarLogoSvg(false);
 
                 $html .= '<div class="contenido-pagina" style="page-break-after: always;">';
+                $html .= '<div class="logo-pagina">' . $logoPagina . '</div>';
                 $html .= '<h2>0' . $numero . ' ' . $titulo . '</h2>';
                 $html .= '<div class="contenido">' . $contenido . '</div>';
                 $html .= '<div class="pie">' . $valores['EMPRESA_NOMBRE'] . ' · ' . $valores['EMPRESA_SITIO_WEB'] . '</div>';
@@ -299,10 +302,10 @@ class PropuestaPdfController {
         $porFila = 3;
         $chunks = array_chunk($items, $porFila);
         foreach ($chunks as $fila) {
-            $html .= '<tr style="height: 80px;">';
+            $html .= '<tr style="height: 90px;">';
             for ($i = 0; $i < $porFila; $i++) {
                 $item = $fila[$i] ?? null;
-                $html .= '<td width="33%" valign="top" style="padding: 0 30px 40px 0;">';
+                $html .= '<td width="33%" valign="top" style="padding: 0 30px 20px 0; border-bottom: 2px solid #ffffff;">';
                 if ($item) {
                     $html .= '<div style="font-size: 36px; font-weight: bold; color: #ffffff; margin-bottom: 10px;">0' . $item['numero'] . '</div>';
                     $html .= '<div style="font-size: 16px; font-weight: bold; color: #ffffff; line-height: 1.2;">' . nl2br($item['texto']) . '</div>';
@@ -358,7 +361,7 @@ class PropuestaPdfController {
         }, $contenido);
     }
 
-    private function cargarLogoSvg() {
+    private function cargarLogoSvg($forzarBlanco = true) {
         $rutas = [
             __DIR__ . '/../../assets/logo.svg',
             __DIR__ . '/../../assets/logo.png',
@@ -375,9 +378,11 @@ class PropuestaPdfController {
                 $svg = file_get_contents($ruta);
                 $svg = preg_replace('/<\?xml.*?\?>/s', '', $svg);
                 $svg = preg_replace('/<!DOCTYPE.*?>/s', '', $svg);
-                $svg = preg_replace('/fill="[^"]*"/', 'fill="#ffffff"', $svg);
-                $svg = str_replace('fill="#ffffff"none', 'fill="none"', $svg);
-                $svg = preg_replace('/(<svg[^>]*>)/', '$1<style>* { fill: #ffffff; }</style>', $svg, 1);
+                if ($forzarBlanco) {
+                    $svg = preg_replace('/fill="[^"]*"/', 'fill="#ffffff"', $svg);
+                    $svg = str_replace('fill="#ffffff"none', 'fill="none"', $svg);
+                    $svg = preg_replace('/(<svg[^>]*>)/', '$1<style>* { fill: #ffffff; }</style>', $svg, 1);
+                }
                 $svg = preg_replace('/width="[^"]*"/', 'width="300px"', $svg);
                 $svg = preg_replace('/height="[^"]*"/', 'height="300px"', $svg);
                 $data = trim($svg);

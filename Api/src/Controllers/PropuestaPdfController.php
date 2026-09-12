@@ -260,7 +260,7 @@ class PropuestaPdfController {
             $numero = $index + 1;
             $variablesSeccion = $this->plantillaVariableDao->getBySeccionId($seccion['id']);
             $valoresSeccion = $this->construirValoresVariables($variablesSeccion, $valores);
-            $valoresCompletos = array_merge($valores, $valoresSeccion);
+            $valoresCompletos = array_replace($valores, $valoresSeccion);
 
             $titulo = $seccion['titulo'] ?? $seccion['codigo'];
             $tituloMay = mb_strtoupper($titulo, 'UTF-8');
@@ -295,7 +295,7 @@ class PropuestaPdfController {
         $items = [];
         foreach ($variables as $v) {
             $codigo = $v['codigo'] ?? '';
-            $valor = $valores[$codigo] ?? $v['formato'] ?? '';
+            $valor = $v['formato'] ?? '';
             if ($valor !== '') {
                 $items[] = ['numero' => $codigo, 'texto' => $valor];
             }

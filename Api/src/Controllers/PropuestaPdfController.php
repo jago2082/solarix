@@ -81,6 +81,12 @@ class PropuestaPdfController {
         $valores = $this->construirDiccionarioValores($plan, $proyecto, $cliente, $sede, $empresa, $maestro, $detalles);
         $html = $this->construirHtml($plantilla, $secciones, $valores, $empresa);
 
+        if ($req->getQueryParam('debug') === 'html') {
+            $res = $res->withHeader('Content-Type', 'text/html; charset=utf-8');
+            $res->getBody()->write($html);
+            return $res;
+        }
+
         try {
             $mpdf = new Mpdf(['mode' => 'utf-8', 'format' => 'A4-L', 'margin_left' => 0, 'margin_right' => 0, 'margin_top' => 0, 'margin_bottom' => 0]);
             $mpdf->SetAuthor($empresa['nombre'] ?? 'Enersolax');
@@ -204,7 +210,7 @@ class PropuestaPdfController {
         .portada-der img.fondo { width: 100%; height: 210mm; object-fit: cover; display: block; }
         .portada-logo { position: absolute; top: 20px; right: 20px; width: 200px; }
         .portada-logo svg { width: 200px; height: 200px; }
-        .oferta { font-size: 12px; letter-spacing: 1.5px; margin-bottom: 80px; }
+        .oferta { font-size: 12px; letter-spacing: 1.5px; margin-bottom: 160px; }
         .titulo { font-size: 30px; font-weight: bold; line-height: 1.3; margin: 0 0 45px 0; text-transform: uppercase; }
         .subtitulo { font-size: 26px; font-weight: bold; margin: 0 0 20px 0; }
         .tipo { font-size: 22px; font-weight: 300; margin: 0; }

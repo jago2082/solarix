@@ -225,8 +225,8 @@ class PropuestaPdfController {
         $html .= '<table class="portada">';
         $html .= '<tr>';
         $html .= '<td class="portada-izq">';
-        $html .= '<div class="oferta">Oferta ' . $valores['PLAN_CODIGO'] . '</div>';
-        $html .= '<h1 class="titulo">' . $valores['PROYECTO_NOMBRE'] . '</h1>';
+        $html .= '<div class="oferta">Oferta ' . $valores['PROYECTO_CODIGO'] . '</div>';
+        $html .= '<h1 class="titulo">' . mb_strtoupper($valores['PROYECTO_NOMBRE'], 'UTF-8') . '</h1>';
         $html .= '<div class="subtitulo">PPA</div>';
         $html .= '<div class="tipo">Energía Solar Fotovoltaica</div>';
         $html .= '</td>';

@@ -226,7 +226,7 @@ class PropuestaPdfController {
         .portada-fondo { position: absolute; bottom: 300px; right: 0; width: 100%; height: calc(100% - 180px); object-fit: cover; }
         .contenido-pagina { position: relative; padding: 40px; padding-top: 100px; }
         .contenido-pagina h2 { font-size: 18px; color: #1a4a7a; border-bottom: 2px solid #1a4a7a; padding-bottom: 8px; margin-top: 0; }
-        .logo-pagina { position: absolute; top: 20px; right: 20px; width: 160px; height: 160px; }
+        .logo-pagina { position: absolute; top: 20px; right: 20px; width: 160px; height: 160px; z-index: 10; }
         .contenido { text-align: justify; font-size: 11px; line-height: 1.5; }
         .tabla-proyeccion { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 10px; }
         .tabla-proyeccion th { background-color: #1a4a7a; color: #fff; padding: 6px; text-align: right; }
@@ -285,9 +285,9 @@ class PropuestaPdfController {
     }
 
     private function renderContenidoNegro($variables, $valores) {
-        $logo = $this->cargarLogoSvg(true, 120);
-        $html = '<div style="width: 297mm; height: 210mm; background-color: #000000; color: #ffffff; padding: 40px 50px; box-sizing: border-box; page-break-after: always;">';
-        $html .= '<div style="text-align: right; width: 100%; margin-bottom: 10px;">' . $logo . '</div>';
+        $logo = $this->cargarLogoSvg(true, 160);
+        $html = '<div style="width: 297mm; height: 210mm; position: relative; background-color: #000000; color: #ffffff; padding: 40px 50px; box-sizing: border-box; page-break-after: always;">';
+        $html .= '<div class="portada-logo" style="position: absolute; top: 20px; right: 20px; width: 160px; height: 160px;">' . $logo . '</div>';
         $html .= '<h1 style="font-size: 42px; font-weight: bold; margin: 0 0 50px 0;">Contenido</h1>';
         $html .= '<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">';
 

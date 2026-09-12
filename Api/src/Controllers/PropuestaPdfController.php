@@ -199,13 +199,14 @@ class PropuestaPdfController {
         body { font-family: Arial, sans-serif; margin: 0; padding: 0; color: #333; }
         .portada { height: 210mm; width: 297mm; border-collapse: collapse; }
         .portada td { padding: 0; vertical-align: top; }
-        .portada-izq { width: 42%; background-color: #000000; color: #ffffff; padding: 50px 35px !important; }
+        .portada-izq { width: 42%; background-color: #000000; color: #ffffff; padding: 45px 30px !important; }
         .portada-der { width: 58%; position: relative; background-color: #1a1a1a; }
         .portada-der img.fondo { width: 100%; height: 210mm; object-fit: cover; display: block; }
-        .portada-logo { position: absolute; top: 25px; right: 25px; width: 140px; }
-        .oferta { font-size: 11px; letter-spacing: 1px; margin-bottom: 70px; }
-        .titulo { font-size: 34px; font-weight: bold; line-height: 1.1; margin: 0 0 35px 0; text-transform: uppercase; }
-        .subtitulo { font-size: 20px; font-weight: bold; margin: 0 0 15px 0; }
+        .portada-logo { position: absolute; top: 25px; right: 25px; width: 120px; }
+        .portada-logo svg { width: 120px; height: 120px; }
+        .oferta { font-size: 12px; letter-spacing: 1.5px; margin-bottom: 40px; }
+        .titulo { font-size: 32px; font-weight: bold; line-height: 1.15; margin: 0 0 25px 0; text-transform: uppercase; }
+        .subtitulo { font-size: 24px; font-weight: bold; margin: 0 0 12px 0; }
         .tipo { font-size: 20px; font-weight: 300; margin: 0; }
         .contenido-pagina { padding: 40px; }
         .contenido-pagina h2 { font-size: 18px; color: #1a4a7a; border-bottom: 2px solid #1a4a7a; padding-bottom: 8px; margin-top: 0; }
@@ -291,7 +292,13 @@ class PropuestaPdfController {
             $ext = strtolower(pathinfo($ruta, PATHINFO_EXTENSION));
             if ($ext === 'svg') {
                 $svg = file_get_contents($ruta);
-                return '<div class="portada-logo">' . $svg . '</div>';
+                $svg = preg_replace('/<\?xml.*?\?>/s', '', $svg);
+                $svg = preg_replace('/<!DOCTYPE.*?>/s', '', $svg);
+                $svg = str_replace('fill="#000000"', 'fill="#ffffff"', $svg);
+                $svg = str_replace('fill="black"', 'fill="white"', $svg);
+                $svg = preg_replace('/width="[^"]*"/', 'width="120px"', $svg);
+                $svg = preg_replace('/height="[^"]*"/', 'height="120px"', $svg);
+                return '<div class="portada-logo">' . trim($svg) . '</div>';
             }
             return '<img class="portada-logo" src="' . $ruta . '" alt="logo" />';
         }

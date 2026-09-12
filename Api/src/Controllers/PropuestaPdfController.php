@@ -232,7 +232,9 @@ class PropuestaPdfController {
         $html .= '</td>';
         $html .= '<td class="portada-der">';
         $html .= $logo;
-        $html .= '<img class="fondo" src="' . $imagenFondo . '" alt="" />';
+        if ($imagenFondo) {
+            $html .= '<img class="fondo" src="' . $imagenFondo . '" alt="" />';
+        }
         $html .= '</td>';
         $html .= '</tr>';
         $html .= '</table>';
@@ -276,24 +278,44 @@ class PropuestaPdfController {
     }
 
     private function cargarLogoSvg() {
-        $ruta = __DIR__ . '/../../../../app/src/assets/icons/logo.svg';
-        if (file_exists($ruta)) {
-            $svg = file_get_contents($ruta);
-            return '<div class="portada-logo">' . $svg . '</div>';
+        $rutas = [
+            __DIR__ . '/../../assets/logo.svg',
+            __DIR__ . '/../../assets/logo.png',
+            __DIR__ . '/../../assets/logo.jpg',
+            __DIR__ . '/../../../../app/src/assets/icons/logo.svg',
+            __DIR__ . '/../../../../app/src/assets/icons/Logo-1.svg'
+        ];
+
+        foreach ($rutas as $ruta) {
+            if (!file_exists($ruta)) continue;
+            $ext = strtolower(pathinfo($ruta, PATHINFO_EXTENSION));
+            if ($ext === 'svg') {
+                $svg = file_get_contents($ruta);
+                return '<div class="portada-logo">' . $svg . '</div>';
+            }
+            return '<img class="portada-logo" src="' . $ruta . '" alt="logo" />';
         }
+
         return '';
     }
 
     private function rutaImagenPortada() {
-        $rutaJpg = __DIR__ . '/../../../../app/src/assets/portada.jpg';
-        $rutaPng = __DIR__ . '/../../../../app/src/assets/portada.png';
-        $rutaWebp = __DIR__ . '/../../../../app/src/assets/portada.webp';
+        $rutasApi = [
+            __DIR__ . '/../../assets/portada.jpg',
+            __DIR__ . '/../../assets/portada.png',
+            __DIR__ . '/../../assets/portada.webp'
+        ];
+        $rutasApp = [
+            __DIR__ . '/../../../../app/src/assets/portada.jpg',
+            __DIR__ . '/../../../../app/src/assets/portada.png',
+            __DIR__ . '/../../../../app/src/assets/portada.webp'
+        ];
 
-        if (file_exists($rutaJpg)) return $rutaJpg;
-        if (file_exists($rutaPng)) return $rutaPng;
-        if (file_exists($rutaWebp)) return $rutaWebp;
+        foreach (array_merge($rutasApi, $rutasApp) as $ruta) {
+            if (file_exists($ruta)) return $ruta;
+        }
 
-        return __DIR__ . '/../../../../app/src/assets/icons/icon-512.webp';
+        return '';
     }
 
     private function formatoMoneda($valor) {

@@ -198,6 +198,8 @@ class PropuestaPdfController {
 
         $v['FECHA_ACTUAL'] = $this->fechaLarga(date('Y-m-d'));
         $v['ANIO_ACTUAL'] = date('Y');
+        $v['IMAGENES_H3'] = $this->cargarGridImagenesH3();
+        $v['LOGO_ENERSOLAX'] = $this->cargarLogoEnersolax();
 
         return $v;
     }
@@ -445,5 +447,47 @@ class PropuestaPdfController {
         $meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
         $ts = strtotime($fecha);
         return date('d', $ts) . ' de ' . $meses[(int)date('m', $ts) - 1] . ' de ' . date('Y', $ts);
+    }
+
+    private function cargarGridImagenesH3() {
+        $html = '<table style="float: right; width: 48%; margin-left: 20px; border-collapse: collapse;">';
+        for ($fila = 0; $fila < 4; $fila++) {
+            $html .= '<tr>';
+            for ($col = 0; $col < 4; $col++) {
+                $num = ($fila * 4) + $col + 1;
+                $ruta = __DIR__ . '/../../assets/h3_image' . $num . '.jpg';
+                $url = $this->urlAsset($ruta);
+                $html .= '<td style="width: 25%; padding: 4px;">';
+                if ($url) {
+                    $html .= '<img src="' . $url . '" style="width: 100%; height: auto; display: block;" />';
+                }
+                $html .= '</td>';
+            }
+            $html .= '</tr>';
+        }
+        $html .= '</table>';
+        return $html;
+    }
+
+    private function cargarLogoEnersolax() {
+        $ruta = __DIR__ . '/../../assets/LogoEnersolax.png';
+        $url = $this->urlAsset($ruta);
+        if (!$url) return '';
+        return '<img src="' . $url . '" style="width: 220px; height: auto; display: block;" />';
+    }
+
+    private function urlAsset($ruta) {
+        if (!file_exists($ruta)) return '';
+
+        $docRoot = $_SERVER['DOCUMENT_ROOT'] ?? '';
+        if ($docRoot && strpos($ruta, $docRoot) === 0) {
+            $rel = str_replace('\\', '/', substr($ruta, strlen($docRoot)));
+        } else {
+            $rel = '/assets/' . basename($ruta);
+        }
+
+        $scheme = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? 'https' : 'http';
+        $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+        return $scheme . '://' . $host . $rel;
     }
 }

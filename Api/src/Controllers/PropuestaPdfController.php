@@ -219,7 +219,7 @@ class PropuestaPdfController {
         .tipo { font-size: 22px; font-weight: 300; margin: 0; }
         .portada-logo { position: absolute; top: 20px; right: 20px; width: 160px; height: 160px; z-index: 10; }
         .portada-logo svg { width: 160px; height: 160px; }
-        .portada-fondo { position: absolute; bottom: 0; right: 0; width: 100%; height: calc(100% - 180px); object-fit: cover; }
+        .portada-fondo { position: absolute; bottom: 300px; right: 0; width: 100%; height: calc(100% - 180px); object-fit: cover; }
         .contenido-pagina { padding: 40px; }
         .contenido-pagina h2 { font-size: 18px; color: #1a4a7a; border-bottom: 2px solid #1a4a7a; padding-bottom: 8px; margin-top: 0; }
         .contenido { text-align: justify; font-size: 11px; line-height: 1.5; }
@@ -250,28 +250,30 @@ class PropuestaPdfController {
         $html .= '</div>';
         $html .= '</div>';
 
-        // Resumen
+        // Contenido
         $html .= '<div class="contenido-pagina" style="page-break-after: always;">';
-        $html .= '<h2>Resumen ejecutivo</h2>';
-        $html .= '<div class="contenido">';
-        $html .= '<p>Propuesta comercial para el suministro de energía solar bajo el esquema PPA.</p>';
-        $html .= '<div class="resumen">';
-        $html .= '<p><strong>Ahorro total estimado:</strong> ' . $valores['TOTAL_AHORRO'] . '</p>';
-        $html .= '<p><strong>Consumo anual:</strong> ' . $valores['TOTAL_CONSUMO'] . ' GWh</p>';
-        $html .= '<p><strong>Generación anual:</strong> ' . $valores['TOTAL_GENERACION'] . ' GWh</p>';
-        $html .= '<p><strong>Reducción de CO2:</strong> ' . $valores['TOTAL_CO2'] . ' t</p>';
-        $html .= '</div>';
-        $html .= $valores['TABLA_PROYECCION'];
-        $html .= '</div>';
+        $html .= '<h2>Contenido</h2>';
+        $html .= '<table style="width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px;">';
+        $numero = 1;
+        foreach ($secciones as $seccion) {
+            $titulo = $seccion['titulo'] ?? $seccion['codigo'];
+            $html .= '<tr>';
+            $html .= '<td style="padding: 12px 0; border-bottom: 1px solid #ccc; width: 60px; color: #1a4a7a; font-weight: bold;">0' . $numero . '</td>';
+            $html .= '<td style="padding: 12px 0; border-bottom: 1px solid #ccc; color: #333;">' . $titulo . '</td>';
+            $html .= '</tr>';
+            $numero++;
+        }
+        $html .= '</table>';
         $html .= '</div>';
 
         // Secciones de la plantilla
-        foreach ($secciones as $seccion) {
+        foreach ($secciones as $index => $seccion) {
+            $numero = $index + 1;
             $contenido = $seccion['contenido'] ?? '';
             $contenido = $this->reemplazarVariables($contenido, $valores);
 
             $html .= '<div class="contenido-pagina" style="page-break-after: always;">';
-            $html .= '<h2>' . ($seccion['titulo'] ?? $seccion['codigo']) . '</h2>';
+            $html .= '<h2>0' . $numero . ' ' . ($seccion['titulo'] ?? $seccion['codigo']) . '</h2>';
             $html .= '<div class="contenido">' . $contenido . '</div>';
             $html .= '<div class="pie">' . $valores['EMPRESA_NOMBRE'] . ' · ' . $valores['EMPRESA_SITIO_WEB'] . '</div>';
             $html .= '</div>';
@@ -308,13 +310,13 @@ class PropuestaPdfController {
                 $svg = preg_replace('/fill="[^"]*"/', 'fill="#ffffff"', $svg);
                 $svg = str_replace('fill="#ffffff"none', 'fill="none"', $svg);
                 $svg = preg_replace('/(<svg[^>]*>)/', '$1<style>* { fill: #ffffff; }</style>', $svg, 1);
-                $svg = preg_replace('/width="[^"]*"/', 'width="160px"', $svg);
-                $svg = preg_replace('/height="[^"]*"/', 'height="160px"', $svg);
+                $svg = preg_replace('/width="[^"]*"/', 'width="300px"', $svg);
+                $svg = preg_replace('/height="[^"]*"/', 'height="300px"', $svg);
                 $data = trim($svg);
             } else {
                 $data = file_get_contents($ruta);
             }
-            return '<img src="data:' . $mime . ';base64,' . base64_encode($data) . '" alt="logo" style="width: 160px; height: auto;" />';
+            return '<img src="data:' . $mime . ';base64,' . base64_encode($data) . '" alt="logo" style="width: 300px; height: auto;" />';
         }
 
         return '';

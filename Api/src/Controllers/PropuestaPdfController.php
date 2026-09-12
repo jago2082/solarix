@@ -79,9 +79,10 @@ class PropuestaPdfController {
         }
 
         $valores = $this->construirDiccionarioValores($plan, $proyecto, $cliente, $sede, $empresa, $maestro, $detalles);
-        $html = $this->construirHtml($plantilla, $secciones, $valores, $empresa);
+        $modoDebug = $req->getQueryParam('debug') === 'html';
+        $html = $this->construirHtml($plantilla, $secciones, $valores, $empresa, $modoDebug);
 
-        if ($req->getQueryParam('debug') === 'html') {
+        if ($modoDebug) {
             $res = $res->withHeader('Content-Type', 'text/html; charset=utf-8');
             $res->getBody()->write($html);
             return $res;
@@ -192,8 +193,8 @@ class PropuestaPdfController {
         return $v;
     }
 
-    private function construirHtml($plantilla, $secciones, $valores, $empresa) {
-        $imagenFondo = $this->rutaImagenPortada();
+    private function construirHtml($plantilla, $secciones, $valores, $empresa, $modoDebug = false) {
+        $imagenFondo = $modoDebug ? $this->urlImagenPortada() : $this->rutaImagenPortada();
         $logo = $valores['EMPRESA_LOGO'];
 
         $html = '<!DOCTYPE html>
@@ -210,7 +211,7 @@ class PropuestaPdfController {
         .portada-der img { width: 100%; height: 210mm; display: block; }
         .portada-logo { width: 200px; height: 200px; }
         .portada-logo svg { width: 200px; height: 200px; }
-        .oferta { font-size: 12px; letter-spacing: 1.5px; }
+        .oferta { font-size: 16px; letter-spacing: 1.5px; }
         .titulo { font-size: 28px; font-weight: bold; line-height: 1.25; text-transform: uppercase; }
         .subtitulo { font-size: 24px; font-weight: bold; }
         .tipo { font-size: 20px; font-weight: 300; }
@@ -235,7 +236,7 @@ class PropuestaPdfController {
         $html .= '<td width="42%" height="210mm" bgcolor="#000000" valign="top">';
         $html .= '<table width="100%" cellpadding="0" cellspacing="0">';
         $html .= '<tr><td width="100%" valign="top" style="padding: 30px 25px 0 25px;">';
-        $html .= '<font face="Arial" size="2" color="#ffffff">Oferta ' . $valores['PROYECTO_CODIGO'] . '</font>';
+        $html .= '<font face="Arial" size="6" color="#ffffff">Oferta ' . $valores['PROYECTO_CODIGO'] . '</font>';
         $html .= '<br/><br/><br/><br/><br/><br/><br/><br/>';
         $html .= '<font face="Arial" size="6" color="#ffffff"><b>' . $nombreMayusculas . '</b></font>';
         $html .= '<br/><br/><br/><br/>';
@@ -340,6 +341,25 @@ class PropuestaPdfController {
             if (file_exists($ruta)) return $ruta;
         }
 
+        return '';
+    }
+
+    private function urlImagenPortada() {
+        $ruta = $this->rutaImagenPortada();
+        if (!$ruta) return '';
+
+        $docRoot = $_SERVER['DOCUMENT_ROOT'] ?? '';
+        if ($docRoot && strpos($ruta, $docRoot) === 0) {
+            $rel = str_replace('\\', '/', substr($ruta, strlen($docRoot)));
+            return $rel;
+        }
+
+        $base = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://' . ($_SERVER['HTTP_HOST'] ?? 'localhost');
+        foreach (['jpg', 'png', 'webp'] as $ext) {
+            if (file_exists(__DIR__ . '/../../assets/portada.' . $ext)) {
+                return $base . '/assets/portada.' . $ext;
+            }
+        }
         return '';
     }
 

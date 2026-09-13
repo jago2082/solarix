@@ -201,6 +201,7 @@ class PropuestaPdfController {
         $v['IMAGENES_H3'] = $this->cargarGridImagenesH3();
         $v['IMAGEN_H4'] = $this->cargarImagenH4();
         $v['IMAGEN_H5'] = $this->cargarImagenH5();
+        $v['IMAGEN_H6'] = $this->cargarImagenH6();
         $v['IMAGEN_H7'] = $this->cargarImagenH7();
         $v['LOGO_ENERSOLAX'] = $this->cargarLogoEnersolax();
 
@@ -318,23 +319,18 @@ class PropuestaPdfController {
                 $texto .= $textoAdicional;
             }
         } elseif ($esHoja6) {
-            $imagenes = $valoresSeccion['IMAGEN_H7'] ?? $valores['IMAGEN_H7'] ?? '';
+            $imagenes = $valoresSeccion['IMAGEN_H6'] ?? $valores['IMAGEN_H6'] ?? '';
             if (!$imagenes) {
-                // Si no hay imagen H7, intentar usar un fallback
                 $imagenes = '';
             }
-            $logoEnersolax = '';
-            // Para la sección 6, centrar la imagen
-            if ($imagenes !== '') {
-                $contenido = '<div style="text-align: center;">';
-                $contenido .= $imagenes;
-                $contenido .= '</div>';
-                if ($texto) {
-                    $contenido .= '<div style="font-size: 15px; line-height: 1.5; color: #ffffff; margin-top: 20px; text-align: justify;">' . nl2br($texto) . '</div>';
-                }
-            } else {
-                $contenido = '<div style="font-size: 15px; line-height: 1.5; color: #ffffff; margin-bottom: 20px; text-align: justify;">' . nl2br($texto) . '</div>';
-            }
+            $logoPagina = $this->cargarLogoSvg(true);
+            $html = '<div class="contenido-pagina" style="page-break-after: always;">';
+            $html .= '<div class="logo-pagina">' . $logoPagina . '</div>';
+            $html .= '<h2 style="color: #ffffff; border-bottom: none;">0' . $numero . ' ' . $titulo . '</h2>';
+            $html .= '<div style="width: 100%; text-align: center;">' . $imagenes . '</div>';
+            $html .= '<div class="pie" style="color: #cccccc;">' . $valores['EMPRESA_NOMBRE'] . ' · ' . $valores['EMPRESA_SITIO_WEB'] . '</div>';
+            $html .= '</div>';
+            return $html;
         } else {
             $imagenes = $esHoja4 ? ($valoresSeccion['IMAGEN_H4'] ?? $valores['IMAGEN_H4'] ?? '') : ($valoresSeccion['IMAGENES_H3'] ?? $valores['IMAGENES_H3'] ?? '');
             $logoEnersolax = $esHoja4 ? '' : ($valoresSeccion['LOGO_ENERSOLAX'] ?? $valores['LOGO_ENERSOLAX'] ?? '');
@@ -557,6 +553,13 @@ class PropuestaPdfController {
         $url = $this->urlAsset($ruta);
         if (!$url) return '';
         return '<img src="' . $url . '" style="width: 100%; height: auto; display: block; object-fit: cover; max-height: 500px;" />';
+    }
+
+    private function cargarImagenH6() {
+        $ruta = __DIR__ . '/../../assets/h6_image1.png';
+        $url = $this->urlAsset($ruta);
+        if (!$url) return '';
+        return '<img src="' . $url . '" style="width: 100%; height: auto; display: block; margin: 0 auto; max-height: 550px;" />';
     }
 
     private function cargarImagenH7() {

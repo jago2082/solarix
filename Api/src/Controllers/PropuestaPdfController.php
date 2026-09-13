@@ -200,6 +200,8 @@ class PropuestaPdfController {
         $v['ANIO_ACTUAL'] = date('Y');
         $v['IMAGENES_H3'] = $this->cargarGridImagenesH3();
         $v['IMAGEN_H4'] = $this->cargarImagenH4();
+        $v['IMAGEN_H5'] = $this->cargarImagenH5();
+        $v['IMAGEN_H7'] = $this->cargarImagenH7();
         $v['LOGO_ENERSOLAX'] = $this->cargarLogoEnersolax();
 
         return $v;
@@ -215,8 +217,8 @@ class PropuestaPdfController {
     <meta charset="UTF-8">
     <style>
         @page { margin: 0; padding: 0; size: A4 landscape; }
-        * { box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; margin: 0; padding: 0; color: #333; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; color: #333; background-color: #000000; }
         .portada { width: 297mm; height: 210mm; position: relative; overflow: hidden; }
         .portada-izq { position: absolute; top: 0; left: 0; width: 42%; height: 100%; background-color: #000000; color: #ffffff; padding: 40px 30px; }
         .portada-der { position: absolute; top: 0; right: 0; width: 58%; height: 100%; background-color: #1a1a1a; }
@@ -227,17 +229,17 @@ class PropuestaPdfController {
         .portada-logo { position: absolute; top: 20px; right: 20px; width: 160px; height: 160px; z-index: 10; }
         .portada-logo svg, .portada-logo img { width: 160px; height: auto; }
         .portada-fondo { position: absolute; bottom: 300px; right: 0; width: 100%; height: calc(100% - 180px); object-fit: cover; }
-        .contenido-pagina { position: relative; padding: 40px; padding-top: 100px; }
-        .contenido-pagina h2 { font-size: 18px; color: #1a4a7a; border-bottom: 2px solid #1a4a7a; padding-bottom: 8px; margin-top: 0; }
+        .contenido-pagina { position: relative; padding: 40px; padding-top: 100px; background-color: #000000; color: #ffffff; margin: 0; min-height: 210mm; }
+        .contenido-pagina h2 { font-size: 18px; color: #ffffff; border-bottom: 2px solid #ffffff; padding-bottom: 8px; margin-top: 0; margin-bottom: 20px; }
         .logo-pagina { position: absolute; top: 20px; right: 20px; width: 160px; height: 160px; z-index: 10; }
-        .contenido { text-align: justify; font-size: 11px; line-height: 1.5; }
+        .contenido { text-align: justify; font-size: 11px; line-height: 1.5; color: #ffffff; }
         .tabla-proyeccion { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 10px; }
         .tabla-proyeccion th { background-color: #1a4a7a; color: #fff; padding: 6px; text-align: right; }
         .tabla-proyeccion td { border: 1px solid #ccc; padding: 5px; text-align: right; }
         .tabla-proyeccion td:first-child, .tabla-proyeccion th:first-child { text-align: center; }
         .resumen { margin-top: 20px; padding: 15px; background: #f2f7fb; border-left: 5px solid #1a4a7a; }
         .resumen p { margin: 3px 0; }
-        .pie { text-align: center; font-size: 9px; color: #777; margin-top: 40px; }
+        .pie { text-align: center; font-size: 9px; color: #cccccc; margin-top: 40px; }
     </style>
 </head>
 <body>';
@@ -259,8 +261,8 @@ class PropuestaPdfController {
         $html .= '</div>';
 
         // Secciones de la plantilla
+        $contadorContenido = 0;
         foreach ($secciones as $index => $seccion) {
-            $numero = $index + 1;
             $variablesSeccion = $this->plantillaVariableDao->getBySeccionId($seccion['id']);
             $valoresSeccion = $this->construirValoresVariables($variablesSeccion, $valores);
             $valoresCompletos = array_replace($valores, $valoresSeccion);
@@ -270,6 +272,8 @@ class PropuestaPdfController {
             if ($tituloMay === 'CONTENIDO') {
                 $html .= $this->renderContenidoNegro($variablesSeccion, $valoresCompletos);
             } elseif ($tituloMay !== 'PORTADA') {
+                $contadorContenido++;
+                $numero = $contadorContenido;
                 $contenido = trim($seccion['contenido'] ?? '');
                 if ($contenido === '' || strtoupper($contenido) === 'NA') {
                     $html .= $this->renderSeccionDinamica($seccion, $numero, $valoresCompletos, $valores);
@@ -295,15 +299,54 @@ class PropuestaPdfController {
         $titulo = $valoresSeccion['NOMBRE_1'] ?? $seccion['titulo'] ?? $seccion['codigo'];
         $texto = $valoresSeccion['1'] ?? '';
         $esHoja4 = ((int)$seccion['id'] === 4);
-        $imagenes = $esHoja4 ? ($valoresSeccion['IMAGEN_H4'] ?? $valores['IMAGEN_H4'] ?? '') : ($valoresSeccion['IMAGENES_H3'] ?? $valores['IMAGENES_H3'] ?? '');
-        $logoEnersolax = $esHoja4 ? '' : ($valoresSeccion['LOGO_ENERSOLAX'] ?? $valores['LOGO_ENERSOLAX'] ?? '');
+        $esHoja5 = ((int)$seccion['id'] === 5);
+        $esHoja6 = ((int)$seccion['id'] === 6);
+        
+        if ($esHoja5) {
+            $imagenes = $valoresSeccion['IMAGEN_H5'] ?? $valores['IMAGEN_H5'] ?? '';
+            $logoEnersolax = '';
+            
+            // Para la sección 5, buscar textos adicionales consecutivos
+            $textoAdicional = '';
+            for ($i = 2; $i <= 10; $i++) {
+                $clave = $i;
+                if (isset($valoresSeccion[$clave]) && !empty($valoresSeccion[$clave])) {
+                    $textoAdicional .= '<br><br>' . $valoresSeccion[$clave];
+                }
+            }
+            if ($textoAdicional) {
+                $texto .= $textoAdicional;
+            }
+        } elseif ($esHoja6) {
+            $imagenes = $valoresSeccion['IMAGEN_H7'] ?? $valores['IMAGEN_H7'] ?? '';
+            if (!$imagenes) {
+                // Si no hay imagen H7, intentar usar un fallback
+                $imagenes = '';
+            }
+            $logoEnersolax = '';
+            // Para la sección 6, centrar la imagen
+            if ($imagenes !== '') {
+                $contenido = '<div style="text-align: center;">';
+                $contenido .= $imagenes;
+                $contenido .= '</div>';
+                if ($texto) {
+                    $contenido .= '<div style="font-size: 15px; line-height: 1.5; color: #ffffff; margin-top: 20px; text-align: justify;">' . nl2br($texto) . '</div>';
+                }
+            } else {
+                $contenido = '<div style="font-size: 15px; line-height: 1.5; color: #ffffff; margin-bottom: 20px; text-align: justify;">' . nl2br($texto) . '</div>';
+            }
+        } else {
+            $imagenes = $esHoja4 ? ($valoresSeccion['IMAGEN_H4'] ?? $valores['IMAGEN_H4'] ?? '') : ($valoresSeccion['IMAGENES_H3'] ?? $valores['IMAGENES_H3'] ?? '');
+            $logoEnersolax = $esHoja4 ? '' : ($valoresSeccion['LOGO_ENERSOLAX'] ?? $valores['LOGO_ENERSOLAX'] ?? '');
+        }
+        
         $logoPagina = $this->cargarLogoSvg(true);
 
         if ($imagenes !== '') {
             $contenido = '<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">';
             $contenido .= '<tr>';
             $contenido .= '<td width="42%" valign="top" style="padding-right: 25px;">';
-            $contenido .= '<div style="font-size: 13px; line-height: 1.5; color: #ffffff; margin-bottom: 20px;">' . nl2br($texto) . '</div>';
+            $contenido .= '<div style="font-size: 15px; line-height: 1.5; color: #ffffff; margin-bottom: 20px; text-align: justify;">' . nl2br($texto) . '</div>';
             $contenido .= $logoEnersolax;
             $contenido .= '</td>';
             $contenido .= '<td width="58%" valign="top" style="padding-left: 25px;">';
@@ -312,7 +355,7 @@ class PropuestaPdfController {
             $contenido .= '</tr>';
             $contenido .= '</table>';
         } else {
-            $contenido = '<div style="font-size: 13px; line-height: 1.5; color: #ffffff; margin-bottom: 20px;">' . nl2br($texto) . '</div>';
+            $contenido = '<div style="font-size: 13px; line-height: 1.5; color: #ffffff; margin-bottom: 20px; text-align: justify;">' . nl2br($texto) . '</div>';
         }
 
         $html = '<div class="contenido-pagina" style="page-break-after: always; background-color: #000000; color: #ffffff;">';
@@ -489,23 +532,10 @@ class PropuestaPdfController {
     }
 
     private function cargarGridImagenesH3() {
-        $html = '<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">';
-        for ($fila = 0; $fila < 4; $fila++) {
-            $html .= '<tr>';
-            for ($col = 0; $col < 4; $col++) {
-                $num = ($fila * 4) + $col + 1;
-                $ruta = __DIR__ . '/../../assets/h3_image' . $num . '.jpg';
-                $url = $this->urlAsset($ruta);
-                $html .= '<td style="width: 25%; padding: 4px;">';
-                if ($url) {
-                    $html .= '<img src="' . $url . '" style="width: 100%; height: auto; display: block;" />';
-                }
-                $html .= '</td>';
-            }
-            $html .= '</tr>';
-        }
-        $html .= '</table>';
-        return $html;
+        $ruta = __DIR__ . '/../../assets/h3_image1.jpg';
+        $url = $this->urlAsset($ruta);
+        if (!$url) return '';
+        return '<img src="' . $url . '" style="width: 100%; height: auto; display: block; object-fit: cover; max-height: 500px;" />';
     }
 
     private function cargarImagenH4() {
@@ -519,7 +549,21 @@ class PropuestaPdfController {
         $ruta = __DIR__ . '/../../assets/LogoEnersolax.png';
         $url = $this->urlAsset($ruta);
         if (!$url) return '';
-        return '<img src="' . $url . '" style="width: 220px; height: auto; display: block;" />';
+        return '<img src="' . $url . '" style="width: 220px; height: auto; display: block; margin-top: 100px;" />';
+    }
+
+    private function cargarImagenH5() {
+        $ruta = __DIR__ . '/../../assets/h5_image1.png';
+        $url = $this->urlAsset($ruta);
+        if (!$url) return '';
+        return '<img src="' . $url . '" style="width: 100%; height: auto; display: block; object-fit: cover; max-height: 500px;" />';
+    }
+
+    private function cargarImagenH7() {
+        $ruta = __DIR__ . '/../../assets/h7_image1.png';
+        $url = $this->urlAsset($ruta);
+        if (!$url) return '';
+        return '<img src="' . $url . '" style="width: 90%; height: auto; display: block; object-fit: contain; margin: 0 auto; max-height: 600px;" />';
     }
 
     private function urlAsset($ruta) {

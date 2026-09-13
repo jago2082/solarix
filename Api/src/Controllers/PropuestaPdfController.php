@@ -199,6 +199,7 @@ class PropuestaPdfController {
         $v['FECHA_ACTUAL'] = $this->fechaLarga(date('Y-m-d'));
         $v['ANIO_ACTUAL'] = date('Y');
         $v['IMAGENES_H3'] = $this->cargarGridImagenesH3();
+        $v['IMAGEN_H4'] = $this->cargarImagenH4();
         $v['LOGO_ENERSOLAX'] = $this->cargarLogoEnersolax();
 
         return $v;
@@ -293,8 +294,9 @@ class PropuestaPdfController {
     private function renderSeccionDinamica($seccion, $numero, $valoresSeccion, $valores) {
         $titulo = $valoresSeccion['NOMBRE_1'] ?? $seccion['titulo'] ?? $seccion['codigo'];
         $texto = $valoresSeccion['1'] ?? '';
-        $imagenes = $valoresSeccion['IMAGENES_H3'] ?? $valores['IMAGENES_H3'] ?? '';
-        $logoEnersolax = $valoresSeccion['LOGO_ENERSOLAX'] ?? $valores['LOGO_ENERSOLAX'] ?? '';
+        $esHoja4 = ((int)$seccion['id'] === 4);
+        $imagenes = $esHoja4 ? ($valoresSeccion['IMAGEN_H4'] ?? $valores['IMAGEN_H4'] ?? '') : ($valoresSeccion['IMAGENES_H3'] ?? $valores['IMAGENES_H3'] ?? '');
+        $logoEnersolax = $esHoja4 ? '' : ($valoresSeccion['LOGO_ENERSOLAX'] ?? $valores['LOGO_ENERSOLAX'] ?? '');
         $logoPagina = $this->cargarLogoSvg(true);
 
         if ($imagenes !== '') {
@@ -504,6 +506,13 @@ class PropuestaPdfController {
         }
         $html .= '</table>';
         return $html;
+    }
+
+    private function cargarImagenH4() {
+        $ruta = __DIR__ . '/../../assets/h4_image1.jpg';
+        $url = $this->urlAsset($ruta);
+        if (!$url) return '';
+        return '<img src="' . $url . '" style="width: 100%; height: auto; display: block;" />';
     }
 
     private function cargarLogoEnersolax() {

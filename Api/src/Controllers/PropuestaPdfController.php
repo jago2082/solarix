@@ -269,13 +269,12 @@ class PropuestaPdfController {
             if ($tituloMay === 'CONTENIDO') {
                 $html .= $this->renderContenidoNegro($variablesSeccion, $valoresCompletos);
             } elseif ($tituloMay !== 'PORTADA') {
-                $logoPagina = $this->cargarLogoSvg(false);
-                if ((int)$seccion['id'] === 3) {
-                    $logoPagina = $this->cargarLogoSvg(true);
-                    $html .= $this->renderSeccionSolaxGen($seccion, $numero, $valoresCompletos, $logoPagina, $valores);
+                $contenido = trim($seccion['contenido'] ?? '');
+                if ($contenido === '' || strtoupper($contenido) === 'NA') {
+                    $html .= $this->renderSeccionDinamica($seccion, $numero, $valoresCompletos, $valores);
                 } else {
-                    $contenido = $seccion['contenido'] ?? '';
                     $contenido = $this->reemplazarVariables($contenido, $valoresCompletos);
+                    $logoPagina = $this->cargarLogoSvg(false);
 
                     $html .= '<div class="contenido-pagina" style="page-break-after: always;">';
                     $html .= '<div class="logo-pagina">' . $logoPagina . '</div>';
@@ -291,25 +290,27 @@ class PropuestaPdfController {
         return $html;
     }
 
-    private function renderSeccionSolaxGen($seccion, $numero, $valoresSeccion, $logoPagina, $valores) {
+    private function renderSeccionDinamica($seccion, $numero, $valoresSeccion, $valores) {
         $titulo = $valoresSeccion['NOMBRE_1'] ?? $seccion['titulo'] ?? $seccion['codigo'];
-        $contenido = $seccion['contenido'] ?? '';
+        $texto = $valoresSeccion['1'] ?? '';
+        $imagenes = $valoresSeccion['IMAGENES_H3'] ?? $valores['IMAGENES_H3'] ?? '';
+        $logoEnersolax = $valoresSeccion['LOGO_ENERSOLAX'] ?? $valores['LOGO_ENERSOLAX'] ?? '';
+        $logoPagina = $this->cargarLogoSvg(true);
 
-        if ($contenido !== '' && strtoupper($contenido) !== 'NA') {
-            $contenido = $this->reemplazarVariables($contenido, $valoresSeccion);
-        } else {
-            $texto = $valoresSeccion['1'] ?? '';
+        if ($imagenes !== '') {
             $contenido = '<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse: collapse;">';
             $contenido .= '<tr>';
             $contenido .= '<td width="42%" valign="top" style="padding-right: 25px;">';
             $contenido .= '<div style="font-size: 13px; line-height: 1.5; color: #ffffff; margin-bottom: 20px;">' . nl2br($texto) . '</div>';
-            $contenido .= ($valoresSeccion['LOGO_ENERSOLAX'] ?? $valores['LOGO_ENERSOLAX'] ?? '');
+            $contenido .= $logoEnersolax;
             $contenido .= '</td>';
             $contenido .= '<td width="58%" valign="top" style="padding-left: 25px;">';
-            $contenido .= ($valoresSeccion['IMAGENES_H3'] ?? $valores['IMAGENES_H3'] ?? '');
+            $contenido .= $imagenes;
             $contenido .= '</td>';
             $contenido .= '</tr>';
             $contenido .= '</table>';
+        } else {
+            $contenido = '<div style="font-size: 13px; line-height: 1.5; color: #ffffff; margin-bottom: 20px;">' . nl2br($texto) . '</div>';
         }
 
         $html = '<div class="contenido-pagina" style="page-break-after: always; background-color: #000000; color: #ffffff;">';

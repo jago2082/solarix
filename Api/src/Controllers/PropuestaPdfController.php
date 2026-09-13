@@ -292,7 +292,7 @@ class PropuestaPdfController {
     }
 
     private function renderSeccionSolaxGen($seccion, $numero, $valoresSeccion, $logoPagina, $valores) {
-        $titulo = $seccion['titulo'] ?? $seccion['codigo'];
+        $titulo = $valoresSeccion['NOMBRE_1'] ?? $seccion['titulo'] ?? $seccion['codigo'];
         $contenido = $seccion['contenido'] ?? '';
 
         if ($contenido !== '' && strtoupper($contenido) !== 'NA') {
@@ -314,7 +314,7 @@ class PropuestaPdfController {
 
         $html = '<div class="contenido-pagina" style="page-break-after: always; background-color: #000000; color: #ffffff;">';
         $html .= '<div class="logo-pagina">' . $logoPagina . '</div>';
-        $html .= '<h2 style="color: #ffffff;">0' . $numero . ' ' . $titulo . '</h2>';
+        $html .= '<h2 style="color: #ffffff; border-bottom: none;">0' . $numero . ' ' . $titulo . '</h2>';
         $html .= '<div class="contenido">' . $contenido . '</div>';
         $html .= '<div class="pie" style="color: #cccccc;">' . $valores['EMPRESA_NOMBRE'] . ' · ' . $valores['EMPRESA_SITIO_WEB'] . '</div>';
         $html .= '</div>';
@@ -378,6 +378,7 @@ class PropuestaPdfController {
 
             $resultado[$codigo] = $valor;
             $resultado[$nombre] = $valor;
+            $resultado['NOMBRE_' . $codigo] = $v['nombre'] ?? '';
         }
         return $resultado;
     }

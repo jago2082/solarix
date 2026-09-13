@@ -234,10 +234,12 @@ class PropuestaPdfController {
         .contenido-pagina h2 { font-size: 18px; color: #ffffff; border-bottom: 2px solid #ffffff; padding-bottom: 8px; margin-top: 0; margin-bottom: 20px; }
         .logo-pagina { position: absolute; top: 20px; right: 20px; width: 160px; height: 160px; z-index: 10; }
         .contenido { text-align: justify; font-size: 11px; line-height: 1.5; color: #ffffff; }
-        .tabla-proyeccion { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 10px; }
-        .tabla-proyeccion th { background-color: #1a4a7a; color: #fff; padding: 6px; text-align: right; }
-        .tabla-proyeccion td { border: 1px solid #ccc; padding: 5px; text-align: right; }
+        .tabla-proyeccion { width: 100%; border-collapse: collapse; margin-top: 15px; font-size: 8px; color: #000000; }
+        .tabla-proyeccion th { background-color: #1a4a7a; color: #ffffff; padding: 5px 4px; text-align: right; border: 1px solid #ffffff; }
+        .tabla-proyeccion td { background-color: #ffffff; border: 1px solid #cccccc; padding: 4px; text-align: right; color: #000000; }
+        .tabla-proyeccion tr:nth-child(even) td { background-color: #f5f5f5; }
         .tabla-proyeccion td:first-child, .tabla-proyeccion th:first-child { text-align: center; }
+        .tabla-proyeccion td:last-child { background-color: #fff9c4; }
         .resumen { margin-top: 20px; padding: 15px; background: #f2f7fb; border-left: 5px solid #1a4a7a; }
         .resumen p { margin: 3px 0; }
         .pie { text-align: center; font-size: 9px; color: #cccccc; margin-top: 40px; }
@@ -302,6 +304,7 @@ class PropuestaPdfController {
         $esHoja4 = ((int)$seccion['id'] === 4);
         $esHoja5 = ((int)$seccion['id'] === 5);
         $esHoja6 = ((int)$seccion['id'] === 6);
+        $esHoja7 = ((int)$seccion['id'] === 7);
         
         if ($esHoja5) {
             $imagenes = $valoresSeccion['IMAGEN_H5'] ?? $valores['IMAGEN_H5'] ?? '';
@@ -328,6 +331,16 @@ class PropuestaPdfController {
             $html .= '<div class="logo-pagina">' . $logoPagina . '</div>';
             $html .= '<h2 style="color: #ffffff; border-bottom: none;">0' . $numero . ' ' . $titulo . '</h2>';
             $html .= '<div style="width: 100%; text-align: center;">' . $imagenes . '</div>';
+            $html .= '<div class="pie" style="color: #cccccc;">' . $valores['EMPRESA_NOMBRE'] . ' · ' . $valores['EMPRESA_SITIO_WEB'] . '</div>';
+            $html .= '</div>';
+            return $html;
+        } elseif ($esHoja7) {
+            $logoPagina = $this->cargarLogoSvg(true);
+            $tabla = $valoresSeccion['TABLA_PROYECCION'] ?? $valores['TABLA_PROYECCION'] ?? '';
+            $html = '<div class="contenido-pagina" style="page-break-after: always;">';
+            $html .= '<div class="logo-pagina">' . $logoPagina . '</div>';
+            $html .= '<h2 style="color: #ffffff; border-bottom: none;">0' . $numero . ' ' . $titulo . '</h2>';
+            $html .= '<div style="color: #ffffff;">' . $tabla . '</div>';
             $html .= '<div class="pie" style="color: #cccccc;">' . $valores['EMPRESA_NOMBRE'] . ' · ' . $valores['EMPRESA_SITIO_WEB'] . '</div>';
             $html .= '</div>';
             return $html;
